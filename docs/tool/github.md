@@ -55,7 +55,7 @@ git push -u origin master
 
 - `git remote add origin ssh地址` 将本地仓库与指定的远程仓库创建 联系；
 
-`push -u origin master` 将本地仓库代码推送至远程仓库，实际开发中该指令后需要输入 github 账号以及密码。（首次提交注意别遗漏`-u`指定默认主机）
+- `git push -u origin master` 将本地仓库代码推送至远程仓库，实际开发中该指令后需要输入 github 账号以及密码。（首次提交注意别遗漏`-u`指定默认主机）
 
 以上指令正常执行后， 本地仓库的代码就提交到远程仓库了：
 
