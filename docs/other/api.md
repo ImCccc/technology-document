@@ -287,39 +287,3 @@ encodeURIComponent 会对特殊字符编码
 ### event.screenX、event.screenY
 
 鼠标相对于用户显示器屏幕左上角的 X,Y 坐标。screenX 指的是鼠标到电脑屏幕左侧的距离。例如：当网页缩小，拖动到屏幕中间时，screnX 大于 clientX .
-
-## 文本溢出...
-
-1. 强制文本在一行内显示：white-space：nowrap;
-2. 溢出内容为隐藏：overflow：hidden;
-3. 溢出省略号：text-overflow：ellipsis;
-4. 强制英文单词断行：word-break:break-all; (<font color="red">设置 white-space：nowrap 会失效</font>)
-
-```html
-<!-- 非flex布局实现文本溢出...显示 -->
-<style>
-  .ellipsis {
-    width: 60px;
-    border: 1px solid;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-</style>
-<div class="ellipsis">88888888888888888888888888</div>
-
-<!-- flex布局实现文本溢出...显示 -->
-<style>
-  .p {
-    display: flex;
-    width: 60px;
-  }
-  .child {
-    flex-grow: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-</style>
-<div class="p">
-  <span class="child">888888888888888888</span>
-</div>
-```
