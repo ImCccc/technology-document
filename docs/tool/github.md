@@ -1,6 +1,9 @@
 # github
 
-下面是 gibhub 常见教程
+个人 github 地址(账号：ImCccc 密码: 常见的密码后面-=):
+<https://github.com/ImCccc?tab=repositories>
+
+下面是 gibhub 常见教程：
 <https://www.cnblogs.com/vs1435/p/11775861.html>
 
 github 上，拉代码有 2 和地址：

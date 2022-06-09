@@ -83,3 +83,7 @@ git remote update origin --prune
 ## 在线 json 转 ts
 
 在线地址： <https://ujuwu.com/#/json2ts>
+
+## 图片转为 base64
+
+<https://c.runoob.com/front-end/59/>
