@@ -6,7 +6,7 @@
 
 常见的运算规则：
 
-<img src="../imgs/9.png">
+<img src="../imgs/suanfa/9.png">
 
 1. 对半向下取整:
 
@@ -42,7 +42,7 @@ a = a ^ b;
 原理：
 
 1. 第一次循环, 在最后开始遍历 i = arr.length – 1; 等于 1 结束
-2. 第二次循环, 在 0 下标开始, j <= i – 1 结束, 和 i 元素比较, 如果 j 下标的元素大于 i 下标元素,交换;
+2. 第二次循环, 在 0 下标开始, j \<= i – 1 结束, 和 i 元素比较, 如果 j 下标的元素大于 i 下标元素,交换;
    > 第 1 次内循环,最大放最后
    >
    > 第 2 次第 2 大放倒数第 2
@@ -367,7 +367,7 @@ const heapSort = (arr) => {
 
 二叉树就是父节点最多只能有 2 个孩子的数，下面是基于二叉树的基本描述：
 
-<img width="100%" src="../imgs/10.png"/>
+<img width="100%" src="../imgs/suanfa/10.png"/>
 
 #### 二叉树的性质
 
@@ -382,18 +382,18 @@ const heapSort = (arr) => {
 2. 所有叶子节点都在同一层级上
 3. 有 n 个节点的满二叉树深为 log2n+1
 
-<img width="100%" src="../imgs/11.png"/>
+<img width="100%" src="../imgs/suanfa/11.png"/>
 
 ### 完全二叉树
 
 一个有 n 个节点的二叉树，按照层级顺序来编号，节点的编号为从 1 到 n；如果树的所有节点和同样深度的满二叉树的编号为 1 到 n 的节点位置相同，则这个二叉树为完全二叉树
 
-<img width="100%" src="../imgs/12.png"/>
+<img width="100%" src="../imgs/suanfa/12.png"/>
 
 ### 二叉查找树 (二叉排序树)
 
 下面是二叉查找树:
-<img width="100%" src="../imgs/13.png"/>
+<img width="100%" src="../imgs/suanfa/13.png"/>
 
 ### 平衡二叉树 (AVL 树)
 
@@ -405,7 +405,7 @@ const heapSort = (arr) => {
 ### 二叉树遍历
 
 分前序，中序，后序遍历
-<img width="100%" src="../imgs/14.png"/>
+<img width="100%" src="../imgs/suanfa/14.png"/>
 
 辅助代码：
 
@@ -564,7 +564,7 @@ function kuanTotalloop(node) {
 }
 ```
 
-动态规划：判断是否搜索二叉树；左树的最大值 < 本身; 右树最小值 > 本身
+动态规划：判断是否搜索二叉树；左树的最大值 \< 本身; 右树最小值 > 本身
 
 ```js
 function isBST(nodes) {
@@ -612,4 +612,4 @@ function isBST(nodes) {
 >
 > 对于每个节点的值都小于等于子树中每个节点值的堆，叫作小顶堆。
 
-<img width="80%" src="../imgs/15.png"/>
+<img width="80%" src="../imgs/suanfa/15.png"/>
