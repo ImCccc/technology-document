@@ -171,42 +171,6 @@ $width: 5em;
 @include firefox-message(".header");
 ```
 
-## 文本溢出...
-
-1. 强制文本在一行内显示：white-space：nowrap;
-2. 溢出内容为隐藏：overflow：hidden;
-3. 溢出省略号：text-overflow：ellipsis;
-4. 强制英文单词断行：word-break:break-all; (<font color="red">设置 white-space：nowrap 会失效</font>)
-
-```html
-<!-- 非flex布局实现文本溢出...显示 -->
-<style>
-  .ellipsis {
-    width: 60px;
-    border: 1px solid;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-</style>
-<div class="ellipsis">88888888888888888888888888</div>
-
-<!-- flex布局实现文本溢出...显示 -->
-<style>
-  .p {
-    display: flex;
-    width: 60px;
-  }
-  .child {
-    flex-grow: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-</style>
-<div class="p">
-  <span class="child">888888888888888888</span>
-</div>
-```
-
 ## flex 布局
 
 下面说容器上（display: flex 那个元素）；项目，就是子元素
@@ -918,3 +882,146 @@ div.card {
 ```
 
 <img  src="../imgs/css/10.jpg"/>
+
+## transform
+
+通过使用 CSS transform 属性，您可以利用以下 2D 转换方法：
+
+- translate()
+- rotate()
+- scaleX()
+- scaleY()
+- scale()
+- skewX()
+- skewY()
+- skew()
+- matrix()
+
+### 位移 translate
+
+1. 右移动 50 个像素，并向下移动 100 个像素：`transform: translate(50px, 100px)`
+2. `transform: translateX(50px)`
+3. `transform: translateY(50px)`
+
+### 旋转 rotate
+
+1. 顺时针旋转 20 度：`transform: rotate(20deg);`
+2. 逆时针旋转 20 度：`transform: rotate(-20deg);`
+
+### 缩放 scale
+
+1. 缩小一般：`transform: scale(0.5, 0.5);`
+2. 原始宽度的一半: `transform: scaleX(0.5);`
+3. 原始高度的一半: `transform: scaleY(0.5);`
+
+### 倾斜 skew
+
+1. X 轴倾斜 20 度: `transform: skewX(20deg);`
+2. Y 轴倾斜 20 度: `transform: skewY(20deg);`
+3. X 轴倾斜 20 度，同时沿 Y 轴倾斜 10 度：`transform: skew(20deg, 10deg);`
+
+## 媒体查询
+
+<https://www.w3school.com.cn/cssref/pr_mediaquery.asp>
+
+针对不同的媒体使用不同的样式表：
+
+```html
+<link
+  rel="stylesheet"
+  media="screen and (min-width: 900px)"
+  href="widescreen.css"
+/>
+<link
+  rel="stylesheet"
+  media="screen and (max-width: 600px)"
+  href="smallscreen.css"
+/>
+```
+
+例子：如果视口的宽度为 800 像素或更宽，请使用媒体查询将背景色设置为淡紫色；如果视口的宽度介于 400 至 799 像素之间，则使用媒体查询将背景色设置为浅绿色。如果视口小于 400 像素，则背景色为浅蓝色：
+
+```CSS
+body {
+  background-color: lightblue;
+}
+
+@media screen and (min-width: 400px) {
+  body {
+    background-color: lightgreen;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  body {
+    background-color: lavender;
+  }
+}
+```
+
+## 文本相关
+
+1. 强制文本在一行内显示：white-space: nowrap;
+2. 溢出内容为隐藏：overflow：hidden;
+3. 溢出省略号：text-overflow：ellipsis;
+4. 强制英文单词断行：word-break: break-all;
+
+### word-wrap
+
+`word-wrap: break-word:` 允许单词换行显示：
+<img height="300px" src="../imgs/css/11.jpg"/>
+
+### [word-break](https://www.w3school.com.cn/cssref/pr_word-break.asp)
+
+语法：`word-break: normal|break-all|keep-all;`
+
+- 强制英文单词断行: `word-break: break-all;`(<font color="red">设置 white-space：nowrap 会失效</font>)
+
+<img src="../imgs/css/12.jpg"/>
+
+### [white-space](https://www.w3school.com.cn/cssref/pr_text_white-space.asp)
+
+white-space 属性设置如何处理元素内的空白:
+
+- normal 默认。空白会被浏览器忽略。
+- nowrap 文本不会换行，文本会在在同一行上继续，直到遇到 \<br\> 标签为止。
+
+### text-overflow
+
+text-overflow 属性规定当文本溢出包含元素时发生的事情。一般配合 `overflow: hidden`， 设置文本溢出`...`显示
+
+- clip 修剪文本。 (默认)
+- ellipsis 显示省略符号来代表被修剪的文本。
+
+<img height="450px" src="../imgs/css/13.jpg"/>
+
+### 文本溢出...
+
+```html
+<!-- 非flex布局实现文本溢出...显示 -->
+<style>
+  .ellipsis {
+    width: 60px;
+    border: 1px solid;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>
+<div class="ellipsis">88888888888888888888888888</div>
+
+<!-- flex布局实现文本溢出...显示 -->
+<style>
+  .p {
+    display: flex;
+    width: 60px;
+  }
+  .child {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>
+<div class="p">
+  <span class="child">888888888888888888</span>
+</div>
+```
