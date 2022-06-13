@@ -567,3 +567,354 @@ p:empty {
   border: 1px solid #ccc;
 }
 ```
+
+## transition 过渡
+
+如需创建过渡效果，必须明确两件事：
+
+1. 添加效果的 CSS 属性
+2. 效果的持续时间
+
+api:
+
+- transition 简写属性，用于将四个过渡属性设置为单一属性
+- transition-delay 规定过渡效果的延迟（以秒计）
+- transition-duration 规定过渡效果要持续多少秒或毫秒
+- transition-property 规定过渡效果所针对的 CSS 属性的名称(`all`代表全部)
+- transition-timing-function 规定过渡效果的速度曲线
+
+```css
+div {
+  width: 100px;
+  height: 100px;
+  background: red;
+  transition: width 2s, height 4s;
+}
+div:hover {
+  width: 300px;
+}
+```
+
+**速度曲线 transition-timing-function**
+
+`transition-timing-function` 属性规定过渡效果的速度曲线。可接受以下值：
+
+- ease - 规定过渡效果，先缓慢地开始，然后加速，然后缓慢地结束（默认）
+- linear - 规定从开始到结束具有相同速度的过渡效果
+- ease-in -规定缓慢开始的过渡效果
+- ease-out - 规定缓慢结束的过渡效果
+- ease-in-out - 规定开始和结束较慢的过渡效果
+- cubic-bezier(n,n,n,n) - 允许您在三次贝塞尔函数中定义自己的值
+
+## animation 动画
+
+### @keyframes
+
+在 @keyframes 规则中指定了 CSS 样式，动画将在特定时间逐渐从当前样式更改为新样式。
+要使动画生效，必须将动画绑定到某个元素。
+
+```css
+/* 动画代码1 */
+@keyframes example1 {
+  from {
+    background-color: red;
+  }
+  to {
+    background-color: yellow;
+  }
+}
+
+/* 动画代码2 */
+@keyframes example2 {
+  0% {
+    background-color: red;
+  }
+  50% {
+    background-color: blue;
+  }
+  100% {
+    background-color: red;
+  }
+}
+
+/* 使用动画的元素上的样式 */
+.animation1 {
+  width: 100px;
+  height: 100px;
+  color: red;
+  animation-name: example2;
+  animation-duration: 4s;
+}
+```
+
+### 动画时长 animation-duration
+
+4 秒完成： `animation-duration: 4s`（默认 0s）
+
+### 动画延迟 animation-delay
+
+2 秒的延迟：`animation-delay: 2s`
+
+### 运行次数 animation-iteration-count
+
+3 次： `animation-iteration-count: 3`
+
+### 永远执行 infinite
+
+永远执行：`animation-iteration-count: infinite`
+
+### 反向或交替运行 animation-direction
+
+animation-direction 属性指定是向前播放、向后播放还是交替播放动画。可接受以下值：
+
+- normal - 动画正常播放（向前）。默认值
+- reverse - 动画以反方向播放（向后）
+- alternate - 动画先向前播放，然后向后
+- alternate-reverse - 动画先向后播放，然后向前
+
+### 动画的速度曲线 animation-timing-function
+
+animation-timing-function 属性可接受以下值：
+
+- ease - 指定从慢速开始，然后加快，然后缓慢结束的动画（默认）
+- linear - 规定从开始到结束的速度相同的动画
+- ease-in - 规定慢速开始的动画
+- ease-out - 规定慢速结束的动画
+- ease-in-out - 指定开始和结束较慢的动画
+- cubic-bezier(n,n,n,n) - 运行您在三次贝塞尔函数中定义自己的值
+
+### animation-fill-mode
+
+CSS 动画不会在第一个关键帧播放之前或在最后一个关键帧播放之后影响元素。animation-fill-mode 属性能够覆盖这种行为。animation-fill-mode 属性可接受以下值：
+
+- none - 默认值。动画在执行之前或之后不会对元素应用任何样式。
+- forwards - 元素将保留由最后一个关键帧设置的样式值
+- backwards - 元素将获取由第一个关键帧设置的样式值，并在动画延迟期间保留该值。
+- both - 动画会同时遵循向前和向后的规则，从而在两个方向上扩展动画属性。
+
+### 动画简写属性
+
+```css
+div {
+  animation-name: example;
+  animation-delay: 2s;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+/* 简写 */
+div {
+  animation: example 5s linear 2s infinite alternate;
+}
+```
+
+### 例子：loading 加载中
+
+```html
+<img class="loading" src="xxx.png" / >
+<style>
+  .loading {
+    width: 40px;
+    animation: fadenum 1.5s linear infinite;
+  }
+  @keyframes fadenum {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+</style>
+```
+
+## CSS 渐变
+
+CSS 渐变使您可以显示两种或多种指定颜色之间的平滑过渡。CSS 定义了两种渐变类型：
+
+1. 线性渐变（向下/向上/向左/向右/对角线）
+2. 径向渐变（由其中心定义）
+
+如需创建线性渐变，您必须定义至少两个色标。色标是您要呈现平滑过渡的颜色。您还可以设置起点和方向（或角度）以及渐变效果。语法：
+
+```css
+background-image: linear-gradient(direction, color-stop1, color-stop2, ...);
+```
+
+### 从上到下（默认）
+
+```css
+#grad {
+  background-image: linear-gradient(red, yellow);
+}
+```
+
+<img width="80%" src="../imgs/css/1.jpg"/>
+
+### 从左到右
+
+```css
+#grad {
+  background-image: linear-gradient(to right, red, yellow);
+}
+```
+
+<img width="80%" src="../imgs/css/2.jpg"/>
+
+### 对角线
+
+```css
+#grad {
+  background-image: linear-gradient(to bottom right, #000, yellow);
+}
+```
+
+<img width="50%" src="../imgs/css/3.jpg"/>
+
+### 使用角度
+
+如果希望对渐变角度做更多的控制，您可以定义一个角度，来取代预定义的方向（向下、向上、向右、向左、向右下等等）。值 `0deg` 等于向上（`to top`）。值 `90deg` 等于向右（`to right`）。值 `180deg` 等于向下（`to bottom`）。
+
+### 透明度
+
+```css
+#grad {
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 0, 0, 0),
+    rgba(255, 0, 0, 1)
+  );
+}
+```
+
+<img width="50%" src="../imgs/css/4.jpg"/>
+
+### CSS 径向渐变
+
+径向渐变由其中心定义。如需创建径向渐变，您还必须定义至少两个色标
+
+```css
+background-image: radial-gradient(
+  shape size at position,
+  start-color,
+  ...,
+  last-color
+);
+```
+
+默认： shape 为椭圆形，size 为最远角，position 为中心。
+
+例子 1：
+
+```css
+#grad {
+  background-image: radial-gradient(red, yellow, green);
+}
+```
+
+<img width="50%" src="../imgs/css/5.jpg"/>
+
+例子 2：
+
+```css
+#grad {
+  background-image: radial-gradient(red 5%, yellow 15%, green 60%);
+}
+```
+
+<img width="50%" src="../imgs/css/6.jpg"/>
+
+例子 3：
+
+```css
+/* shape 参数定义形状。它可接受 circle 或 ellipse 值。默认值为 ellipse（椭圆） */
+#grad {
+  background-image: radial-gradient(circle, red, yellow, green);
+}
+```
+
+<img width="50%" src="../imgs/css/7.jpg"/>
+
+例子 4：
+
+```css
+/* repeating-radial-gradient() 函数用于重复径向渐变： */
+#grad {
+  background-image: repeating-radial-gradient(red, yellow 10%, green 15%);
+}
+```
+
+<img width="50%" src="../imgs/css/8.jpg"/>
+
+## CSS 阴影效果
+
+### 文字阴影 text-shadow
+
+```css
+/* 例子 1： */
+h1 {
+  text-shadow: 2px 2px;
+}
+
+/* 例子 2： */
+h1 {
+  text-shadow: 2px 2px red;
+}
+
+/* 例子 3： */
+h1 {
+  text-shadow: 2px 2px 5px red;
+}
+
+/* 例子 4： */
+h1 {
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+/* 例子 5 多个阴影： */
+h1 {
+  text-shadow: 0 0 3px #ff0000, 0 0 5px #0000ff;
+}
+
+/* 例子 6 ： */
+h1 {
+  color: white;
+  text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+
+/* 例子 7 */
+h1 {
+  color: yellow;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+```
+
+<img width="50%" src="../imgs/css/9.jpg"/>
+
+### 边框阴影 box-shadow
+
+```css
+/* 例子 1： */
+div {
+  box-shadow: 10px 10px;
+}
+
+/* 例子 2：为阴影添加颜色 */
+div {
+  box-shadow: 10px 10px grey;
+}
+
+/* 例子 3：向阴影添加模糊效果 */
+div {
+  box-shadow: 10px 10px 5px grey;
+}
+
+/* 例子 4：创建纸质卡片效果 */
+div.card {
+  width: 100px;
+  height: 100px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+```
+
+<img  src="../imgs/css/10.jpg"/>

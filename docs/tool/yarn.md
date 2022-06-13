@@ -4,6 +4,8 @@
 
 [中文官网](https://yarn.bootcss.com/)<https://yarn.bootcss.com/>
 
+[其他](https://cloud.tencent.com/developer/section/1477724)<https://cloud.tencent.com/developer/section/1477724>
+
 yarn 是快速、可靠、安全的依赖管理工具。
 
 1. 离线模式：如果你以前安装过某个包，再次安装时可以在没有任何互联网连接的情况下进行
@@ -42,8 +44,31 @@ yarn remove axios
 
 ```
 yarn upgrade
-yarn upgrade-interactive –latest
+yarn upgrade axios
+yarn upgrade axios@0.27.0
 ```
+
+交互式更新模式: `yarn upgrade-interactive`
+
+```js
+yarn upgrade-interactive –latest
+
+[1/? Choose which packages to update. (Press <space> to select, <a> to toggle all, <i> to inverse s
+election)
+ devDependencies
+❯◯ autoprefixer      6.7.7  ❯  7.0.0          https://github.com/postcss/autoprefixer#readme
+ ◯ webpack           2.4.1  ❯  2.5.1          https://github.com/webpack/webpack
+
+ dependencies
+ ◯ bull              2.2.6  ❯  3.0.0-alpha.3  https://github.com/OptimalBits/bull#readme
+ ◯ fs-extra          3.0.0  ❯  3.0.1          https://github.com/jprichardson/node-fs-extra
+ ◯ socket.io         1.7.3  ❯  1.7.4          https://github.com/socketio/socket.io#readme
+ ◯ socket.io-client  1.7.3  ❯  1.7.4          https://github.com/Automattic/socket.io-client#readme
+```
+
+:::tip
+你可以把它 `yarn upgrade-interactive` 看作是 `yarn outdated` 和 `yarn upgrade [package...]` 命令的组合。在`yarn outdated` 显示过期软件包列表 `yarn upgrade [package...]`并可用于升级所需软件包的位置，`yarn upgrade-interactive` 显示相同的过期软件包列表，并让您立即选择要升级的软件包。
+:::
 
 ## yarn 镜像
 
