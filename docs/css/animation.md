@@ -7,8 +7,6 @@
 1. 添加效果的 CSS 属性
 2. 效果的持续时间
 
-api:
-
 - transition 简写属性，用于将四个过渡属性设置为单一属性
 - transition-delay 规定过渡效果的延迟（以秒计）
 - transition-duration 规定过渡效果要持续多少秒或毫秒

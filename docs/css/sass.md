@@ -19,6 +19,32 @@ sass --watch input.scss:output.css
 sass --watch app/sass:public/stylesheets
 ```
 
+## 变量
+
+变量以美元符号开头，赋值方法与 CSS 属性的写法一样, 变量支持块级作用域，嵌套规则内定义的变量只能在嵌套规则内使用（局部变量），不在嵌套规则内定义的变量则可在任何地方使用（全局变量）
+
+```css
+$width: 5em;
+
+#main {
+  width: $width;
+}
+```
+
+**将局部变量转换为全局变量可以添加 !global 声明：**
+
+```css
+#main {
+  /* 局部变量，添加 !global 后变为全局变量 */
+  $width: 5em !global;
+  width: $width;
+}
+
+#sidebar {
+  width: $width;
+}
+```
+
 ## 父选择器
 
 用 & 代表嵌套规则外层的父选择器:
@@ -61,43 +87,142 @@ body.firefox a {
 }
 ```
 
-## 变量 $
+## 嵌套属性
 
-变量以美元符号开头，赋值方法与 CSS 属性的写法一样, 变量支持块级作用域，嵌套规则内定义的变量只能在嵌套规则内使用（局部变量），不在嵌套规则内定义的变量则可在任何地方使用（全局变量）
+反复写 border-styleborder-widthborder-color 以及 border-\*等也是非常烦人的。在 sass 中，你只需敲写一遍 border：
 
-```css
-$width: 5em;
-
-#main {
-  width: $width;
-}
-```
-
-**将局部变量转换为全局变量可以添加 !global 声明：**
-
-```css
-#main {
-  /* 局部变量，添加 !global 后变为全局变量 */
-  $width: 5em !global;
-
-  width: $width;
-}
-
-#sidebar {
-  width: $width;
-}
-```
-
-## 数据类型
-
-- 字符串 (Strings)
-  SassScript 支持 CSS 的两种字符串类型：有引号字符串 (quoted strings)，如 "Lucida Grande" ；与无引号字符串 (unquoted strings)，如 sans-serif bold，在编译 CSS 文件时不会改变其类型。只有一种情况例外，使用 #{} (interpolation) 时，有引号字符串将被编译为无引号字符串，这样便于在 mixin 中引用选择器名：
-
-```css
-@mixin firefox-message($selector) {
-  body.firefox #{$selector}:before {
-    content: "Hi, Firefox users!";
+```scss
+// 例子1
+nav {
+  border: {
+    style: solid;
+    width: 1px;
+    color: #ccc;
   }
 }
-@include firefox-message(".header");
+// 编译后
+nav {
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ccc;
+}
+
+// 例子2
+nav {
+  border: 1px solid #ccc {
+    left: 0px;
+    right: 0px;
+  }
+}
+// 编译后
+nav {
+  border: 1px solid #ccc;
+  border-left: 0px;
+  border-right: 0px;
+}
 ```
+
+## 默认变量值 !default
+
+```scss
+$fancybox-width: 400px !default;
+.fancybox {
+  width: $fancybox-width;
+}
+```
+
+上例中，如果用户在导入你的 sass 局部文件之前声明了一个$fancybox-width变量，那么你的局部文件中对$fancybox-width 赋值 400px 的操作就无效。如果用户没有做这样的声明，则$fancybox-width 将默认为 400px。
+
+## 导入 @import
+
+sass 局部文件的文件名以下划线开头。这样，sass 就不会在编译时单独编译这个文件输出 css,而只把这个文件用作导入:
+
+你想导入 `themes/_night-sky.scss` 这个局部文件里的变量，你只需在样式表中写`@import "themes/night-sky"`
+
+- **三种情况下会生成原生的 CSS@import:**
+  1.  被导入文件的名字以.css 结尾
+  2.  被导入文件的名字是一个 URL 地址（比如http://www.sass.hk/css/css.css）
+  3.  被导入文件的名字是 CSS 的 url()值
+
+## 混合 @mixin
+
+```scss
+@mixin rounded-corners {
+  border-radius: 5px;
+}
+.notice {
+  @include rounded-corners;
+}
+```
+
+混合嵌套规则：
+
+```scss
+@mixin no-bullets {
+  list-style: none;
+  li {
+    margin-left: 0px;
+  }
+}
+ul.plain {
+  color: #444;
+  @include no-bullets;
+}
+
+// 编译后
+ul.plain {
+  color: #444;
+  list-style: none;
+}
+ul.plain li {
+  margin-left: 0px;
+}
+```
+
+混合器传参 + 默认参数：
+
+```scss
+// $hover: red 默认参数
+@mixin link-colors($normal, $hover: red, $visited: green) {
+  color: $normal;
+  &:hover {
+    color: $hover;
+  }
+  &:visited {
+    color: $visited;
+  }
+}
+
+a {
+  @include link-colors(blue, red, green);
+}
+// 忽略参数顺序，也可以这样使用
+a {
+  @include link-colors($normal: blue, $visited: green, $hover: red);
+}
+```
+
+## 继承 @extend
+
+```scss
+.error {
+  border: 1px solid red;
+  background-color: #fdd;
+}
+.error a {
+  //应用到.seriousError a
+  color: red;
+  font-weight: 100;
+}
+h1.error {
+  //应用到hl.seriousError
+  font-size: 1.2rem;
+}
+
+.seriousError {
+  @extend .error;
+  border-width: 3px;
+}
+```
+
+上例子 `.seriousError` 不仅会继承 `.error` 自身的所有样式，任何跟 `.error` 有关的组合选择器样式也会被 `.seriousError` 以组合选择器的形式继承
