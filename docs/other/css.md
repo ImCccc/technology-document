@@ -899,7 +899,7 @@ div.card {
 
 ### 位移 translate
 
-1. 右移动 50 个像素，并向下移动 100 个像素：`transform: translate(50px, 100px)`
+1. `transform: translate(50px, 100px)`
 2. `transform: translateX(50px)`
 3. `transform: translateY(50px)`
 
