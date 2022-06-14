@@ -11,7 +11,7 @@ github 上，拉代码有 2 和地址：
 1. SSH: git@github.com:ImCccc/technology-document.git
 2. https: https://github.com/ImCccc/technology-document.git
 
-有什么区别呢？https url 直接有效网址打开，但是用户每次通过 git 提交的时候都要输入用户名和密码，有没有简单的一点的办法，一次配置，永久使用呢？当然，所以有了第二种地址，也就是 SSH URL，那如何配置就是本文要分享的内容。
+有什么区别呢？https url 直接有效网址打开，但是用户每次通过 git 提交的时候都要输入用户名和密码，有没有简单的一点的办法，一次配置，永久使用呢？当然，所以有了第二种地址，也就是 SSH URL，如何配置下面有说明。
 
 ## 配置 SSH
 
