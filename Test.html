@@ -4,19 +4,53 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
   </head>
-  <style></style>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+
+    div {
+      display: inline-flex;
+      border: 5px solid;
+      padding: 20px 40px;
+    }
+    #baba {
+      border: 5px solid red;
+    }
+  </style>
+
   <body>
-    <div name="name1" class="class1">
-      <span id="p1" class="span1">1</span>
+    <div id="yeye">
+      <div id="baba">
+        <div id="bb">
+          <span>1</span>
+          <span>1</span>
+          <span>1</span>
+        </div>
+      </div>
     </div>
   </body>
 
   <script>
-    var text = document.createTextNode(`<span id="p1" class="span1">1</span>`);
+    var yeye = document.getElementById("yeye");
+    var bb = document.getElementById("bb");
+    var baba = document.getElementById("baba");
+    console.log("getBoundingClientRect:", baba.getBoundingClientRect());
 
-    const p1 = document.getElementById("p1");
+    console.log("getClientRects:", bb.getClientRects().length);
 
-    p1.appendChild(text);
-    p1.appendChild(text);
+    // console.log("scrollHeight: ", parentNode.scrollHeight);
+    // console.log("clientHeight: ", parentNode.clientHeight);
+
+    // console.log("scrollWidth: ", parentNode.scrollWidth);
+    // console.log("clientWidth: ", parentNode.clientWidth);
+
+    // console.log("clientLeft: ", parentNode.clientLeft);
+    // console.log("clientTop: ", parentNode.clientTop);
+
+    // console.log("innerHTML: ", parentNode.innerHTML);
+    // console.log("outerHTML: ", parentNode.outerHTML);
+    // console.log("tagName: ", parentNode.tagName);
   </script>
 </html>
