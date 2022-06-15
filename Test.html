@@ -4,96 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
   </head>
-
-  <style>
-    body {
-      display: flex;
-      flex-wrap: wrap;
-      align-content: flex-start;
-    }
-
-    div {
-      width: 220px;
-      height: 80px;
-      margin: 10px;
-      position: absolute;
-      bottom: 141px;
-      right: 16px;
-    }
-
-    .bg1 {
-      padding: 20px;
-      border: 20px solid red;
-      background: url(./14.png);
-      background-repeat: no-repeat;
-      background-origin: border-box;
-    }
-
-    /* .bg2 {
-      background: url(./14.png) no-repeat;
-    }
-
-    .bg3 {
-      background: url(./14.png) no-repeat center center;
-    }
-
-    .bg4 {
-      background: url(./14.png);
-      background-size: 100%;
-    }
-
-    .bg5 {
-      background: url(./14.png) no-repeat center center;
-      background-size: 100%;
-    }
-
-    .bg6 {
-      background: url(./14.png);
-      background-size: 40px 80px;
-    }
-
-    .bg7 {
-      background: url(./14.png) center center;
-      background-size: 40px 80px;
-    }
-
-    .bg8 {
-      background: url(./14.png);
-      background-size: 100% 100%;
-    }
-
-    .bg9 {
-      background: url(./14.png);
-      background-size: cover;
-    }
-
-    .bg10 {
-      background: url(./14.png) center;
-      background-size: contain;
-    }
-
-    .bg11 {
-      background: url(./14.png) center no-repeat;
-      background-size: contain;
-    }
-
-    .bg12 {
-      background: url(./14.png) center;
-      background-size: auto;
-    } */
-  </style>
+  <style></style>
   <body>
-    <div class="bg1"></div>
-    <!-- <div class="bg2"></div>
-    <div class="bg3"></div>
-    <div class="bg4"></div>
-    <div class="bg5"></div>
-    <div class="bg6"></div>
-    <div class="bg7"></div>
-    <div class="bg8"></div>
-    <div class="bg9"></div>
-    <div class="bg10"></div>
-    <div class="bg11"></div>
-    <div class="bg12"></div> -->
+    <div name="name1" class="class1">
+      <span id="p1" class="span1">1</span>
+    </div>
   </body>
+
+  <script>
+    var text = document.createTextNode(`<span id="p1" class="span1">1</span>`);
+
+    const p1 = document.getElementById("p1");
+
+    p1.appendChild(text);
+    p1.appendChild(text);
+  </script>
 </html>
