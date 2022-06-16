@@ -212,7 +212,7 @@ let answer = await inquirer.prompt([
 - **choices** :(Array|Function) 选项列表。如果定义为函数，则第一个参数将是当前查询器会话答案
 
 例子：
-<img src="./8.png"/>
+<img src="./imgs/8.png"/>
 
 ### metalsmith
 

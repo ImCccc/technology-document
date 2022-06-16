@@ -6,7 +6,7 @@
 
 常见的运算规则：
 
-<img src="./_suanfa9.png">
+<img src="./imgs/_suanfa9.png">
 
 1. 对半向下取整:
 
@@ -367,7 +367,7 @@ const heapSort = (arr) => {
 
 二叉树就是父节点最多只能有 2 个孩子的数，下面是基于二叉树的基本描述：
 
-<img width="100%" src="./_suanfa10.png"/>
+<img width="100%" src="./imgs/_suanfa10.png"/>
 
 #### 二叉树的性质
 
@@ -382,18 +382,18 @@ const heapSort = (arr) => {
 2. 所有叶子节点都在同一层级上
 3. 有 n 个节点的满二叉树深为 log2n+1
 
-<img width="100%" src="./_suanfa11.png"/>
+<img width="100%" src="./imgs/_suanfa11.png"/>
 
 ### 完全二叉树
 
 一个有 n 个节点的二叉树，按照层级顺序来编号，节点的编号为从 1 到 n；如果树的所有节点和同样深度的满二叉树的编号为 1 到 n 的节点位置相同，则这个二叉树为完全二叉树
 
-<img width="100%" src="./_suanfa12.png"/>
+<img width="100%" src="./imgs/_suanfa12.png"/>
 
 ### 二叉查找树 (二叉排序树)
 
 下面是二叉查找树:
-<img width="100%" src="./_suanfa13.png"/>
+<img width="100%" src="./imgs/_suanfa13.png"/>
 
 ### 平衡二叉树 (AVL 树)
 
@@ -405,7 +405,7 @@ const heapSort = (arr) => {
 ### 二叉树遍历
 
 分前序，中序，后序遍历
-<img width="100%" src="./_suanfa14.png"/>
+<img width="100%" src="./imgs/_suanfa14.png"/>
 
 辅助代码：
 
@@ -612,4 +612,4 @@ function isBST(nodes) {
 >
 > 对于每个节点的值都小于等于子树中每个节点值的堆，叫作小顶堆。
 
-<img width="80%" src="./_suanfa15.png"/>
+<img width="80%" src="./imgs/_suanfa15.png"/>
