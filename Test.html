@@ -10,24 +10,38 @@
       margin: 0;
     }
 
-    div {
-      display: inline-flex;
-      border: 5px solid;
-      padding: 20px 40px;
+    #yeye > div {
+      padding: 10px 40px;
+      border: 5px solid #607d8b;
+      margin: 10px;
     }
-    #baba {
-      border: 5px solid red;
+
+    #yeye > div > div {
+      margin-top: 10px;
+    }
+
+    #yeye {
+      margin-top: 20px;
+      overflow: auto;
+    }
+
+    .bold {
+      color: red;
+      font-size: 20px;
+    }
+
+    .beforebegin {
+      display: inline-block;
+      margin-left: 65px;
     }
   </style>
 
   <body>
     <div id="yeye">
-      <div id="baba">
-        <div id="bb">
-          <span>1</span>
-          <span>1</span>
-          <span>1</span>
-        </div>
+      <span>我是bb</span>
+      <div id="bb">
+        <div style="border: 1px solid">我是bb元素的第1个小孩</div>
+        <div style="border: 1px solid">我是bb元素的最后小孩</div>
       </div>
     </div>
   </body>
@@ -36,21 +50,39 @@
     var yeye = document.getElementById("yeye");
     var bb = document.getElementById("bb");
     var baba = document.getElementById("baba");
-    console.log("getBoundingClientRect:", baba.getBoundingClientRect());
 
-    console.log("getClientRects:", bb.getClientRects().length);
+    var newEle = document.createElement("span");
+    newEle.style.backgroundColor = "#ffffbc";
+    newEle.className = "beforebegin";
+    newEle.innerHTML = `
+      我是 newEle，调用 bb.insertAdjacentElement("beforebegin", newEle) 生成的，<br/>
+      我在bb <span class="bold">元素本身的前面</span> 
+    `;
+    bb.insertAdjacentElement("beforebegin", newEle);
 
-    // console.log("scrollHeight: ", parentNode.scrollHeight);
-    // console.log("clientHeight: ", parentNode.clientHeight);
+    var newEle = document.createElement("div");
+    newEle.style.backgroundColor = "#ffffbc";
+    newEle.innerHTML = `
+      我是 newEle，调用 bb.insertAdjacentElement("afterbegin", newEle) 生成的，<br/>
+      我在bb元素当中，并且在bb<span class="bold">元素第一个子孩子前面</span> 
+    `;
+    bb.insertAdjacentElement("afterbegin", newEle);
 
-    // console.log("scrollWidth: ", parentNode.scrollWidth);
-    // console.log("clientWidth: ", parentNode.clientWidth);
+    var newEle = document.createElement("div");
+    newEle.style.backgroundColor = "#ffffbc";
+    newEle.innerHTML = `
+      我是 newEle，调用 bb.insertAdjacentElement("beforeend", newEle) 生成的，<br/>
+      我在bb元素当中，并且在bb<span class="bold">元素最后一个子孩子后面</span> 
+    `;
+    bb.insertAdjacentElement("beforeend", newEle);
 
-    // console.log("clientLeft: ", parentNode.clientLeft);
-    // console.log("clientTop: ", parentNode.clientTop);
-
-    // console.log("innerHTML: ", parentNode.innerHTML);
-    // console.log("outerHTML: ", parentNode.outerHTML);
-    // console.log("tagName: ", parentNode.tagName);
+    var newEle = document.createElement("span");
+    newEle.className = "beforebegin";
+    newEle.style.backgroundColor = "#ffffbc";
+    newEle.innerHTML = `
+      我是 newEle，调用 bb.insertAdjacentElement("afterend", newEle) 生成的，<br/>
+      我在bb <span class="bold">元素本身的后面</span> 
+    `;
+    bb.insertAdjacentElement("afterend", newEle);
   </script>
 </html>
