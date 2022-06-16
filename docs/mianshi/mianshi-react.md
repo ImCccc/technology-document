@@ -4,7 +4,7 @@ react 面试常见面试题
 
 ## react 生命周期
 
-![有问题上知乎 图标](../imgs/4.png)
+![](./imgs/4.png)
 
 ### render
 
@@ -104,7 +104,7 @@ react 组件挂载之前，会调用它的构造函数, 构造函数仅用于以
 
 将事件处理器附加到渲染 React 树的根 DOM 容器中，React 17 将会在底层调用 rootNode.addEventListener()
 
-<img src="../imgs/5.png" width="505px"/>
+<img src="./imgs/5.png" width="505px"/>
 
 ### React 的事件和原生事件有什么区别
 

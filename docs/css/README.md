@@ -21,7 +21,7 @@ background-image: linear-gradient(direction, color-stop1, color-stop2, ...);
 }
 ```
 
-<img width="80%" src="../imgs/css/1.jpg"/>
+<img width="80%" src="./imgs/1.jpg"/>
 
 ### 从左到右
 
@@ -31,7 +31,7 @@ background-image: linear-gradient(direction, color-stop1, color-stop2, ...);
 }
 ```
 
-<img width="80%" src="../imgs/css/2.jpg"/>
+<img width="80%" src="./imgs/2.jpg"/>
 
 ### 对角线
 
@@ -41,7 +41,7 @@ background-image: linear-gradient(direction, color-stop1, color-stop2, ...);
 }
 ```
 
-<img width="50%" src="../imgs/css/3.jpg"/>
+<img width="50%" src="./imgs/3.jpg"/>
 
 ### 使用角度
 
@@ -59,7 +59,7 @@ background-image: linear-gradient(direction, color-stop1, color-stop2, ...);
 }
 ```
 
-<img width="50%" src="../imgs/css/4.jpg"/>
+<img width="50%" src="./imgs/4.jpg"/>
 
 ### CSS 径向渐变
 
@@ -84,7 +84,7 @@ background-image: radial-gradient(
 }
 ```
 
-<img width="50%" src="../imgs/css/5.jpg"/>
+<img width="50%" src="./imgs/5.jpg"/>
 
 例子 2：
 
@@ -94,7 +94,7 @@ background-image: radial-gradient(
 }
 ```
 
-<img width="50%" src="../imgs/css/6.jpg"/>
+<img width="50%" src="./imgs/6.jpg"/>
 
 例子 3：
 
@@ -105,7 +105,7 @@ background-image: radial-gradient(
 }
 ```
 
-<img width="50%" src="../imgs/css/7.jpg"/>
+<img width="50%" src="./imgs/7.jpg"/>
 
 例子 4：
 
@@ -116,7 +116,7 @@ background-image: radial-gradient(
 }
 ```
 
-<img width="50%" src="../imgs/css/8.jpg"/>
+<img width="50%" src="./imgs/8.jpg"/>
 
 ## CSS 阴影效果
 
@@ -162,7 +162,7 @@ h1 {
 }
 ```
 
-<img width="50%" src="../imgs/css/9.jpg"/>
+<img width="50%" src="./imgs/9.jpg"/>
 
 ### 边框阴影 box-shadow
 
@@ -190,7 +190,7 @@ div.card {
 }
 ```
 
-<img  src="../imgs/css/10.jpg"/>
+<img  src="./imgs/10.jpg"/>
 
 ## 媒体查询
 
@@ -241,7 +241,7 @@ body {
 ### word-wrap
 
 `word-wrap: break-word:` 允许单词换行显示：
-<img height="300px" src="../imgs/css/11.jpg"/>
+<img height="300px" src="./imgs/11.jpg"/>
 
 ### [word-break](https://www.w3school.com.cn/cssref/pr_word-break.asp)
 
@@ -249,7 +249,7 @@ body {
 
 - 强制英文单词断行: `word-break: break-all;`(<font color="red">设置 white-space：nowrap 会失效</font>)
 
-<img src="../imgs/css/12.jpg"/>
+<img src="./imgs/12.jpg"/>
 
 ### [white-space](https://www.w3school.com.cn/cssref/pr_text_white-space.asp)
 
@@ -265,7 +265,7 @@ text-overflow 属性规定当文本溢出包含元素时发生的事情。一般
 - clip 修剪文本。 (默认)
 - ellipsis 显示省略符号来代表被修剪的文本。
 
-<img height="450px" src="../imgs/css/13.jpg"/>
+<img height="450px" src="./imgs/13.jpg"/>
 
 ### 文本溢出...
 

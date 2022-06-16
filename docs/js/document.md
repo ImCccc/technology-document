@@ -1,4 +1,4 @@
-# document
+# Document
 
 ## [NodeList](https://developer.mozilla.org/zh-CN/docs/Web/API/NodeList)
 
@@ -116,15 +116,15 @@ HTMLCollection 接口表示一个包含了元素（元素顺序为文档流中�
 
 Element 也有该方法，[参考](/js/element.html#getelementsbyclassname)
 
-### `Element.getElementsByTagName()`
+### `getElementsByTagName()`
 
 Element 也有该方法，[参考](/js/element.html#element-getelementsbytagname)
 
-### `Element.querySelector()`
+### `querySelector()`
 
 Element 也有该方法，[参考](/js/element.html#element-queryselector)
 
-### `Element.querySelectorAll()`
+### `querySelectorAll()`
 
 Element 也有该方法，[参考](/js/element.html#element-queryselectorall)
 

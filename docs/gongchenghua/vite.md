@@ -44,17 +44,17 @@ export default defineConfig({
 
 项目中，import 引入文件，会有路径提示，不过除了 ts 文件，其他文件都没有文件名的提示，导致手敲，很麻烦：
 
-<img src="../imgs/gongchenghua/1.png">
+<img src="./imgs/1.png">
 
 解决方案：
 
 1. 安装插件 Path Autocomplete
 
-<img src="../imgs/gongchenghua/4.png">
+<img src="./imgs/4.png">
 
 2. 按下 ctrl + shift + p, 输入 setting, 打开配置文件
 
-<img src="../imgs/gongchenghua/5.jpg">
+<img src="./imgs/5.jpg">
 
 setting.json:
 
@@ -71,18 +71,18 @@ setting.json:
 
 3. 完成：
 
-<img src="../imgs/gongchenghua/6.jpg">
+<img src="./imgs/6.jpg">
 
 ### 引入文件名错误不报错
 
 当 import 引入文件时，例如<code>import HelloWorld from "@/components/HelloWorld1.vue"</code>, 其实时没有 HelloWorld1.vue 这个文件，但不会有报错提示
 
-<img src="../imgs/gongchenghua/2.png">
+<img src="./imgs/2.png">
 
 <font color="red">todo. . . 该问题暂未解决；</font>
 非友好解决： 修改 env.d.ts ，不过这显然不是最终的解决方案， 这个文件是 IDE 的类型支持，不能随便修改
 
-<img src="../imgs/gongchenghua/3.png">
+<img src="./imgs/3.png">
 
 ## 环境变量
 
@@ -159,4 +159,4 @@ interface ImportMeta {
 }
 ```
 
-<img height="120" src="../imgs/gongchenghua/7.jpg">
+<img height="120" src="./imgs/7.jpg">

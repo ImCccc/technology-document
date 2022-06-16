@@ -44,7 +44,7 @@ npm run rm
 
 _同时按下 Fn + Esc_
 
-<img src="../imgs/other/3.png" width="300px">
+<img src="./imgs/3.png" width="300px">
 
 ## window 删除文件
 
@@ -56,7 +56,7 @@ rd /s/q node_modules
 
 在某个文件夹，快速打开终端：
 
-<img src="../imgs/other/4.png" width="300px">
+<img src="./imgs/4.png" width="300px">
 
 ## vscode 看不到远程分支
 
@@ -78,7 +78,7 @@ git remote update origin --prune
 
 ## vscode 设置代码片段
 
-<img src="../imgs/other/5.png" width="100%">
+<img src="./imgs/5.png" width="100%">
 
 ## json 转 ts
 
@@ -123,7 +123,7 @@ mockToTs();
 
 5. 运行 `node index.js`
 
-<img src="../imgs/other/2.png" width="300px">
+<img src="./imgs/2.png" width="300px">
 
 ## 图片转为 base64
 

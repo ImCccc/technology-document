@@ -89,7 +89,7 @@ align-content 属性定义了多根轴线的对齐方式。如果项目只有一
 - space-between：与交叉轴两端对齐，轴线之间的间隔平均分布。
 - space-around：每根轴线两侧的间隔都相等。所以，轴线之间的间隔比轴线与边框的间隔大一倍。
 
-<img height="150px" src="../imgs/other/1.jpg" />
+<img height="150px" src="./imgs//18.jpg" />
 
 ```css
 .box {

@@ -32,11 +32,11 @@ ssh-keygen -t rsa -C "1234567@qq.com"
 
 成功截图（C:\Users\登录用户名\.ssh 目录，里面有两个文件：id_rsa 和 id_rsa.pub）：
 
-<img height="200px" src="../imgs/tool/1.jpg">
+<img height="200px" src="./imgs/1.jpg">
 
 ### 配置 github
 
-<img  src="../imgs/tool/2.png">
+<img  src="./imgs/2.png">
 
 设置完成后，直接可以在 vscode 上提交代码了
 
@@ -62,7 +62,7 @@ git push -u origin master
 
 以上指令正常执行后， 本地仓库的代码就提交到远程仓库了：
 
-<img  src="../imgs/tool/3.jpg">
+<img  src="./imgs/3.jpg">
 
 ## git 分支命令
 
@@ -134,7 +134,7 @@ git push origin -u dev
 
 合并分支 merge，或者拉取代码 push, 出现冲突解：
 
-<img  src="../imgs/tool/3.png">
+<img  src="./imgs/3.png">
 
 出现以上提示， 说明本次更新代码失败；主要在于本地工作区间跟远程仓库的新代码冲突了
 
@@ -167,7 +167,7 @@ git pull 或者 git merge dev
 git stash pop
 ```
 
-<img  src="../imgs/tool/4.png">
+<img  src="./imgs/4.png">
 
 4. 手工解决冲突，提交代码：
 
@@ -189,7 +189,7 @@ git reset --hard HEAD^
 
 Git 提供了一个命令 git reflog 用来记录你的每一次命令：
 
-<img  src="../imgs/tool/5.png">
+<img  src="./imgs/5.png">
 
 回到未来：
 

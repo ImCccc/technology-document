@@ -42,7 +42,7 @@ background-position: 20%; /* background-position: 20% 50%;*/
 background-position: 2rem; /* background-position: 2rem 50%;*/
 ```
 
-<img src="../imgs/css/15.jpg"/>
+<img src="./imgs/15.jpg"/>
 
 提示：您需要把 background-attachment 属性设置为 "fixed"，才能保证该属性在 Firefox 和 Opera 中正常工作)
 
@@ -82,7 +82,7 @@ background-repeat: repeat-y;
 background-repeat: no-repeat;
 ```
 
-<img src="../imgs/css/16.jpg"/>
+<img src="./imgs/16.jpg"/>
 
 ## background-origin
 
@@ -90,7 +90,7 @@ background-repeat: no-repeat;
 - border-box 背景图像相对于边框盒来定位。
 - content-box 背景图像相对于内容框来定位。
 
-<img  height="400px" src="../imgs/css/17.jpg"/>
+<img  height="400px" src="./imgs/17.jpg"/>
 
 ## background-attachment
 
@@ -190,4 +190,4 @@ background-attachment 属性设置背景图像是否固定或者随着页面的�
 </body>
 ```
 
-<img src="../imgs/css/14.jpg"/>
+<img src="./imgs/14.jpg"/>

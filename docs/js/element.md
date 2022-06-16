@@ -2,13 +2,13 @@
 
 Element 是一个通用性非常强的基类，所有 Document 对象下的对象都继承自它。这个接口描述了所有相同种类的元素所普遍具有的方法和属性。一些接口继承自 Element 并且增加了一些额外功能的接口描述了具体的行为。例如， HTMLElement 接口是所有 HTML 元素的基本接口，而 SVGElement 接口是所有 SVG 元素的基础。
 
-<img src="./3.jpg"/>
+<img src="./imgs/3.jpg"/>
 
 **属性：** 所有属性继承自它的祖先接口 [Node](/js/document.html#node)
 
 ## attributes 属性相关
 
-### `Element.attributes`
+### `attributes`
 
 返回一个与该元素相关的所有属性集合:
 
@@ -26,7 +26,7 @@ attributes.name; // name="lcr"
 attributes[1]; // name="lcr"
 ```
 
-### `Element.className`
+### `className`
 
 ```html
 <div data-age="18" name="lcr" class="flex box"></div>
@@ -37,7 +37,7 @@ var className = document.querySelector(".flex").className;
 console.log(className); // 'flex box'
 ```
 
-### `Element.classList`
+### `classList`
 
 只读，返回该元素包含的 class 属性
 
@@ -51,56 +51,56 @@ console.log(classList); // ['flex', 'box']
 console.log(classList.value); // 'flex box'
 ```
 
-### `Element.tagName`
+### `tagName`
 
 返回一个字符串，其中包含给定元素的标记名称`(例子：DIV, SPAN)`
 
-### `Element.getAttribute()`
+### `getAttribute()`
 
 getAttribute() 返回元素上一个指定的属性值，不存在返回 null
 
 - 语法： `let attribute = element.getAttribute('id')`
 
-### `Element.getAttributeNames()`
+### `getAttributeNames()`
 
 - 语法: `let attributeNames = element.getAttributeNames()`
 - 返回: 返回一个 Array, Element 的所有 **属性名称**(例子：`['id', 'class']`)
 
-### `Element.hasAttribute()`
+### `hasAttribute()`
 
 判断元素有没有某个属性 `var hasAttr = Element.hasAttribute('id')`
 
-### `Element.removeAttribute()`
+### `removeAttribute()`
 
 删除元素某个属性 `Element.removeAttribute('id')`
 
-### `Element.setAttribute()`
+### `setAttribute()`
 
 设置元素某个属性 `Element.setAttribute('id', 'xxx')`
 
 ## 元素距离宽高相关
 
-### `Element.clientHeight`
+### `clientHeight`
 
 只读，返回 Number 表示内部相对于外层元素的高度。<font color="red">(不包含 border)</font>
 
-### `Element.clientWidth`
+### `clientWidth`
 
 只读，返回 Number 表示该元素内部的宽度。<font color="red">(不包含 border)</font>
 
-### `Element.clientLeft`
+### `clientLeft`
 
 只读，返回 Number 表示该元素距离它左边界的宽度。<font color="red">(感觉就是 border-left 的宽度)</font>
 
-### `Element.clientTop`
+### `clientTop`
 
 只读，返回 Number 表示该元素距离它上边界的高度。<font color="red">(感觉就是 border-top 的宽度)</font>
 
-### `Element.getBoundingClientRect()`
+### `getBoundingClientRect()`
 
 Element.getBoundingClientRect() 方法返回一个 DOMRect 对象，该对象使用 ` left` ` top` `right` `bottom` `x` `y` `width` 和 `height` 这几个以像素为单位的只读属性描述整个矩形的位置和大小。除了 width 和 height 以外的属性是相对于视图窗口的左上角来计算的。
 
-<img height="400px" src="./4.jpg"/>
+<img height="400px" src="./imgs/4.jpg"/>
 
 例子：
 
@@ -132,7 +132,7 @@ Element.getBoundingClientRect() 方法返回一个 DOMRect 对象，该对象使
 </script>
 ```
 
-<img src="./5.jpg"/>
+<img src="./imgs/5.jpg"/>
 
 :::tip
 
@@ -142,7 +142,7 @@ Element.getBoundingClientRect() 方法返回一个 DOMRect 对象，该对象使
 
 ## 更新 dom 元素相关
 
-### `Element.innerHTML`
+### `innerHTML`
 
 获取 `HTML String` 或者设置元素的后代的 `HTML`
 
@@ -151,15 +151,15 @@ const content = element.innerHTML; // 获取
 element.innerHTML = htmlString; // 设置
 ```
 
-### `Element.outerHTML`
+### `outerHTML`
 
 和`innerHTML`的区别，就是包含自身。获取值，包含自身的 `HTML` 文本; 设置时替换自身
 
-### `Element.remove()`
+### `remove()`
 
 元素在 dom 文档树上删除
 
-### `Element.insertAdjacentElement()`
+### `insertAdjacentElement()`
 
 - 语法: `element.insertAdjacentElement(position, element)`
 
@@ -171,7 +171,16 @@ element.innerHTML = htmlString; // 设置
   > - `afterbegin`:只在该元素当中，在该元素第一个子孩子前面。
   > - `beforeend`:只在该元素当中，在该元素最后一个子孩子后面。
 
-<img src="./6.jpg"/>
+<img src="./imgs/6.jpg"/>
+
+### `insertAdjacentHTML()`
+
+和 `insertAdjacentElement` 方法的唯一区别就是第二个参数， `insertAdjacentHTML`方法第二个参数是 `innerHTML` 字符串
+，该方法会将文本解析为 `Element` 元素
+
+### `insertAdjacentText()`
+
+和 `insertAdjacentElement` 方法的唯一区别就是第二个参数， `insertAdjacentText`方法第二个参数是 `文本节点`
 
 ## 事件相关
 
@@ -259,7 +268,7 @@ yeye.removeEventListener(listener);
 
 ## 查询 dom 元素相关
 
-### `Element.closest()`
+### `closest()`
 
 匹配特定选择器且离当前元素最近的祖先元素（也可以是当前元素本身）。如果匹配不到，则返回 null。
 
@@ -279,7 +288,7 @@ var rootElement = document.getElementById("#id");
 var elements = rootElement.getElementsByClassName("className");
 ```
 
-### `Element.getElementsByTagName()`
+### `getElementsByTagName()`
 
 - 语法: `document.getElementsByTagName(name)` 或者 `element.getElementsByTagName(name)`
 - 返回: 实时集合 HTMLCollection <font color="red">（可以自动更新自己来保持和 DOM 树的同步）</font>
@@ -296,7 +305,7 @@ var div1Paras = div1.getElementsByTagName("p");
 最新的 W3C 规范 说明这些元素是 HTMLCollection（HTML 集合）； 然而这个方法在 WebKit 内核的浏览器中返回一个 NodeList
 :::
 
-### `Element.querySelector()`
+### `querySelector()`
 
 - 语法: `document.querySelector(selectors)` 或者 `element.querySelector(selectors)`
 - 返回: 方法返回匹配的第一个 Element 对象，找不到返回 null。
@@ -311,7 +320,7 @@ var elements = document.getElementsByTagName("div");
 elements.querySelector('[name="down"]');
 ```
 
-### `Element.querySelectorAll()`
+### `querySelectorAll()`
 
 - 语法: `document.querySelectorAll(selectors)` 或者 `element.querySelectorAll(selectors)`
 - 返回: 静态 NodeList 集合<font color="red">（不能保持 DOM 树的同步）</font>
@@ -331,33 +340,91 @@ var matches = container.querySelectorAll("li[data-active='1']");
 
 ## 滚动相关
 
-### `Element.scrollHeight`
+### `scrollHeight`
 
 只读，返回类型为： Number，表示元素的滚动视图高度。
 
-### `Element.scrollWidth`
+### `scrollWidth`
 
 只读，返回类型为： Number，表示元素的滚动视图宽度。
 
-### `Element.scrollTop`
+### `scrollTop`
 
 读取或设置元素滚动条到元素上边的距离
 
-### `Element.scrollLeft`
+### `scrollLeft`
 
 读取或设置元素滚动条到元素左边的距离
 
-### `Element.scroll()`
+### `scrollIntoView()`
 
-### `Element.scrollBy()`
+`childrenElement` 元素调用 `scrollIntoView()` 滚动条就会滚动到`childrenElement`那
 
-### `Element.scrollIntoView()`
+```js
+element.scrollIntoView(); // 等价于：element.scrollIntoView(true)
+element.scrollIntoView(false);
+element.scrollIntoView({ block: "end" });
+element.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+```
 
-- 语法： `childrenElement.scrollIntoView()`
-- 作用： `childElement` 元素调用 `scrollIntoView()` 滚动条就会滚动到`childElement`那
+- 语法 1：`childrenElement.scrollIntoView(alignToTop)`
+
+  - `alignToTop: true` 默认值，元素的顶端将和其所在滚动区的顶端对齐
+
+  - `alignToTop: false` 元素的底端将和其所在滚动区的可视区域的底端对齐
+
+- 语法 2：`childrenElement.scrollIntoView(options)`
+
+  - `options`: 一个包含 `behavior` `block` `inline` 属性的对象
+
+  - `options.behavior`: 是否平滑过渡，`auto`或`smooth`之一。默认为`auto`不平滑
+
+  - `options.block`: 垂直方向的对齐,`start`,`center`,`end`,`nearest`之一。默认为`start`
+
+    1. `start`: 顶部对齐
+    2. `center`: 中间对齐
+    3. `end`: 底部对齐
+    4. `nearest`: 底部对齐
+
+  - `options.inline`: 水平方向的对齐,`start`,`center`,`end`,`nearest`之一。默认为`nearest`
+
+    1. `start`: 左侧对齐
+    2. `center`: 中间对齐
+    3. `end`: 右侧对齐
+    4. `nearest`: 右侧对齐
 
 :::tip
 如果有 2 条滚动条，例如： childElement 爸爸是 `overflow: auto`, body 也是 `overflow: auto`，并且他们同时产生滚动条，那么 `scrollIntoView` 也能定位到
 :::
 
-### `Element.scrollTo()`
+### [`Element.scroll()`](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/scroll)
+
+- 语法 1: `element.scroll(x-coord, y-coord)`
+
+  > `element`: 有滚动条的元素
+  >
+  > `x-coord`: 横向滚动条，例子 100
+  >
+  > `y-coord`: 纵向滚动条，例子 200
+
+- 语法 2: `element.scroll(options)`
+
+  > `options`: 一个 [ScrollToOptions](https://developer.mozilla.org/zh-CN/docs/conflicting/Web/API/Window/scroll) 对象
+  >
+  > `options.left`: 横向滚动条，例子 100
+  >
+  > `options.top`: 纵向滚动条，例子 100
+  >
+  > `options.behavior`: 滚动是否平滑进行， 默认 `auto` 不平滑； 设置 `smooth` 平滑滚动
+
+```js
+body.scroll(700, 900);
+// or
+body.scroll({ top: 500, left: 700, behavior: "smooth" });
+```
+
+### `scrollBy()`
+
+和 `Element.scroll()` 方法一模一样
+
+### `scrollTo()`

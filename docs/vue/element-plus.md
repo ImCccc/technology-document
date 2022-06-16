@@ -45,7 +45,7 @@ tsconfig.json 中通过 compilerOptions.type 指定全局组件类型。
 }
 ```
 
-<img  src="../imgs/gongchenghua/8.jpg">
+<img  src="./imgs/8.jpg">
 
 ## 国际化
 

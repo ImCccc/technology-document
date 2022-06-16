@@ -17,7 +17,7 @@ Ajax 的核心是 XMLHttpRequest 对象
 - `send(string)` 将请求发送到服务器，用于 POST 请求
 - `setRequestHeader()` 向要发送的报头添加标签/值对
 
-<img src="./1.jpg"/>
+<img src="./imgs/1.jpg"/>
 
 ### 对象属性
 
@@ -28,7 +28,7 @@ Ajax 的核心是 XMLHttpRequest 对象
 - `status` 返回请求的状态号
 - `statusText` 返回状态文本（比如 "OK" 或 "Not Found"）
 
-<img src="./2.jpg"/>
+<img src="./imgs/2.jpg"/>
 
 ### get 请求
 

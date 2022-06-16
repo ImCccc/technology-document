@@ -30,7 +30,7 @@
 
 ## 重排 reflow 重绘 repaint
 
-<img src="../imgs/6.png"/>
+<img src="./imgs/6.png"/>
 
 ### 浏览器渲染过程
 
