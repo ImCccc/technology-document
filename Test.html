@@ -26,7 +26,7 @@
       border: 3px solid;
     }
   </style>
-  <!-- <div class="dropzone">
+  <div class="dropzone">
     <div
       id="draggable"
       draggable="true"
@@ -38,13 +38,12 @@
   <div class="dropzone"></div>
   <div class="dropzone"></div>
   <div class="dropzone"></div>
-  <div id="xxx" class="xxx"></div> -->
+  <div id="xxx" class="xxx"></div>
   <input id="input" type="text" />
   <script>
     var dragged;
 
     var draggabledom = document.getElementById("draggable");
-    var xxx = document.getElementById("xxx");
 
     /* 拖动目标元素时触发 drag 事件 */
     // document.addEventListener(
@@ -104,8 +103,7 @@
       false
     );
 
-    // document.addEventListener(
-    xxx.addEventListener(
+    document.addEventListener(
       "drop",
       function (event) {
         console.log("drop");
@@ -123,13 +121,20 @@
   </script>
 
   <script>
-    var inputDom = document.getElementById("input");
+    var dom = document.getElementById("input");
 
-    inputDom.onselect = (e) => {
-      console.log(e);
-    };
-    // inputDom.addEventListener("select", (e) => {
-    //   console.log(e);
-    // });
+    // 系统 click 事件
+    dom.addEventListener("click", (e) => {
+      console.log("isTrusted: ", e.isTrusted); // { data: 'params' }
+    });
+    dom.dispatchEvent(new Event("click"));
+
+    // 自定义事件，传递数据
+    dom.addEventListener("build2", (e) => {
+      console.log("isTrusted: ", e.isTrusted);
+    });
+    dom.dispatchEvent(
+      new CustomEvent("build2", { detail: { data: "params" } })
+    );
   </script>
 </html>

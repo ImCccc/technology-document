@@ -182,13 +182,50 @@ element.innerHTML = htmlString; // 设置
 
 和 `insertAdjacentElement` 方法的唯一区别就是第二个参数， `insertAdjacentText`方法第二个参数是 `文本节点`
 
-## 事件相关
+## EventTarget 事件相关
+
+[事件接口 EventTarget 文档](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget)
+`EventTarget` 是一个 `DOM` 接口，由可以接收事件、并且可以创建侦听器的对象实现。`Element` `document` 和 `window` 都实现 `EventTarget`，其他对象也可以实现，比如 `XMLHttpRequest` `AudioNode` `AudioContext` 等等。
+
+EventTarget 的简单实现:
+
+```js
+var EventTarget = function () {
+  this.listeners = {};
+};
+
+EventTarget.prototype.listeners = null;
+EventTarget.prototype.addEventListener = function (type, callback) {
+  if (!(type in this.listeners)) this.listeners[type] = [];
+  this.listeners[type].push(callback);
+};
+
+EventTarget.prototype.removeEventListener = function (type, callback) {
+  if (!(type in this.listeners)) return;
+  var stack = this.listeners[type];
+  for (var i = 0, l = stack.length; i < l; i++) {
+    if (stack[i] === callback) {
+      stack.splice(i, 1);
+      return this.removeEventListener(type, callback);
+    }
+  }
+};
+
+EventTarget.prototype.dispatchEvent = function (event) {
+  if (!(event.type in this.listeners)) return;
+  var stack = this.listeners[event.type];
+  event.target = this;
+  for (var i = 0, l = stack.length; i < l; i++) {
+    stack[i].call(this, event);
+  }
+};
+```
 
 ### `EventTarget.addEventListener()`
 
-[EventTarget.addEventListener](https://developer.mozilla.org/zh-CN/docs/Web/API/EventTarget/addEventListener) 方法将指定的监听器注册到 EventTarget 上，当该对象触发指定的事件时，指定的回调函数就会被执行。
+`addEventListener`方法将指定的监听器注册到 `EventTarget` 上，当该对象触发指定的事件时，指定的回调函数就会被执行。
 
-事件目标可以是一个文档上的元素 Element,Document 和 Window 或者任何其他支持事件的对象 (比如 XMLHttpRequest)。
+事件目标可以是一个文档上的元素 `Element`, `Document` 和 `Window` 或者任何其他支持事件的对象 (比如 `XMLHttpRequest`)。
 
 语法：
 
@@ -264,6 +301,26 @@ let yeye = document.getElementById("yeye");
 let listener = (e) => console.log("爷爷");
 yeye.addEventListener("click", listener, false);
 yeye.removeEventListener(listener);
+```
+
+### `EventTarget.dispatchEvent()`
+
+向一个指定的事件目标派发一个事件。标准事件处理规则 (包括事件捕获和可选的冒泡过程) 同样适用于通过手动的使用 dispatchEvent()方法派发的事件。
+
+```js
+var dom = document.getElementById("input");
+
+// 系统 click 事件
+dom.addEventListener("click", (e) => {
+  console.log(e);
+});
+dom.dispatchEvent(new Event("click"));
+
+// 自定义事件，传递数据
+dom.addEventListener("build2", (e) => {
+  console.log("data: ", e.detail); // { data: 'params' }
+});
+dom.dispatchEvent(new CustomEvent("build2", { detail: { data: "params" } }));
 ```
 
 ## 查询 dom 元素相关
