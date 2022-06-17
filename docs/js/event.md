@@ -9,47 +9,38 @@
 3. 脚本代码触发，例如对元素调用 `HTMLElement.click()` 方法
 4. 自定义事件，使用 `EventTarget.dispatchEvent()` 方法将自定义事件派发往指定的目标（target）
 
-**下面列出常见的基于 Event 的接口， 需要注意的是，所有的事件接口名称都是以 “ Event ” 结尾的**
-`AnimationEvent`
-`BeforeInputEvent`
-`BeforeUnloadEvent`
-`ClipboardEvent`
-`CloseEvent`
-`CompositionEvent`
-`CSSFontFaceLoadEvent`
-`CustomEvent`
-`DeviceLightEvent`
-`DeviceMotionEvent`
-`DeviceOrientationEvent`
-`DeviceProximityEvent`
-`DOMTransactionEvent`
-`DragEvent`
-`EditingBeforeInputEvent`
-`ErrorEvent`
-`FetchEvent`
-`FocusEvent`
-`GamepadEvent`
-`HashChangeEvent`
-`InputEvent`
-`KeyboardEvent`
-`MediaStreamEvent`
-`MessageEvent`
-`MouseEvent`
-`PageTransitionEvent`
-`PointerEvent`
-`ProgressEvent`
-`RelatedEvent`
-`RTCIdentityErrorEvent`
-`RTCIdentityEvent`
-`SensorEvent`
-`StorageEvent`
-`SVGEvent`
-`SVGZoomEvent`
-`TouchEvent`
-`TransitionEvent`
-`UIEvent`
-`WebGLContextEvent`
-`WheelEvent`
+**下面列出常见的基于 Event 的接口， 需要注意的是，所有的事件接口名称都是以 “Event” 结尾的**
+
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/AnimationEvent">AnimationEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/BeforeUnloadEvent">BeforeUnloadEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/ClipboardEvent">ClipboardEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/CloseEvent">CloseEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/CompositionEvent">CompositionEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/CustomEvent">CustomEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/DeviceMotionEvent">DeviceMotionEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/DeviceOrientationEvent">DeviceOrientationEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/DeviceProximityEvent">DeviceProximityEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/DragEvent">DragEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/ErrorEvent">ErrorEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/FetchEvent">FetchEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/FocusEvent">FocusEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/GamepadEvent">GamepadEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/HashChangeEvent">HashChangeEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/InputEvent">InputEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/KeyboardEvent">KeyboardEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/MediaStreamEvent">MediaStreamEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/MessageEvent">MessageEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/MouseEvent">MouseEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/PageTransitionEvent">PageTransitionEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/PointerEvent">PointerEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/ProgressEvent">ProgressEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/StorageEvent">StorageEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/SVGEvent">SVGEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/TouchEvent">TouchEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/TransitionEvent">TransitionEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/UIEvent">UIEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/WebGLContextEvent">WebGLContextEvent</a>
+<a style="width: 230px; display: inline-block;" href="https://developer.mozilla.org/zh-CN/docs/Web/API/WheelEvent">WheelEvent</a>
 
 ## 常见属性
 

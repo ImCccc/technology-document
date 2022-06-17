@@ -123,18 +123,31 @@
   <script>
     var dom = document.getElementById("input");
 
-    // 系统 click 事件
-    dom.addEventListener("click", (e) => {
-      console.log("isTrusted: ", e.isTrusted); // { data: 'params' }
-    });
-    dom.dispatchEvent(new Event("click"));
+    let str1 = "123football";
+    let regex1 = /foo/g;
+    console.log(regex1.sticky); // true
 
-    // 自定义事件，传递数据
-    dom.addEventListener("build2", (e) => {
-      console.log("isTrusted: ", e.isTrusted);
-    });
-    dom.dispatchEvent(
-      new CustomEvent("build2", { detail: { data: "params" } })
-    );
+    console.log(regex1.test(str1)); // true
+    console.log(regex1.lastIndex); // 3
+
+    console.log(regex1.test(str1)); // false
+    console.log(regex1.lastIndex); // 0
+
+    console.log(regex1.test(str1)); // true
+    console.log(regex1.lastIndex); // 3
+
+    console.log("-------------------------------------------------"); // true
+
+    regex1 = /foo/;
+    console.log(regex1.sticky); // true
+
+    console.log(regex1.test(str1)); // true
+    console.log(regex1.lastIndex); // 3
+
+    console.log(regex1.test(str1)); // false
+    console.log(regex1.lastIndex); // 0
+
+    console.log(regex1.test(str1)); // true
+    console.log(regex1.lastIndex); // 3
   </script>
 </html>

@@ -161,3 +161,105 @@ var n2 = str.match(/runoob./s); // 匹配\n: n2 = ['runoob\n']
    > 字符具有高于替换运算符的优先级，使得"m|food"匹配"m"或"food"
    >
    > 若要匹配"mood"或"food"，请使用括号创建子表达式，从而产生"(m|f)ood"
+
+## 前端的正则 RegExp
+
+有两种方法可以创建一个 RegExp 对象：一种是字面量，另一种是构造函数。
+
+```js
+/abc/i; //字面量形式
+
+new RegExp("abc", "i"); // 首个参数为字符串模式的构造函数
+
+new RegExp(/abc/, "i"); // 首个参数为常规字面量的构造函数
+```
+
+例子：
+
+```js
+// 以下是等价的
+var re = new RegExp("\\w+");
+var re = /\w+/;
+```
+
+### RegExp.prototype.sticky
+
+只读，反映了搜索是否具有粘性（ 仅从正则表达式的 lastIndex 属性表示的索引处搜索 ）
+
+例子 1：
+
+```js
+let str1 = "football";
+let regex1 = new RegExp("foo", "y");
+console.log(regex1.sticky); // true
+
+console.log(regex1.test(str1)); // true
+console.log(regex1.lastIndex); // 3
+
+console.log(regex1.test(str1)); // false
+console.log(regex1.lastIndex); // 0
+
+console.log(regex1.test(str1)); // true
+console.log(regex1.lastIndex); // 3
+```
+
+例子 2：
+
+```js
+let str1 = "123football";
+
+/*-----------------------使用全局匹配g-------------------------*/
+let regex1 = /foo/g;
+console.log(regex1.sticky); // false
+
+console.log(regex1.test(str1)); // true
+console.log(regex1.lastIndex); // 6
+
+console.log(regex1.test(str1)); // false
+console.log(regex1.lastIndex); // 0
+
+console.log(regex1.test(str1)); // true
+console.log(regex1.lastIndex); // 6
+
+/*------------------------------------------------------------*/
+regex1 = /foo/;
+console.log(regex1.sticky); // false
+
+console.log(regex1.test(str1)); // true
+console.log(regex1.lastIndex); // 0
+
+console.log(regex1.test(str1)); // true
+console.log(regex1.lastIndex); // 0
+
+console.log(regex1.test(str1)); // true
+console.log(regex1.lastIndex); // 0
+```
+
+### RegExp.prototype.ignoreCase
+
+匹配文本的时候是否忽略大小写。
+
+### RegExp.prototype.multiline
+
+只读，是否进行多行搜索。 `multiline` 是一个布尔对象，如果使用了 "m" 标志，则返回 true；否则，返回 false。"m" 标志意味着一个多行输入字符串被看作多行。例如，使用 `"m"，"^" 和 "$"` 将会从只匹配正则字符串的开头或结尾，变为匹配字符串中任一行的开头或结尾。
+
+### RegExp.prototype.exec()
+
+- 在一个指定字符串中执行一个搜索匹配。返回一个结果数组或 null。
+
+- 在设置了 `global` 或 `sticky` 标志位的情况下（如 `/foo/g` or `/foo/y`）， RegExp 对象是有状态的，他们会将上次成功匹配后的位置记录在 `lastIndex` 属性中，使用此特性，`exec()` 可用来对单个字符串中的多次匹配结果进行逐条的遍历，String.prototype.match() 只会返回匹配到的结果。
+
+```js
+const regex1 = RegExp("foo*", "g");
+const str1 = "table football, foosball";
+let arr;
+while ((arr = regex1.exec(str1)) !== null) {
+  // 打印：arr[0] = foo lastIndex = 9
+  // 打印：arr[0] = foo lastIndex = 19
+  console.log(`arr[0] = ${arr[0]}`, `lastIndex = ${regex1.lastIndex}`);
+}
+```
+
+### RegExp.prototype.test()
+
+用来查看正则表达式与指定的字符串是否匹配。返回 true 或 false。
