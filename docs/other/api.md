@@ -97,13 +97,10 @@ offsetTop: 当前元素距离上一级定位元素的上边的偏移量
 
 offsetLeft: 当前元素距离上一级定位元素的左边的偏移量
 
-> 注意：
->
-> 没有 offsetBottom 和 offsetRight;
->
-> offsetTop 和 offsetLeft 的值的获取跟父级元素没关系
->
-> 跟其上一级的定位元素(<font color="red">除 position:static;外的所有定位如 fixed,relative,absolute</font>)有关系
+:::tip
+offsetTop 和 offsetLeft 的值跟父级元素没关系；
+跟其上一级的定位元素 （除 `position:static` 外的所有定位如 `fixed`,`relative`,`absolute`）有关系
+:::
 
 ### clientTop 和 clientLeft
 
@@ -112,27 +109,24 @@ offsetLeft: 当前元素距离上一级定位元素的左边的偏移量
 document.getElementById("id").clientLeft;
 ```
 
-clientLeft,clientTop: 这两个返回的是元素周围边框的厚度（border）,没有边框就是 0
+`clientLeft` `clientTop` 返回的是元素周围边框的厚度, 也就是`border`, 没有边框就是 0
 
 ### innerWidth 和 innerHeight
 
-是全局变量 window.innerWidth 和 window.innerHeight 理解为浏览器内容区域的宽高，不包括菜单栏的
+- `window.innerWidth` 和 `window.innerHeight` 理解为浏览器内容区域的宽高，不包括菜单栏
 
 ```css
-/* 
-  如果设置下面的样式那么:
-  window.innerHeight = document.body.offsetHeight
-*/
+/* 如果设置下面的样式, 那么 window.innerHeight === document.body.offsetHeight */
 body,
 html {
   height: 100%;
 }
 ```
 
-> 备注:
+> 备注：
 >
-> 1. 浏览器缩放,这 2 个值也会随着变化
-> 2. 浏览器窗口变化,这 2 个值也会随着变化
+> - 浏览器缩放,这 2 个值也会随着变化
+> - 浏览器窗口变化,这 2 个值也会随着变化
 
 ### outerHeight 和 outerWidth
 
@@ -140,19 +134,22 @@ window.outerHeight 和 window.outerWidth 理解为浏览器窗口的宽高，包
 
 > 备注:
 >
-> 1. 浏览器缩放,这 2 个值 <font color="red">不会</font> 随着变化
-> 2. 浏览器窗口变化,这 2 个值也会随着变化
+> - 浏览器缩放,这 2 个值 <font color="red">不会</font> 随着变化
+> - 浏览器窗口变化,这 2 个值也会随着变化
 
 ### screen.height 和 screen.width
 
 是指的屏幕，表示当前整个显示器显示的屏幕部分，不限于当前的窗口。height 是屏幕的宽度，例如屏幕分辨率 1920\*1080 的话，一般情况下 screen.heigth 即为 1080。
 
-> 备注: 只和电脑分辨率有关，和浏览器无关
+> 备注:
+>
+> - 只和电脑分辨率有关，和浏览器无关
 
 ### screen.availHeight 和 screen.availWidth
 
-availHeight 只读属性，返回屏幕上可用于浏览器的区域的高度。
-浏览器的区域是除任务栏以外的整个屏幕。
+- `availHeight` 只读属性，返回屏幕上可用于浏览器的区域的高度
+
+- 浏览器的区域是除任务栏以外的整个屏幕
 
 ## 浏览器常用的 api
 

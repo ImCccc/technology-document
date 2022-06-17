@@ -5,80 +5,131 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
   </head>
   <style>
-    * {
-      padding: 0;
-      margin: 0;
+    #draggable {
+      width: 200px;
+      height: 20px;
+      text-align: center;
+      background: white;
     }
 
-    html,
-    body {
-      height: 100%;
-      overflow: hidden;
-    }
-    body {
-      overflow: auto;
-      width: 800px;
+    .dropzone {
+      width: 200px;
+      height: 20px;
+      background: blueviolet;
+      margin-bottom: 10px;
+      padding: 10px;
     }
 
-    #yeye > div {
-      padding: 10px 40px;
-      border: 5px solid #607d8b;
-      margin: 10px;
-    }
-
-    #yeye > div > div {
-      margin-top: 10px;
-    }
-
-    #yeye {
-      margin-top: 20px;
-      margin-left: 500px;
-      overflow: auto;
-    }
-
-    .bold {
-      color: red;
-      font-size: 20px;
-    }
-    .border {
-      width: 1500px;
-      border: 5px solid #607d8b;
+    .xxx {
+      width: 600px;
       height: 200px;
+      border: 3px solid;
     }
   </style>
-
-  <body id="body">
-    <div class="border"></div>
-    <div class="border"></div>
-    <div class="border"></div>
-    <div class="border"></div>
-    <div class="border"></div>
-    <div class="border"></div>
-    <div class="border"></div>
-    <div class="border"></div>
-    <div id="yeye">
-      <div id="bb">
-        <div style="border: 1px solid">我是bb元素的第1个小孩</div>
-        <div style="border: 1px solid">我是bb元素的最后小孩</div>
-      </div>
+  <!-- <div class="dropzone">
+    <div
+      id="draggable"
+      draggable="true"
+      ondragstart="event.dataTransfer.setData('text/plain',null)"
+    >
+      This div is draggable
     </div>
-    <div class="border"></div>
-    <div class="border"></div>
-    <div class="border"></div>
-    <div class="border"></div>
-  </body>
+  </div>
+  <div class="dropzone"></div>
+  <div class="dropzone"></div>
+  <div class="dropzone"></div>
+  <div id="xxx" class="xxx"></div> -->
+  <input id="input" type="text" />
+  <script>
+    var dragged;
+
+    var draggabledom = document.getElementById("draggable");
+    var xxx = document.getElementById("xxx");
+
+    /* 拖动目标元素时触发 drag 事件 */
+    // document.addEventListener(
+    draggabledom.addEventListener("drag", (event) => 1, false);
+
+    draggabledom.addEventListener(
+      "dragstart",
+      function (event) {
+        dragged = event.target;
+        event.target.style.background = "red";
+        console.log("dragstart");
+      },
+      false
+    );
+
+    draggabledom.addEventListener(
+      "dragend",
+      function (event) {
+        event.target.style.background = "";
+        // console.log("dragend");
+      },
+      false
+    );
+
+    /* 放置目标元素时触发事件 */
+    document.addEventListener(
+      "dragover",
+      function (event) {
+        console.log("dragover");
+        // 阻止默认动作以启用 drop
+        event.preventDefault();
+      },
+      false
+    );
+
+    document.addEventListener(
+      "dragenter",
+      function (event) {
+        // 当可拖动的元素进入可放置的目标时高亮目标节点
+        if (event.target.className == "dropzone") {
+          event.target.style.background = "purple";
+          // console.log("dragenter");
+        }
+      },
+      false
+    );
+
+    document.addEventListener(
+      "dragleave",
+      function (event) {
+        // 当拖动元素离开可放置目标节点，重置其背景
+        if (event.target.className == "dropzone") {
+          // console.log("dropzone");
+          event.target.style.background = "";
+        }
+      },
+      false
+    );
+
+    // document.addEventListener(
+    xxx.addEventListener(
+      "drop",
+      function (event) {
+        console.log("drop");
+        // 阻止默认动作（如打开一些元素的链接）
+        event.preventDefault();
+        // 将拖动的元素到所选择的放置目标节点中
+        if (event.target.className == "dropzone") {
+          event.target.style.background = "";
+          dragged.parentNode.removeChild(dragged);
+          event.target.appendChild(dragged);
+        }
+      },
+      false
+    );
+  </script>
 
   <script>
-    var yeye = document.getElementById("yeye");
-    var body = document.getElementById("body");
-    setTimeout(() => {
-      // yeye.scrollIntoView(true); // scrollIntoViewOptions: {block: "start", inline: "nearest"}
-      // yeye.scrollIntoView(false); // scrollIntoViewOptions: {block: "end", inline: "nearest"}
-      yeye.scrollIntoView({
-        behavior: "smooth", // 动画过渡效果: "auto" 或 "smooth", 默认为 "auto"
-        block: "nearest", // 定义垂直方向的对齐， "start", "center", "end", "nearest" 。默认为 "start"。
-        inline: "nearest", // 定义水平方向的对齐， "start", "center", "end", "nearest" 。默认为 "nearest"
-      });
-    }, 1000);
+    var inputDom = document.getElementById("input");
+
+    inputDom.onselect = (e) => {
+      console.log(e);
+    };
+    // inputDom.addEventListener("select", (e) => {
+    //   console.log(e);
+    // });
   </script>
 </html>

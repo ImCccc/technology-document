@@ -428,3 +428,5 @@ body.scroll({ top: 500, left: 700, behavior: "smooth" });
 和 `Element.scroll()` 方法一模一样
 
 ### `scrollTo()`
+
+和 `Element.scroll()` 方法一模一样
