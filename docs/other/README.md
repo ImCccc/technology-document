@@ -158,3 +158,9 @@ const uploadChange = (uploadFile) => {
   fileReader.readAsArrayBuffer(uploadFile);
 };
 ```
+
+## Chorm 浏览器打开控制台很慢
+
+按照如下设置即可
+
+<img src="./imgs/1.png">
