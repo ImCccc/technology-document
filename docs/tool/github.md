@@ -215,3 +215,45 @@ git checkout -- readme.txt
 总之，就是让这个文件回到最近一次 git commit 或 git add 时的状态。
 
 **git checkout -- file 命令中的--很重要，没有--，就变成了“切换到另一个分支”的命令**
+
+## 同一台电脑同时使用 gitHub 和 gitLab
+
+gitLab 配置和之前一样, 下面重点说说 gitHub 配置
+
+1. 打开 git 客户端, 生成 gitHub 的秘钥 (和 gitLab 不一样就是指定名称)
+
+```
+ssh-keygen -t rsa -C "306022598@qq.com" -f ~/.ssh/id_rsa_github
+```
+
+有提问,按回车即可, 完成后会生成文件, 如下:
+
+<img  src="./imgs/7.jpg">
+
+2. gitHub 上添加 sshkey (可以添加多个的)
+
+<img  src="./imgs/8.jpg">
+
+3. `.ssh` 文件夹下面, 添加配置文件 `config` (不需要后缀名)
+
+```
+Host github.com
+  User git
+  HostName github.com
+  User github邮箱
+  IdentityFile ~/.ssh/id_rsa_github
+
+Host gitlab.com
+  User git
+  HostName 公司域名
+  User gitlab邮箱
+  IdentityFile ~/.ssh/id_rsa
+```
+
+4. 在 git 客户端直接就可以克隆了<font color="red">(要 ssh 地址, 不要使用 https 地址)</font>
+
+```
+git clone git@github.com:ImCccc/technology-document.git
+```
+
+5. 克隆后, 直接在 `vscode` 上就可以提交 `gitLab` 和 `gitHub` 代码
