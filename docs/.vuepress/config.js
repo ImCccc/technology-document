@@ -1,0 +1,117 @@
+module.exports = {
+  title: "李炽荣-前端文档",
+  base: "/",
+  port: "8880",
+  evergreen: true,
+  // 配置插件
+  // plugins: ["demo-container"],
+  themeConfig: {
+    sidebarDepth: 2,
+    head: [],
+    markdown: {},
+    nav: [
+      {
+        text: "前端工程化",
+        link: "/gongchenghua/vite.md",
+      },
+      {
+        text: "工具",
+        link: "/tool/",
+      },
+      {
+        text: "vue",
+        link: "/vue/",
+      },
+      {
+        text: "react",
+        link: "/react/",
+      },
+      {
+        text: "javascript",
+        link: "/js/",
+      },
+      {
+        text: "css",
+        link: "/css/",
+      },
+      {
+        text: "面试",
+        link: "/mianshi/",
+      },
+      {
+        text: "其他",
+        link: "/other/",
+      },
+    ],
+    sidebar: {
+      "/gongchenghua/": [
+        "/gongchenghua/vite.md",
+        "/gongchenghua/webpack.md",
+        "/gongchenghua/createReactApp.md",
+        "/gongchenghua/yeoman.md",
+        "/gongchenghua/cli.md",
+        "/gongchenghua/openapi.md",
+        "/gongchenghua/pwa.md",
+        "/gongchenghua/qiankun.md",
+      ],
+      "/mianshi/": [
+        "/mianshi/",
+        "/mianshi/mianshi-react.md",
+        "/mianshi/mianshi-vue.md",
+        "/mianshi/mianshi-cssHtml.md",
+      ],
+      "/tool/": [
+        "/tool/",
+        "/tool/yarn.md",
+        "/tool/RegExp.md",
+        "/tool/github.md",
+        "/tool/typescript.md",
+      ],
+      "/vue/": [
+        "/vue/",
+        "/vue/slot.md",
+        "/vue/event.md",
+        "/vue/props.md",
+        "/vue/setup.md",
+        "/vue/ClassStyle.md",
+        "/vue/ProvideInject.md",
+        "/vue/directive.md",
+        "/vue/element-plus.md",
+      ],
+      "/react/": [
+        "/react/",
+        "/react/hooks.md",
+        "/react/ahooks.md",
+        "/react/react-router-dom.md",
+        "/react/mobx.md",
+        "/react/AntDesignPro.md",
+      ],
+      "/css/": [
+        "/css/",
+        "/css/less.md",
+        "/css/sass.md",
+        "/css/flex.md",
+        "/css/animation.md",
+        "/css/selector.md",
+        "/css/transform.md",
+        "/css/background.md",
+      ],
+      "/js/": [
+        "/js/node.md",
+        "/js/element.md",
+        "/js/document.md",
+        "/js/nodeList.md",
+        "/js/htmlCollection.md",
+        "/js/event.md",
+        "/js/request.md",
+        "/js/",
+      ],
+      "/other/": [
+        "/other/",
+        "/other/api.md",
+        "/other/suanfa.md",
+        "/other/package.md",
+      ],
+    },
+  },
+};
