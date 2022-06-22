@@ -46,7 +46,6 @@ module.exports = {
     sidebar: {
       "/gongchenghua/": [
         "/gongchenghua/vite.md",
-        "/gongchenghua/webpack.md",
         "/gongchenghua/createReactApp.md",
         "/gongchenghua/yeoman.md",
         "/gongchenghua/cli.md",

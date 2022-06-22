@@ -159,7 +159,7 @@ const uploadChange = (uploadFile) => {
 };
 ```
 
-## Chorm 浏览器打开控制台很慢
+## chrome 浏览器打开控制台很慢
 
 按照如下设置即可
 

@@ -216,7 +216,7 @@ git checkout -- readme.txt
 
 **git checkout -- file 命令中的--很重要，没有--，就变成了“切换到另一个分支”的命令**
 
-## 同一台电脑同时使用 gitHub 和 gitLab
+## 同时使用 gitHub 和 gitLab
 
 gitLab 配置和之前一样, 下面重点说说 gitHub 配置
 
