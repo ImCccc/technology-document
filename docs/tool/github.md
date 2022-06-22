@@ -86,8 +86,11 @@ git checkout -b dev
 
 分支提交到远程仓库:
 
-```
+```js
 git push origin -u dev
+
+// 如果存在分支
+git push origin master
 ```
 
 查看分支：
