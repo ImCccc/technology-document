@@ -24,6 +24,210 @@ git remote update origin --prune
 
 <img src="./imgs/11.png" width="100%">
 
+### css | less | scss 代码片段
+
+```json
+{
+  "mixins-variables": {
+    "prefix": "aaa-import",
+    "body": [
+      "@import '~@/styles/mixins.less';",
+      "@import '~@/styles/variables.less';"
+    ]
+  },
+
+  "display: flex": {
+    "prefix": "aaa-flex",
+    "body": ["display: flex;"]
+  },
+
+  "flex-grow: 1": {
+    "prefix": "aaa-grow1",
+    "body": ["flex-grow: 1;"]
+  },
+
+  "flex-shrink: 0": {
+    "prefix": "aaa-shrink0",
+    "body": ["flex-shrink: 0;"]
+  },
+
+  "flex-direction: column": {
+    "prefix": "aaa-column",
+    "body": ["display: flex;", "flex-direction: column;"]
+  },
+
+  "flex-column-between": {
+    "prefix": "aaa-between-column",
+    "body": [
+      "display: flex;",
+      "flex-direction: column;",
+      "justify-content: space-between;"
+    ]
+  },
+
+  "flex-center": {
+    "prefix": "aaa-center",
+    "body": [
+      "display: flex;",
+      "align-items: center;",
+      "justify-content: center;"
+    ]
+  },
+
+  "flex-between": {
+    "prefix": "aaa-between",
+    "body": [
+      "display: flex;",
+      "align-items: center;",
+      "justify-content: space-between;"
+    ]
+  },
+
+  "cursor: pointer": {
+    "prefix": "aaa-cursor",
+    "body": ["cursor: pointer;"]
+  },
+
+  "ellipsis": {
+    "prefix": "aaa-ellipsis",
+    "body": ["width: ${0};", "overflow: hidden;", "text-overflow: ellipsis;"]
+  }
+}
+```
+
+### tsx 代码片段 (typescriptreact.json)
+
+```json
+{
+  "init-tsx": {
+    "prefix": "aaainit",
+    "body": [
+      "import styles from './index.module.less';\n",
+      "const Comp: React.FC = () => {",
+      "\treturn <div>test</div>;",
+      "};\n",
+      "export default Comp;"
+    ]
+  },
+
+  "import-style": {
+    "prefix": "aaastyles",
+    "body": ["import styles from './index.module.less';\n"]
+  },
+
+  "classNames": {
+    "prefix": "aaaclassNames",
+    "body": "import classNames from 'classnames';"
+  },
+
+  "Modal.confirm": {
+    "prefix": "aaaModal",
+    "body": [
+      "Modal.confirm({",
+      "\ttitle: '提示',",
+      "\tcontent: '数据未保存，确定要离开吗？',",
+      "\tcancelText: '取消',",
+      "\tokText: '确定',",
+      "\tonOk: () => {",
+      "\t},",
+      "});"
+    ]
+  },
+
+  "import-utils": {
+    "prefix": "aaautils",
+    "body": ["import { ${1:clone} } from '@/utils/util';"]
+  },
+
+  "umi-history": {
+    "prefix": "aaacomp",
+    "body": ["import { $1 } from '@/components$1';"]
+  },
+
+  "antd-Button": {
+    "prefix": "aaaButton",
+    "body": ["import { Button } from 'antd';"]
+  },
+
+  "数组promise": {
+    "prefix": "aaapromise",
+    "body": ["return new Promise((resolve, reject) => {\n\t${1}\n})"]
+  },
+
+  "定时器setTimeout": {
+    "prefix": "aaasettimeout",
+    "body": ["const ${1:timer} = setTimeout(() => {\n\t$3\n}, ${2:60})"]
+  },
+
+  "数组reduce": {
+    "prefix": "aaareduce",
+    "body": ["${1:arr}.reduce((data, cur) => {\n\t${2}\n\treturn data\n}, {})"]
+  }
+}
+```
+
+### markdown 代码片段
+
+给 md 文档添加代码片段,会有点麻烦,请看下面步骤:
+
+1. 找到 markdown.json 配置文件:
+
+<img height="250px" src="./imgs/vscode6.jpg" />
+
+2. 这时还不行, 需要在配置文件 `setting.json` 添加配置:
+
+<img height="100px" src="./imgs/vscode7.jpg" />
+
+```json
+{
+  "[markdown]": {
+    "editor.quickSuggestions": true
+  }
+}
+```
+
+**我常用的代码片段 markdown.json**
+
+````json
+{
+  "Print to ```javascript": {
+    "prefix": "```js",
+    "body": ["```javascript", "$1", "$2", "```"],
+    "description": "js代码片段"
+  },
+
+  "Print to ```css": {
+    "prefix": "```css",
+    "body": ["```css", "$1", "$2", "```"],
+    "description": "css代码片段"
+  },
+
+  "Print to ```html": {
+    "prefix": "```html",
+    "body": ["```html", "$1", "$2", "```"],
+    "description": "html代码片段"
+  },
+
+  "Print to ```json": {
+    "prefix": "```json",
+    "body": ["```json", "$1", "$2", "```"],
+    "description": "json代码片段"
+  },
+
+  "Print to img": {
+    "prefix": "aaaimg",
+    "body": ["<img  src=\"${0}\" />"],
+    "description": "img"
+  },
+
+  "Print to font": {
+    "prefix": "aaafont",
+    "body": ["<font color=\"${0:red}\">$1</font>"],
+    "description": "字体"
+  }
+}
+````
+
 ## vscode 不能使用 rm-rf 删除文件夹
 
 - 方法 1
