@@ -83,3 +83,12 @@ const Comp: React.FC = () => {
   );
 };
 ```
+
+## React.memo
+
+`React.memo()`是一个高阶函数，它与 `React.PureComponent` 类似，但是一个函数组件而非一个类。
+可接受 2 个参数，第一个参数为纯函数的组件，第二个参数用于对比 `props` 控制是否刷新，与 `shouldComponentUpdate()`功能类似。
+
+<font color="red">一般配合 useCallback 使用,防止使用 onClick={ () => {} }导致子组件每次渲染</font>
+
+<img src="./imgs/1.png" />
