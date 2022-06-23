@@ -324,3 +324,20 @@ yarn add -D typescript-plugin-css-modules
   "typescript.tsserver.pluginPaths": ["typescript-plugin-css-modules"]
 }
 ```
+
+3. 配置 tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules",
+        "options": { "customMatcher": "\\.(c|le|sc)ss" }
+      }
+    ]
+  }
+}
+```
+
+<img height="150px" src="./imgs/8.jpg">
