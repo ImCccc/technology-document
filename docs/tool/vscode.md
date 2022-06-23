@@ -26,6 +26,8 @@ git remote update origin --prune
 
 ### css | less | scss 代码片段
 
+::: details 点击查看 less.json
+
 ```json
 {
   "mixins-variables": {
@@ -95,7 +97,11 @@ git remote update origin --prune
 }
 ```
 
+:::
+
 ### tsx 代码片段 (typescriptreact.json)
+
+::: details 点击查看 typescriptreact.json
 
 ```json
 {
@@ -166,9 +172,81 @@ git remote update origin --prune
 }
 ```
 
+:::
+
 ### markdown 代码片段
 
-给 md 文档添加代码片段,会有点麻烦,请看下面步骤:
+`markdown` 文档的代码片段配置文件为 <font color="red">markdown.json </font>
+
+::: details 点击查看 markdown.json 配置
+
+````json
+{
+  "Print ···javascript": {
+    "prefix": "···js",
+    "body": ["```javascript", "$1", "$2", "```"],
+    "description": "js代码片段"
+  },
+
+  "Print ···css": {
+    "prefix": "···css",
+    "body": ["```css", "$1", "$2", "```"],
+    "description": "css代码片段"
+  },
+
+  "Print ···html": {
+    "prefix": "···html",
+    "body": ["```html", "$1", "$2", "```"],
+    "description": "html代码片段"
+  },
+
+  "Print ···json": {
+    "prefix": "···json",
+    "body": ["```json", "$1", "$2", "```"],
+    "description": "json代码片段"
+  },
+
+  "Print ```javascript": {
+    "prefix": "```js",
+    "body": ["```javascript", "$1", "$2", "```"],
+    "description": "js代码片段"
+  },
+
+  "Print ```css": {
+    "prefix": "```css",
+    "body": ["```css", "$1", "$2", "```"],
+    "description": "css代码片段"
+  },
+
+  "Print ```html": {
+    "prefix": "```html",
+    "body": ["```html", "$1", "$2", "```"],
+    "description": "html代码片段"
+  },
+
+  "Print ```json": {
+    "prefix": "```json",
+    "body": ["```json", "$1", "$2", "```"],
+    "description": "json代码片段"
+  },
+
+  "Print img": {
+    "prefix": "aaaimg",
+    "body": ["<img  src=\"${0}\" />"],
+    "description": "img"
+  },
+
+  "Print font": {
+    "prefix": "aaafont",
+    "body": ["<font color=\"${0:red}\">$1</font>"],
+    "description": "字体"
+  }
+}
+````
+
+:::
+
+**给 md 文档添加代码片段, 请看下面步骤:**
 
 1. 找到 markdown.json 配置文件:
 
@@ -176,12 +254,7 @@ git remote update origin --prune
 
 2. 这时还不行, 需要在配置文件 `setting.json` 添加配置:
 
-调出用户配置文件 `setting.json`
-
 <img  src="./imgs/vscode8.jpg" />
-
-修改配置
-
 <img height="100px" src="./imgs/vscode7.jpg" />
 
 ```json
@@ -191,48 +264,6 @@ git remote update origin --prune
   }
 }
 ```
-
-**我常用的代码片段 markdown.json**
-
-````json
-{
-  "Print to ```javascript": {
-    "prefix": "```js",
-    "body": ["```javascript", "$1", "$2", "```"],
-    "description": "js代码片段"
-  },
-
-  "Print to ```css": {
-    "prefix": "```css",
-    "body": ["```css", "$1", "$2", "```"],
-    "description": "css代码片段"
-  },
-
-  "Print to ```html": {
-    "prefix": "```html",
-    "body": ["```html", "$1", "$2", "```"],
-    "description": "html代码片段"
-  },
-
-  "Print to ```json": {
-    "prefix": "```json",
-    "body": ["```json", "$1", "$2", "```"],
-    "description": "json代码片段"
-  },
-
-  "Print to img": {
-    "prefix": "aaaimg",
-    "body": ["<img  src=\"${0}\" />"],
-    "description": "img"
-  },
-
-  "Print to font": {
-    "prefix": "aaafont",
-    "body": ["<font color=\"${0:red}\">$1</font>"],
-    "description": "字体"
-  }
-}
-````
 
 ## vscode 不能使用 rm-rf 删除文件夹
 
