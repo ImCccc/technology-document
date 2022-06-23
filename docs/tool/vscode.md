@@ -367,6 +367,16 @@ yarn add -D typescript-plugin-css-modules
 
 <img height="150px" src="./imgs/vscode5.jpg">
 
+## vscode 保存自动格式化
+
+配置 setting.json
+
+```json
+{
+  "editor.formatOnSave": true
+}
+```
+
 ## 常见插件
 
 <img width="400px" src="./imgs/vscode9.jpg" />
