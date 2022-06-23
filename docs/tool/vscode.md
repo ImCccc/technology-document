@@ -369,6 +369,8 @@ yarn add -D typescript-plugin-css-modules
 
 ## 常见插件
 
+<img width="400px" src="./imgs/vscode9.jpg" />
+
 - 中文: Chinese (Simplified) (简体中文)
 
 - 括号有颜色: [Deprecated] Bracket Pair Colorizer
@@ -380,3 +382,5 @@ yarn add -D typescript-plugin-css-modules
 - 代码格式: Prettier - Code formatter
 
 - vue3 代码格式: Vue Language Features (Volar)
+
+- 代码校验: ESLint
