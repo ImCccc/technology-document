@@ -163,6 +163,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 
 1. 添加 `.eslintrc.js` 文件
 
+::: details 点击查看 .eslintrc.js
+
 ```js
 module.exports = {
   root: true,
@@ -196,6 +198,8 @@ module.exports = {
 };
 ```
 
+:::
+
 2. 安装插件
 
 ```
@@ -207,6 +211,8 @@ yarn add -D @typescript-eslint/parser eslint @typescript-eslint/eslint-plugin es
 <font color="red">确保 vscode 安装 Prettier - Code formatter 插件</font>
 
 1. 添加 `.prettierrc.js` 文件
+
+::: details 点击查看 .prettierrc.js
 
 ```js
 module.exports = {
@@ -235,6 +241,8 @@ module.exports = {
   importOrderParserPlugins: ["typescript", "jsx", "classProperties"],
 };
 ```
+
+:::
 
 ### 按需加载 antd
 
