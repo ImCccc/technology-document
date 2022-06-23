@@ -2,6 +2,24 @@
 
 下面列出 `vscode` 常见问题与配置
 
+## 常见插件
+
+<img width="400px" src="./imgs/vscode9.jpg" />
+
+- 中文: Chinese (Simplified) (简体中文)
+
+- 括号有颜色: [Deprecated] Bracket Pair Colorizer
+
+- 开启简单服务器: Live Server
+
+- 右键在浏览器打开 html 文件: open in browser
+
+- 代码格式: Prettier - Code formatter
+
+- vue3 代码格式: Vue Language Features (Volar)
+
+- 代码校验: ESLint
+
 ## vscode 看不到远程分支
 
 执行：
@@ -377,20 +395,16 @@ yarn add -D typescript-plugin-css-modules
 }
 ```
 
-## 常见插件
+## 我的 vscode 快捷键
 
-<img width="400px" src="./imgs/vscode9.jpg" />
+下面是我本人自定义的快捷键:
 
-- 中文: Chinese (Simplified) (简体中文)
+<img height="150px" src="./imgs/vscode11.jpg" />
 
-- 括号有颜色: [Deprecated] Bracket Pair Colorizer
+## vscode 如何批量重命名变量和函数
 
-- 开启简单服务器: Live Server
+1. 双击变量名
+2. 右键 或者 按下 F2
+3. 此时会出现输入框,输入新名称,按下回车键即可完成
 
-- 右键在浏览器打开 html 文件: open in browser
-
-- 代码格式: Prettier - Code formatter
-
-- vue3 代码格式: Vue Language Features (Volar)
-
-- 代码校验: ESLint
+<img src="./imgs/vscode12.jpg" />
