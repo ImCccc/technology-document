@@ -40,39 +40,6 @@ export default defineConfig({
 }
 ```
 
-### vscode 没有文件名提示
-
-项目中，import 引入文件，会有路径提示，不过除了 ts 文件，其他文件都没有文件名的提示，导致手敲，很麻烦：
-
-<img src="./imgs/1.png">
-
-解决方案：
-
-1. 安装插件 Path Autocomplete
-
-<img src="./imgs/4.png">
-
-2. 按下 ctrl + shift + p, 输入 setting, 打开配置文件
-
-<img src="./imgs/5.jpg">
-
-setting.json:
-
-```json
-{
-  //导入文件时是否携带文件的拓展名
-  "path-autocomplete.extensionOnImport": true,
-  //配置@的路径提示
-  "path-autocomplete.pathMappings": {
-    "@": "${folder}/src"
-  }
-}
-```
-
-3. 完成：
-
-<img src="./imgs/6.jpg">
-
 ### 引入文件名错误不报错
 
 当 import 引入文件时，例如<code>import HelloWorld from "@/components/HelloWorld1.vue"</code>, 其实时没有 HelloWorld1.vue 这个文件，但不会有报错提示
@@ -308,36 +275,3 @@ import { createStyleImportPlugin } from 'vite-plugin-style-import';
   },
 }
 ```
-
-### Css module 有代码提示
-
-1. 安装
-
-```
-yarn add -D typescript-plugin-css-modules
-```
-
-2. vs code 的 setting.json 添加：
-
-```json
-{
-  "typescript.tsserver.pluginPaths": ["typescript-plugin-css-modules"]
-}
-```
-
-3. 配置 tsconfig.json
-
-```json
-{
-  "compilerOptions": {
-    "plugins": [
-      {
-        "name": "typescript-plugin-css-modules",
-        "options": { "customMatcher": "\\.(c|le|sc)ss" }
-      }
-    ]
-  }
-}
-```
-
-<img height="150px" src="./imgs/8.jpg">

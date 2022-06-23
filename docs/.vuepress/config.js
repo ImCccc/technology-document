@@ -60,6 +60,7 @@ module.exports = {
         "/mianshi/mianshi-cssHtml.md",
       ],
       "/tool/": [
+        "/tool/vscode.md",
         "/tool/",
         "/tool/yarn.md",
         "/tool/RegExp.md",
