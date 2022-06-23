@@ -80,10 +80,10 @@ module.exports = {
       ],
       "/react/": [
         "/react/",
+        "/react/mobx.md",
+        "/react/react-router-dom.md",
         "/react/hooks.md",
         "/react/ahooks.md",
-        "/react/react-router-dom.md",
-        "/react/mobx.md",
         "/react/AntDesignPro.md",
       ],
       "/css/": [
