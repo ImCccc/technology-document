@@ -335,3 +335,17 @@ yarn add -D typescript-plugin-css-modules
 ```
 
 <img height="150px" src="./imgs/vscode5.jpg">
+
+## 常见插件
+
+- 中文: Chinese (Simplified) (简体中文)
+
+- 括号有颜色: [Deprecated] Bracket Pair Colorizer
+
+- 开启简单服务器: Live Server
+
+- 右键在浏览器打开 html 文件: open in browser
+
+- 代码格式: Prettier - Code formatter
+
+- vue3 代码格式: Vue Language Features (Volar)
