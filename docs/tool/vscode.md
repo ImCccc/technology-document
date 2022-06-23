@@ -334,7 +334,7 @@ setting.json:
 
 <img height="80px" src="./imgs/vscode4.jpg">
 
-## vscode css module 有代码提示
+## vscode css module 配置代码提示
 
 1. 安装
 
