@@ -1,47 +1,22 @@
 module.exports = {
-  title: "李炽荣-前端文档",
+  // 配置插件  plugins: ["demo-container"],
+  title: "前端文档",
   base: "/",
   port: "8880",
   evergreen: true,
-  // 配置插件
-  // plugins: ["demo-container"],
   themeConfig: {
     sidebarDepth: 2,
     head: [],
     markdown: {},
     nav: [
-      {
-        text: "前端工程化",
-        link: "/gongchenghua/vite.md",
-      },
-      {
-        text: "工具",
-        link: "/tool/",
-      },
-      {
-        text: "vue",
-        link: "/vue/",
-      },
-      {
-        text: "react",
-        link: "/react/",
-      },
-      {
-        text: "javascript",
-        link: "/js/",
-      },
-      {
-        text: "css",
-        link: "/css/",
-      },
-      {
-        text: "面试",
-        link: "/mianshi/",
-      },
-      {
-        text: "其他",
-        link: "/other/",
-      },
+      { text: "前端工程化", link: "/gongchenghua/vite.md" },
+      { text: "工具", link: "/tool/" },
+      { text: "vue", link: "/vue/" },
+      { text: "react", link: "/react/" },
+      { text: "javascript", link: "/js/" },
+      { text: "css", link: "/css/" },
+      { text: "面试", link: "/mianshi/" },
+      { text: "其他", link: "/other/" },
     ],
     sidebar: {
       "/gongchenghua/": [
