@@ -176,6 +176,12 @@ git remote update origin --prune
 
 2. 这时还不行, 需要在配置文件 `setting.json` 添加配置:
 
+调出用户配置文件 `setting.json`
+
+<img  src="./imgs/vscode8.jpg" />
+
+修改配置
+
 <img height="100px" src="./imgs/vscode7.jpg" />
 
 ```json
