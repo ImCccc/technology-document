@@ -22,7 +22,7 @@ git remote update origin --prune
 
 ## vscode 设置代码片段
 
-<img src="./imgs/11.png" width="100%">
+<img src="./imgs/vscode10.png" width="100%">
 
 ### css | less | scss 代码片段
 
