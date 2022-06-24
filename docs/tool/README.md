@@ -101,7 +101,11 @@ registry=https://registry.npm.taobao.org
 
 1. 先有账号，在官网申请 <https://www.npmjs.com/>
 
-2. 登录 npm, 在终端输入 <code>npm login</code>然后 输入账, 密码, 邮箱
+2. 登录 npm, 在终端输入 <code>npm login</code>然后 输入账号, 密码, 邮箱
+
+- 账号: `vs1435`
+- 邮箱: `306022598@qq.com`
+- 密码: `最后一位-`
 
 3. npm publish 发布
 

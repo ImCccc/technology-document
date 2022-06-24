@@ -283,3 +283,14 @@ import { createStyleImportPlugin } from 'vite-plugin-style-import';
   },
 }
 ```
+
+## vite 创建的项目不能直接用 ip 访问
+
+想使用 ip 访问,vite.config.ts 需要添加`host: '0.0.0.0'`:
+
+```
+server: {
+  host: '0.0.0.0',
+  proxy: { ... },
+},
+```
