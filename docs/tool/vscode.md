@@ -385,6 +385,13 @@ yarn add -D typescript-plugin-css-modules
 
 <img height="150px" src="./imgs/vscode5.jpg">
 
+::: warning
+
+注意: 使用该插件后, 引入 less 变量, 不能使用别名的方式, 要使用相对路径, 不然 ts 会报错
+
+例子: `@import '../../styles/var.less';`
+:::
+
 ## vscode 保存自动格式化
 
 配置 setting.json

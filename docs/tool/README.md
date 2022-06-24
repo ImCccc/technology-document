@@ -111,6 +111,14 @@ registry=https://registry.npm.taobao.org
 
 4. 发布完成后，在官网就可以看到
 
+## 删除已发布的包
+
+运行 npm unpublish 包名-force 命令，即可从 npm 删除已发布的包
+
+```javascript
+ npm unpublish 包名 -force
+```
+
 ## npx
 
 npx 是 npm 的高级版本，npx 具有更强大的功能
