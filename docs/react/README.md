@@ -1,49 +1,272 @@
 # React
 
-## JSX
+## Context
 
-<https://react.docschina.org/docs/introducing-jsx.html>
+Context 提供一个无需为每层组件手动添加 props，就能在组件树间进行数据传递的方法。下面是例子:
 
-它被称为 JSX，是一个 JavaScript 的语法扩展。JSX 可能会使人联想到模版语言，但它具有 JavaScript 的全部功能。
+```tsx
+// 祖先组件: 将 “dark” 作为当前的值传递下去
+export const ThemeContext = React.createContext("light"); // “light” 为默认值
 
-### 基本使用
+class App extends React.Component {
+  render() {
+    return (
+      <ThemeContext.Provider value="dark">
+        <Toolbar />
+      </ThemeContext.Provider>
+    );
+  }
+}
 
-```js
-const element = <h1>Hello, world!</h1>;
+// 中间组件
+function Toolbar() {
+  return (
+    <div>
+      <ThemedButton />
+    </div>
+  );
+}
+
+// 子组件: 指定 contextType 读取当前的 theme context。React 会往上找到最近的 Provider
+import { ThemeContext } from "祖先组件";
+class ThemedButton extends React.Component {
+  static contextType = ThemeContext; // 也可以这样写: ThemedButton.contextType = ThemeContext;
+
+  render() {
+    return <Button theme={this.context} />;
+  }
+}
 ```
 
-### 变量
+### React.createContext
 
-```js
-const name = "Josh Perez";
-const element = <h1>Hello, {name}</h1>;
+创建一个 `Context` 对象。当 React 渲染一个订阅了这个 `Context` 对象的组件，这个组件会从组件树中离自身最近的那个匹配的 `Provider` 中读取到当前的 `Context` 值。
+
+### Context.Provider
+
+每个 Context 对象都会返回一个 Provider React 组件(上例: `<ThemeContext.Provider value="dark">`) ，它允许消费组件订阅 context 的变化。
+
+当 `Provider` 的 `value` 值发生变化时，它内部的所有消费组件都会重新渲染。从 `Provider` 到其内部 `consumer` 组件（包括 `.contextType` 和 `useContext` ）的传播不受制于 `shouldComponentUpdate` 函数，因此当 `consumer` <font color="red">组件在其祖先组件跳过更新的情况下也能更新。</font>
+
+### Class.contextType
+
+```tsx
+class MyClass extends React.Component {
+  componentDidUpdate() {
+    let value = this.context;
+  }
+  render() {
+    let value = this.context;
+  }
+}
+MyClass.contextType = MyContext;
 ```
 
-### 属性
+### Context.Consumer
 
-```js
-const element = <div tabIndex="0"></div>;
-const element = <img src={user.avatarUrl}></img>;
+```tsx
+<MyContext.Consumer>
+  {value => /* 基于 context 值进行渲染*/}
+</MyContext.Consumer>
 ```
 
-### 防止注入攻击
+### 动态 Context
 
-你可以安全地在 JSX 当中插入用户输入内容，React DOM 在渲染输入内容之前，会进行转义。所有的内容在渲染之前都被转换成了字符串。这样可以有效地防止 XSS（cross-site-scripting, 跨站脚本）攻击。
+::: details 查看例子
 
-### 原理
+theme-context.js
 
-Babel 会把 JSX 转译成一个名为 React.createElement() 函数调用。以下两种示例代码完全等效：
+```tsx
+export const themes = {
+  light: {
+    foreground: "#000000",
+    background: "#eeeeee",
+  },
+  dark: {
+    foreground: "#ffffff",
+    background: "#222222",
+  },
+};
 
-```js
-// 写法1
-const element = <h1 className="greeting">Hello, world!</h1>;
+export const ThemeContext = React.createContext(themes.dark);
+```
 
-// 写法2
-const element = React.createElement(
-  "h1",
-  { className: "greeting" },
-  "Hello, world!"
-);
+themed-button.js
+
+```tsx
+import { ThemeContext } from "./theme-context";
+class ThemedButton extends React.Component {
+  render() {
+    let props = this.props;
+    let theme = this.context;
+    return <button {...props} style={{ backgroundColor: theme.background }} />;
+  }
+}
+ThemedButton.contextType = ThemeContext;
+export default ThemedButton;
+```
+
+app.js
+
+```tsx
+import { ThemeContext, themes } from "./theme-context";
+import ThemedButton from "./themed-button";
+
+function Toolbar(props) {
+  return <ThemedButton onClick={props.changeTheme}>Change Theme</ThemedButton>;
+}
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { theme: themes.light };
+
+    this.toggleTheme = () => {
+      this.setState((state) => ({
+        theme: state.theme === themes.dark ? themes.light : themes.dark,
+      }));
+    };
+  }
+
+  render() {
+    return (
+      <ThemeContext.Provider value={this.state.theme}>
+        <Toolbar changeTheme={this.toggleTheme} />
+      </ThemeContext.Provider>
+    );
+  }
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
+```
+
+:::
+
+### 在嵌套组件中更新 Context
+
+::: details 查看例子
+
+theme-context.js:
+
+```tsx
+// 确保传递给 createContext 的默认值数据结构是调用的组件（consumers）所能匹配的！
+export const ThemeContext = React.createContext({
+  toggleTheme: () => {},
+  theme: { foreground: "#ffffff", background: "#222222" },
+});
+```
+
+子组件: theme-toggler-button.js
+
+```tsx
+import { ThemeContext } from "./theme-context";
+
+function ThemeTogglerButton() {
+  return (
+    <ThemeContext.Consumer>
+      {({ theme, toggleTheme }) => (
+        <button onClick={toggleTheme}>Toggle Theme</button>
+      )}
+    </ThemeContext.Consumer>
+  );
+}
+
+export default ThemeTogglerButton;
+```
+
+app.js
+
+```tsx
+import { ThemeContext, themes } from "./theme-context";
+import ThemeTogglerButton from "./theme-toggler-button";
+
+// 中间组件
+function Content() {
+  return (
+    <div>
+      <ThemeTogglerButton />
+    </div>
+  );
+}
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.toggleTheme = () => {
+      this.setState((state) => ({
+        theme: state.theme === themes.dark ? themes.light : themes.dark,
+      }));
+    };
+
+    // State 也包含了更新函数，因此它会被传递进 context provider。
+    this.state = {
+      theme: themes.light,
+      toggleTheme: this.toggleTheme,
+    };
+  }
+
+  render() {
+    // 整个 state 都被传递进 provider
+    return (
+      <ThemeContext.Provider value={this.state}>
+        <Content />
+      </ThemeContext.Provider>
+    );
+  }
+}
+```
+
+:::
+
+## createRef (类组件)
+
+当 ref 被传递给 render 中的元素时，对该节点的引用可以在 ref 的 current 属性中被访问。ref 的值根据节点的类型而有所不同：
+
+- 当 `ref` 属性用于 `HTML` 元素时，构造函数中使用 `React.createRef()` 创建的 `ref` 接收底层 `DOM` 元素作为其 current 属性。
+- 当 `ref` 属性用于自定义 `class` 组件时， `ref` 对象接收组件的挂载实例作为其 `current` 属性。
+
+以下代码使用 ref 去存储 DOM 节点的引用：
+
+```tsx
+class CustomTextInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.textInput = React.createRef();
+    this.focusTextInput = this.focusTextInput.bind(this);
+  }
+
+  focusTextInput() {
+    this.textInput.current.focus();
+  }
+
+  render() {
+    return (
+      <>
+        <input type="text" ref={this.textInput} />
+        <button onClick={this.focusTextInput}>click</button>
+      </>
+    );
+  }
+}
+```
+
+## forwardRef
+
+Ref 转发是一个可选特性，其允许某些组件接收 ref，并将其向下传递（换句话说，“转发”它）给子组件。
+
+在下面的示例中， `FancyButton` 使用 `React.forwardRef` 来获取传递给它的 `ref` ，然后转发到它渲染的 `button`
+
+```tsx
+// 子组件
+const FancyButton = React.forwardRef((props, ref) => (
+  <button ref={ref}>{props.children}</button>
+));
+
+// 父组件: 可以直接获取 DOM button 的 ref, ref.current 将指向 <button> DOM 节点。
+const ref = React.createRef();
+<FancyButton ref={ref}>Click me!</FancyButton>;
 ```
 
 ## 父组件调用子组件的方法
