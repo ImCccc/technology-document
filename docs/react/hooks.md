@@ -67,3 +67,22 @@ function useMemoizedFn<T extends noop>(fn: T) {
   return memoizedFn.current;
 }
 ```
+
+## useRef
+
+<https://zh-hans.reactjs.org/docs/hooks-reference.html#useref>
+
+useRef 返回一个可变的 ref 对象，其 .current 属性被初始化为传入的参数（initialValue）。返回的 ref 对象在组件的整个生命周期内持续存在。
+
+一个常见的用例便是命令式地访问子组件, 无论该节点如何改变，React 都会将 ref 对象的 .current 属性设置为相应的 DOM 节点。
+
+```tsx
+import { useRef } from "react";
+
+const ref = useRef<HTMLInputElement>(null);
+console.log(ref.current?.value);
+
+<input ref={ref} type="text" />;
+```
+
+请记住，当 ref 对象内容发生变化时，useRef 并不会通知你。变更 .current 属性不会引发组件重新渲染
