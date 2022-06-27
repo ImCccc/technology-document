@@ -167,6 +167,8 @@ lazy 实际上是帮助我们实现代码分割的功能。
 
 ### hooks (react 16.8)
 
+<https://zh-hans.reactjs.org/docs/hooks-intro.html#gatsby-focus-wrapper>
+
 hooks 可以让你在不编写类的情况下使用 state 和 React 的其他功能。你还可以构建自己的 hooks，在组件之间共享可重用的有状态逻辑。
 
 ## react 17
