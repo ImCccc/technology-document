@@ -402,6 +402,10 @@ yarn add -D typescript-plugin-css-modules
 }
 ```
 
+## less 使用函数或者混入报红
+
+原因 vscode 安装了插件 Stylelint, 禁用就行了
+
 ## 我的 vscode 快捷键
 
 下面是我本人自定义的快捷键:
