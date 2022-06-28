@@ -8,8 +8,9 @@ npm 官网：<https://www.npmjs.com/>
 
 ### rimraf
 
+nodejs 环境中，删除文件的插件
+
 > <code>npm install rimraf</code>
-> nodejs 环境中，删除文件的插件
 >
 > <https://www.npmjs.com/package/rimraf>
 
@@ -23,7 +24,6 @@ glob.sync(`dist/**/*`).forEach((path) => rimraf.sync(path));
 编译工具，可以将 ts 代码转化为 js 代码
 
 > <code>npm install father-build</code>
-> nodejs 环境中，删除文件的插件
 >
 > <https://www.npmjs.com/package/father-build>
 
