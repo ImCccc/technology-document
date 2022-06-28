@@ -1,12 +1,12 @@
 const sidebar = {
   "/gongchenghua/": [
     "/gongchenghua/vite.md",
-    "/gongchenghua/createReactApp.md",
-    "/gongchenghua/yeoman.md",
     "/gongchenghua/cli.md",
     "/gongchenghua/openapi.md",
     "/gongchenghua/pwa.md",
+    "/gongchenghua/yeoman.md",
     "/gongchenghua/qiankun.md",
+    "/gongchenghua/createReactApp.md",
   ],
   "/mianshi/": [
     "/mianshi/",
