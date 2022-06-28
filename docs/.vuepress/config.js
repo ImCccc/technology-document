@@ -46,6 +46,7 @@ const sidebar = {
     "/css/less.md",
     "/css/sass.md",
     "/css/flex.md",
+    "/css/css-module.md",
     "/css/animation.md",
     "/css/selector.md",
     "/css/transform.md",
