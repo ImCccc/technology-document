@@ -51,6 +51,23 @@ export default defineConfig({
 
 <img src="./imgs/3.png">
 
+## 打包配置
+
+```javascript
+  build: {
+    outDir: 'dist',
+    rollupOptions: {
+      output: {
+        chunkFileNames: 'js/[name]-[hash].js',
+        entryFileNames: 'js/[name]-[hash].js',
+        assetFileNames: '[ext]/[name]-[hash].[ext]',
+      },
+    },
+  },
+```
+
+<img height="200px" src="./imgs/vite1.jpg" />
+
 ## 环境变量
 
 Vite 在一个特殊的 import.meta.env 对象上暴露环境变量。
