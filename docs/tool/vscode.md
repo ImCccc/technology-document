@@ -20,7 +20,7 @@
 
 - 代码校验: ESLint
 
-## vscode 看不到远程分支
+## 看不到远程分支
 
 执行：
 
@@ -28,7 +28,7 @@
 git remote update origin --prune
 ```
 
-## vscode 不能使用 cnpm
+## 不能使用 cnpm
 
 1、打开 vs code（以管理员身份运行）
 
@@ -38,7 +38,7 @@ git remote update origin --prune
 
 4、在终端执行：get-ExecutionPolicy，显示 RemoteSigned
 
-## vscode 设置代码片段
+## 设置代码片段
 
 <img src="./imgs/vscode10.png" width="100%">
 
@@ -283,7 +283,7 @@ git remote update origin --prune
 }
 ```
 
-## vscode 不能使用 rm-rf 删除文件夹
+## 不能使用 rm-rf 删除文件夹
 
 - 方法 1
 
@@ -321,7 +321,7 @@ package.json 添加：
 npm run rm
 ```
 
-## vscode 没有文件名提示
+## 没有文件名提示
 
 vite 创建的 vue 项目中 import 引入文件会有路径提示，不过除了 ts 文件，其他文件都没有文件名的提示，导致手敲，很麻烦：
 
@@ -352,7 +352,7 @@ setting.json:
 
 <img height="80px" src="./imgs/vscode4.jpg">
 
-## vscode css module 配置代码提示
+## css module 配置代码提示
 
 1. 安装
 
@@ -392,7 +392,7 @@ yarn add -D typescript-plugin-css-modules
 例子: `@import '../../styles/var.less';`
 :::
 
-## vscode 保存自动格式化
+## 保存自动格式化
 
 配置 setting.json
 
@@ -412,7 +412,7 @@ yarn add -D typescript-plugin-css-modules
 
 <img height="150px" src="./imgs/vscode11.jpg" />
 
-## vscode 如何批量重命名变量和函数
+## 如何批量重命名变量和函数
 
 1. 双击变量名
 2. 右键 或者 按下 F2

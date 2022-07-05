@@ -1,71 +1,16 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
   </head>
-  <style>
-    #draggable {
-      width: 200px;
-      height: 20px;
-      text-align: center;
-      background: white;
-    }
-
-    .dropzone {
-      width: 200px;
-      height: 20px;
-      background: blueviolet;
-      margin-bottom: 10px;
-      padding: 10px;
-    }
-
-    .xxx {
-      width: 600px;
-      height: 200px;
-      border: 3px solid;
-    }
-  </style>
-  <div class="dropzone">
-    <div
-      id="draggable"
-      draggable="true"
-      ondragstart="event.dataTransfer.setData('text/plain',null)"
-    >
-      This div is draggable
-    </div>
-  </div>
-  <div class="dropzone"></div>
-  <div class="dropzone"></div>
-  <div class="dropzone"></div>
-  <div id="xxx" class="xxx"></div>
-  <input id="input" type="text" />
+  <body>
+    <div>Hello</div>
+  </body>
 
   <script>
-    const regexp = /(12)(3)/g;
-    const str = "1234abc123d";
-    const array = [...str.matchAll(regexp)];
-
-    // console.log(array[1]);
-    // expected output: Array ["test2", "e", "st2", "2"]
-
-    var css333 = 9;
-    var css111 = 9;
-
-    function b() {
-      console.log(css333);
-    }
-
-    function c() {
-      console.log(css333);
-    }
-
-    function sss() {
-      const d = () => console.log(css333);
-    }
-    sss();
-    sss();
-    sss();
-    sss();
+    function initialization() {}
   </script>
 </html>
