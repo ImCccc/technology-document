@@ -104,3 +104,45 @@ const uploadChange = (uploadFile) => {
 按照如下设置即可
 
 <img src="./imgs/1.png">
+
+## node 修改文件名称
+
+renameFiles.js：
+
+```javascript
+let fs = require("fs");
+
+var path = "./";
+
+// 替换名称的方法
+let index = 0;
+function replaceName(oldName) {
+  return oldName + "-";
+}
+
+function rename(filePath) {
+  fs.readdir(filePath, (_, files) => {
+    files.forEach((filename) => {
+      if (filename === "renameFiles.js") return;
+      var oldPath = filePath + filename;
+      let fsStats = fs.statSync(oldPath);
+      if (fsStats.isFile()) {
+        const suffixIndex = filename.lastIndexOf(".");
+        const oldName = filename.slice(0, suffixIndex);
+        const suffix = filename.slice(suffixIndex, filename.length);
+        const newName = replaceName(oldName);
+        let newPath = filePath + newName + suffix;
+        fs.rename(oldPath, newPath, (err) => {
+          if (!err) return console.log(filename + "副本替换成功!");
+        });
+      } else if (fsStats.isDirectory()) {
+        rename(oldPath + "/");
+      }
+    });
+  });
+}
+
+rename(path);
+```
+
+<img src="./imgs/9.jpg" />
