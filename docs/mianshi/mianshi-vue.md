@@ -14,4 +14,11 @@ Vue2：`Object.defineProperty` 重新定义 `data` 中所有的属性， `Object
 
 <font color="red">vue3：改用 proxy ，可直接监听对象数组的变化。 </font>
 
-## v-model 中的实现原理及如何自定义 v-model
+## vue 的性能优化
+
+- 事件代理
+- keep-alive
+- 拆分组件
+- key 保证唯一性
+- 路由懒加载、异步组件
+- 防抖节流
