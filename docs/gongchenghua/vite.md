@@ -84,9 +84,10 @@ Vite 在一个特殊的 import.meta.env 对象上暴露环境变量。
 ### 不同环境下添加不一样的变量
 
 例子：
-开发环境需要访问：https://www.baidu.com/;
-生产环境需要访问：https://cn.bing.com/;
-测试环境需要访问：https://www.youdao.com/
+
+1. 开发环境需要访问：https://www.baidu.com/;
+2. 生产环境需要访问：https://cn.bing.com/;
+3. 测试环境需要访问：https://www.youdao.com/
 
 - 步骤 1：根目录下添加开发环境的变量文件 .env.development
 

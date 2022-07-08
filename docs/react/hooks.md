@@ -1,5 +1,7 @@
 # hooks api
 
+<https://zh-hans.reactjs.org/docs/hooks-reference.html>
+
 ## useContext
 
 - 父组件 `Parent.tsx`
@@ -86,3 +88,11 @@ console.log(ref.current?.value);
 ```
 
 请记住，当 ref 对象内容发生变化时，useRef 并不会通知你。变更 .current 属性不会引发组件重新渲染
+
+## useImperativeHandle
+
+- 使用场景: 父组件访问子组件(函数组件)的某些方法
+
+- 使用语法: `useImperativeHandle(ref, createHandle, [deps]);`
+
+- <a href="/react/#父组件调用子组件的方法">具体用法传送门</a>
