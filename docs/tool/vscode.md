@@ -10,6 +10,9 @@
 
 - 括号有颜色: [Deprecated] Bracket Pair Colorizer
 
+  <font color="red">有自带的,需要设置下</font>
+  <img src="./imgs/13.png" />
+
 - 开启简单服务器: Live Server
 
 - 右键在浏览器打开 html 文件: open in browser
