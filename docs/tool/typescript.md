@@ -386,21 +386,24 @@ declare namespace Global {
 **一些例子：**
 
 ```ts
-// Validation.ts;
+文件: Validation.ts:
 namespace Validation {
   export interface StringValidator {}
 }
-// LettersOnlyValidator.ts;
+
+文件: LettersOnlyValidator.ts:
 /// <reference path="Validation.ts" />
 namespace Validation {
   export class LettersOnlyValidator implements StringValidator {}
 }
-// ZipCodeValidator.ts;
+
+文件 ZipCodeValidator.ts:
 /// <reference path="Validation.ts" />
 namespace Validation {
   export class ZipCodeValidator implements StringValidator {}
 }
-// Test.ts
+
+文件 Test.ts:
 /// <reference path="Validation.ts" />
 /// <reference path="LettersOnlyValidator.ts" />
 /// <reference path="ZipCodeValidator.ts" />
