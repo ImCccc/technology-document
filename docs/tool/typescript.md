@@ -101,6 +101,44 @@ let strLength: number = (someValue as string).length;
 
 ## 实用技巧
 
+### infer
+
+infer 可以在 extends 的条件语句中推断待推断的类型, 例如在文档的示例中，使用 infer 来推断函数的返回值类型
+
+```tsx
+type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
+```
+
+理解为：
+
+- 如果 T 继承了 (...args: any[]) => any 类型，则返回类型 R，否则返回 any。
+- R 被定义在 extends (...args: any[]) => infer R 中，即 R 是从传入参数类型中推导出来的。
+
+```tsx
+// 如果泛型 T 是 ()=> infer R 的子集，则返回 infer R 获取到的类型，否则返回 boolean
+type Func<T> = T extends () => infer R ? R : boolean;
+
+// 没命中 `T extends () => infer R`, 所以类型是 boolean
+let func1: Func<"xxxx">; // boolean
+let func2: Func<(p: any) => string>; // boolean
+
+/*
+  1. 命中 `T extends () => infer R`;
+  2. func3 类型是 R;
+  3. R 其实就是 `() => string` 类型的返回值;
+*/
+let func3: Func<() => string>;
+
+/* 其它例子 */
+type Obj<T> = T extends { a: infer VT; b: infer VT } ? VT : number;
+
+let obj1: Obj<string>; // number;
+let obj2: Obj<true>; // number;
+
+let obj3: Obj<{ a: string; b: string }>; // string
+let obj4: Obj<{ a: number; b: string }>; // a、b 为不同类型时，返回联合类型: string | number
+```
+
 ### Required
 
 - Required\<T\> 将某个类型里的属性全部变为必选项
