@@ -99,6 +99,81 @@ let someValue: any = "this is a string";
 let strLength: number = (someValue as string).length;
 ```
 
+## tsconfig.json 配置
+
+如果一个目录下存在一个 tsconfig.json 文件，那么它意味着这个目录是 TypeScript 项目的根目录。 tsconfig.json 文件中指定了用来编译这个项目的根文件和编译选项
+
+**示例**
+
+```ts
+{
+  "compilerOptions": {
+    "module": "system",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "outFile": "../../built/local/tsc.js",
+    "sourceMap": true
+  },
+  "extends": "./tsconfig1.ts",
+  "files": ["core.ts"],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
+```
+
+### files, include, exclude
+
+```ts
+{
+  "files": ["core.ts"],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
+```
+
+- files: 指定一个包含相对或绝对文件路径的列表。优先级比 exclude 高
+- include: 从那个文件夹开始编译
+- exclude: 编译时忽略哪些文件，默认情况下会排除 <code>node_modules，bower_components，jspm_packages, \<outFile\></code> 目录
+
+**支持的匹配模式**
+
+- 匹配 0 或多个字符（不包括目录分隔符）
+- ? 匹配一个任意字符（不包括目录分隔符）
+- \*\*/ 递归匹配任意子目录
+
+### extends
+
+```ts
+{
+  "extends": "./configs/base",
+}
+```
+
+<font color="#bf414a;">tsconfig.json</font> 文件可以利用 <font color="#bf414a;">extends </font>属性从另一个配置文件里继承配置
+
+> 继承配置文件的 files，include 和 exclude 覆盖源配置文件的属性
+>
+> 配置文件里的相对路径在解析时相对于它所在的文件
+
+### compilerOptions
+
+参考文档：<https://www.tslang.cn/docs/handbook/compiler-options.html>
+
+compilerOptionsp 是编译配置，包含很多选项
+
+#### paths
+
+模块名到基于 baseUrl 的路径映射的列表（别名配置）
+
+#### jsx
+
+```
+"jsx": "react-jsx",
+```
+
+在 .tsx 文件里支持 JSX
+
 ## 实用技巧
 
 ### infer
@@ -412,77 +487,13 @@ validators["ZIP code"] = new Validation.ZipCodeValidator();
 validators["Letters only"] = new Validation.LettersOnlyValidator();
 ```
 
-## tsconfig.json 配置
+### T[number]
 
-如果一个目录下存在一个 tsconfig.json 文件，那么它意味着这个目录是 TypeScript 项目的根目录。 tsconfig.json 文件中指定了用来编译这个项目的根文件和编译选项
-
-**示例**
-
-```ts
-{
-  "compilerOptions": {
-    "module": "system",
-    "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "outFile": "../../built/local/tsc.js",
-    "sourceMap": true
-  },
-  "extends": "./tsconfig1.ts",
-  "files": ["core.ts"],
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
-}
+```tsx
+type T = ["a", "b", "c"];
+type BB = T[number]; // type BB = "a" | "b" | "c"
 ```
 
-### files, include, exclude
+## 试题
 
-```ts
-{
-  "files": ["core.ts"],
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
-}
-```
-
-- files: 指定一个包含相对或绝对文件路径的列表。优先级比 exclude 高
-- include: 从那个文件夹开始编译
-- exclude: 编译时忽略哪些文件，默认情况下会排除 <code>node_modules，bower_components，jspm_packages, \<outFile\></code> 目录
-
-**支持的匹配模式**
-
-- 匹配 0 或多个字符（不包括目录分隔符）
-- ? 匹配一个任意字符（不包括目录分隔符）
-- \*\*/ 递归匹配任意子目录
-
-### extends
-
-```ts
-{
-  "extends": "./configs/base",
-}
-```
-
-<font color="#bf414a;">tsconfig.json</font> 文件可以利用 <font color="#bf414a;">extends </font>属性从另一个配置文件里继承配置
-
-> 继承配置文件的 files，include 和 exclude 覆盖源配置文件的属性
->
-> 配置文件里的相对路径在解析时相对于它所在的文件
-
-### compilerOptions
-
-参考文档：<https://www.tslang.cn/docs/handbook/compiler-options.html>
-
-compilerOptionsp 是编译配置，包含很多选项
-
-#### paths
-
-模块名到基于 baseUrl 的路径映射的列表（别名配置）
-
-#### jsx
-
-```
-"jsx": "react-jsx",
-```
-
-在 .tsx 文件里支持 JSX
+<https://juejin.cn/post/7110232056826691591>
