@@ -214,6 +214,13 @@ let obj3: Obj<{ a: string; b: string }>; // string
 let obj4: Obj<{ a: number; b: string }>; // a、b 为不同类型时，返回联合类型: string | number
 ```
 
+例子: 获取第一个元素 First\<T\>
+
+```tsx
+type First<T> = T extends [infer P, ...infer Rest] ? P : never;
+type FirstType = First<["1", "2"]>; //type FirstType = "1"
+```
+
 ### Required
 
 - Required\<T\> 将某个类型里的属性全部变为必选项
@@ -493,6 +500,8 @@ validators["Letters only"] = new Validation.LettersOnlyValidator();
 type T = ["a", "b", "c"];
 type BB = T[number]; // type BB = "a" | "b" | "c"
 ```
+
+### . . . 语法
 
 ## 试题
 
