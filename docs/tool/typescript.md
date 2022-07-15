@@ -503,6 +503,10 @@ type BB = T[number]; // type BB = "a" | "b" | "c"
 
 ### . . . 语法
 
+```tsx
+type First<T> = T extends [infer P, ...infer Rest] ? P : never;
+```
+
 ## 试题
 
 <https://juejin.cn/post/7110232056826691591>
