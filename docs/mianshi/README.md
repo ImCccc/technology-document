@@ -327,3 +327,37 @@ Content-Type: text/html; charset=utf-8
 2. h1,h2 都复用 TCP 链接，一个链接可同时发送多个请求，但 h2 不用按顺序一一对应，避免队头阻塞
 3. 完全不同的连接方式，端口也不一样，h1 是 80，h2 是 443
 4. h2 是基于 ssl + http 协议构成，可进行加密、身份认证，比 h1 安全
+
+## Event Loop 是什么
+
+`Event loop` 是一个执行模型，浏览器和 NodeJS 基于不同的技术实现了各自的 `Event Loop`
+
+- 宏队列
+
+一些异步任务的回调会依次进入宏队列(`macro task queue`)，等待后续被调用，这些异步任务包括：
+
+1. setTimeout
+2. setInterval
+3. requestAnimationFrame (浏览器独有)
+4. setImmediate (Node 独有)
+
+- 微队列
+
+一些异步任务的回调会依次进入微队列, 这些异步任务包括：
+
+1. Promise
+2. process.nextTick (Node 独有)
+
+**浏览器的 Event Loop**
+
+1. 执行全局 Script 同步代码，遇到异步回调,就会放在宏队列或者微队列中
+
+2. 从微队列取出位于队首的任务，放入调用栈 Stack 中执行，执行完后微队列长度减 1
+
+3. 继续执行微队的任务，直到直到把微队列所有任务都执行完毕。
+   <font color="red">(注意: 如果在执行过程中，又产生了微任务，那么会加入到队列的末尾，也会在这个周期被调用执行)</font>
+
+4. 从宏队列取出位于队首的任务，放入调用栈 Stack 中执行，执行完后宏队列长度减 1
+   <font color="red">(注意: 执行完成后, 会先看看是否有微任务, 有会先执行微任务)</font>
+
+5. 重复第 2-4 个步骤

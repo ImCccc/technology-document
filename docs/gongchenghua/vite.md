@@ -312,3 +312,7 @@ server: {
   proxy: { ... },
 },
 ```
+
+## 插件
+
+<https://vitejs.cn/guide/api-plugin.html#authoring-a-plugin>
