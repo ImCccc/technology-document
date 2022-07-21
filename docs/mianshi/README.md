@@ -372,3 +372,85 @@ Content-Type: text/html; charset=utf-8
 - 作用
   > 1. 在本质上，闭包就是将函数内部和函数外部连接起来的桥梁。
   > 2. 局部变量无法共享和长久的保存，而全局变量可能造成变量污染，闭包既可以长久的保存变量又不会造成全局污染
+
+## 原型和原型链
+
+1. **原型链**: 对象隐式的`__proto__`属性
+2. **原型**: 构造函数的 `prototype` 属性
+3. **原型链的顶端**: `null`, `Object.prototype.__proto__ == null`;
+
+- 对象的 `__proto__` 指向 `构造函数.prototyte`
+- `构造函数.prototyte`, 默认值是一个对象: `{ constrctor: 构造函数本身 }`
+- 对象的 `constructor` 指向 `它构造函数.prototyte.constrctor`
+- `构造函数.prototyte.constrctor` 指向本身(默认情况下)
+
+### `__proto__`
+
+当访问一个对象的属性时, 可能会用到对象的原型链`__proto__` 属性, 具体流程:
+
+1. 会先看看对象本身是否存在该属性, 存在则返回
+2. 不存在, 那么就沿着原型链 `__proto__` 一层层往上找
+3. 还是找不到, 就返回 `undefined`
+
+### `prototype`
+
+1. 函数上的 `prototype` 属性叫原型;
+2. 函数天生就有该属性, 它的值是一个对象, 对象有个 `constrctor` 属性指向函数本身
+3. 在 函数 `prototype` 添加一些属性, 每一个实例都可以继承这些属性, 这也是这个属性的最大用处之一
+
+### new 一个函数做了什么
+
+```javascript
+function SX(name) {
+  this.name = name;
+}
+
+let SB = new SX("煞笔");
+```
+
+1. 创建一个新的空对象 `SB = { }`
+2. 设置对象的原型链为构造函数的原型: `SB.__proto__ = SX.prototype`
+3. 绑定 this 为新建的空对象: `this = SB`, 然后执行构造函数:
+4. 如果函数没有返回值或者返回的不是引用类型, 那么就返回新对象 `SB`
+
+例子 1:
+
+```javascript
+function F() {}
+var a = new F();
+/*
+  有如下的结果 
+  1: a.constructor == F; 
+  2. a.__proto__ == F.prototype 
+
+  3: F.constructor == Function
+  4. F.prototype == { constructor: F }
+*/
+```
+
+### 创建一个对象的方式
+
+1. `var a = {}`
+2. `var a = new Obiect()`
+3. `var a = Object.create({})` => `a.__proto__` == { }
+
+```js
+var p = {};
+var a = Object.create(p);
+a.__proto__ == p;
+a.__proto__.__proto__ == Object.prototype;
+
+var b = {};
+b.__proto__ == Object.prototype;
+
+var c = new Object();
+c.__proto__ == Object.prototype;
+```
+
+::: tip
+
+1. 只有函数有 `prototype` 属性, 对象是没有的
+2. 对象和函数都有原型链,也就是`__proto__` 属性
+3. `var a = {}` 只是 `var a = new Obiect()` 的语法糖
+
+:::
