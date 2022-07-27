@@ -216,6 +216,28 @@ git checkout -- readme.txt
 
 **git checkout -- file 命令中的--很重要，没有--，就变成了“切换到另一个分支”的命令**
 
+## 常见问题
+
+### 只合并分支 A 的某一个 commit
+
+在 A 分支上提交了一个 commit，B 分支也同样需要这个 commit 的代码，但是分支 B 不能合并分支 A, 因为分支 A 有些代码不能直接上线，下面就教你如何只合并分支 A 的某一个 commit
+
+1.  先找到需要合并的 commit 的代号，一般是一个很长的字符串，可以在 gitLab 找到，如下图:
+
+<img src="./imgs/github1.png" />
+
+2.  终端执行命令：
+
+```
+git cherry-pick ff476ddb3535f6c6af8576c3be98530b584c9b2d
+```
+
+### vscode 看不到远程分支
+
+```
+git remote update origin --prune
+```
+
 ## 同时使用 gitHub 和 gitLab
 
 gitLab 配置和之前一样, 下面重点说说 gitHub 配置
