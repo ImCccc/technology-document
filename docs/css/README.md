@@ -16,7 +16,7 @@
 
 ### 组件类
 
-`card`, `list`, `picture`, `carousel`, `swiper`, `menu`, `navs`, `badge`, `hint`, `modal`, dialog
+`card`, `list`, `picture`, `carousel`, `swiper`, `menu`, `navs`, `badge`, `hint`, `modal`, `dialog`
 
 ### 位置类
 
