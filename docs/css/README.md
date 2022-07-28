@@ -1,5 +1,35 @@
 # css
 
+## css 命名例子
+
+### 包裹类
+
+`container`, `wrapper`, `outer`, `inner`, `box`, `header`, `footer`,`main`, `content`, `aside`, `page`, `section`, `block`
+
+### 状态类
+
+`primary`, `secondary`, `success`, `danger`, `warning`, `info`, `error`, `link`, `light`, `dark`, `disabled`, `active`, `checked`, `loading`
+
+### 尺寸类
+
+`large`, `middle`, `small`, `bigger`, `smaller`
+
+### 组件类
+
+`card`, `list`, `picture`, `carousel`, `swiper`, `menu`, `navs`, `badge`, `hint`, `modal`, dialog
+
+### 位置类
+
+`first`, `last`, `current`, `prev`, `next`, `forward`, `back`
+
+### 文本类
+
+`title`, `desc`, `content`, `date`, `author`, `category`, `label`, `tag`
+
+### 人物类
+
+`avatar`, `name`, `age`, `post`, `intro`
+
 ## CSS 渐变
 
 CSS 渐变使您可以显示两种或多种指定颜色之间的平滑过渡。CSS 定义了两种渐变类型：
