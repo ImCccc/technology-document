@@ -1,32 +1,32 @@
 # css
 
-## css 命名例子
+## css 命名
 
-### 包裹类
+- 包裹类
 
 `container`, `wrapper`, `outer`, `inner`, `box`, `header`, `footer`,`main`, `content`, `aside`, `page`, `section`, `block`
 
-### 状态类
+- 状态类
 
 `primary`, `secondary`, `success`, `danger`, `warning`, `info`, `error`, `link`, `light`, `dark`, `disabled`, `active`, `checked`, `loading`
 
-### 尺寸类
+- 尺寸类
 
 `large`, `middle`, `small`, `bigger`, `smaller`
 
-### 组件类
+- 组件类
 
 `card`, `list`, `picture`, `carousel`, `swiper`, `menu`, `navs`, `badge`, `hint`, `modal`, `dialog`
 
-### 位置类
+- 位置类
 
 `first`, `last`, `current`, `prev`, `next`, `forward`, `back`
 
-### 文本类
+- 文本类
 
 `title`, `desc`, `content`, `date`, `author`, `category`, `label`, `tag`
 
-### 人物类
+- 人物类
 
 `avatar`, `name`, `age`, `post`, `intro`
 
@@ -290,7 +290,7 @@ white-space 属性设置如何处理元素内的空白:
 
 ### text-overflow
 
-text-overflow 属性规定当文本溢出包含元素时发生的事情。一般配合 `overflow: hidden`， 设置文本溢出`...`显示
+text-overflow 属性规定当文本溢出包含元素时发生的事情。一般配合`overflow: hidden`， 设置文本溢出`...`显示
 
 - clip 修剪文本。 (默认)
 - ellipsis 显示省略符号来代表被修剪的文本。
@@ -327,3 +327,7 @@ text-overflow 属性规定当文本溢出包含元素时发生的事情。一般
   <span class="child">888888888888888888</span>
 </div>
 ```
+
+## tailwindcss
+
+<https://www.tailwindcss.cn/>
