@@ -1,6 +1,8 @@
 # 常见面试题
 
-链接: <https://www.yuque.com/cuggz/interview>
+1. <https://www.yuque.com/cuggz/interview>
+
+2. <https://www.processon.com/view/5d392c50e4b02015bd89f162#map>
 
 ## Event Loop 是什么
 
