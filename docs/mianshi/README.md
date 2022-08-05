@@ -1,5 +1,7 @@
 # 常见面试题
 
+链接: <https://www.yuque.com/cuggz/interview>
+
 ## Event Loop 是什么
 
 `Event loop` 是一个执行模型，浏览器和 NodeJS 基于不同的技术实现了各自的 `Event Loop`
