@@ -485,3 +485,93 @@ ES6 及之后的版本，块语句`（ {} 中间的语句）`也会创建一个�
 </div>
 
 作用域链为变量查找的机制， 变量只能在特定的区域内才能被访问，外部环境不能访问内部环境的任何变量和函数，即可以向上搜索，但不可以向下搜索
+
+## 前端路由
+
+::: tip
+
+- 一般路由实现主要有 `history` 和 `hash` 两种方式
+- `hash` 的实现全部在前端，不需要后端服务器配合，兼容性好，主要是通过监听 `hashchange` 事件，处理前端业务逻辑
+- `history` 的实现，需要服务器做以下简单的配置，通过监听 `pushState` 及 `replaceState` 事件，处理前端业务逻辑
+
+:::
+
+### hash 哈希模式
+
+主要就是监听 hash 的变化，渲染不同的组件代码
+
+- hash 模式所有的工作都是在前端完成的，不需要后端服务的配合
+- hash 模式的实现方式就是通过监听 URL 中 hash 部分的变化，从而做出对应的渲染逻辑
+- hash 模式下，URL 中会带有#，看起来不太美观
+
+### history 模式
+
+#### history
+
+history 路由模式的实现，是要使用 history 全局对象，有如下 api：
+
+- `window.history.go` 可以跳转到浏览器会话历史中的指定的某一个记录页
+- `window.history.forward` 指向浏览器会话历史中的下一页，跟浏览器的前进按钮相同
+- `window.history.back` 返回浏览器会话历史中的上一页，跟浏览器的回退按钮功能相同
+- `window.history.pushState` 可以将给定的数据压入到浏览器会话历史栈中
+- `window.history.replaceState` 将当前的会话页面的 url 替换成指定的数据
+
+而 history 路由的实现，主要就是依靠于 pushState 与 replaceState 实现的，这里我们先总结下它们的一些特点
+
+<div class="f1">
+  1. 都会改变当前页面显示的 url，但都不会刷新页面 
+  <br><br>
+  2. pushState 是压入浏览器的会话历史栈中，会使得 history.length 加 1
+  <br><br>
+  3. replaceState 是 替换当前的这条会话历史，因此不会增加 history.length
+</div>
+
+#### popstate
+
+::: tip
+
+1. 每当激活同一文档中不同的历史记录条目时，popstate 事件就会在对应的 window 对象上触发。
+
+2. 如果当前处于激活状态的历史记录条目是由 history.pushState() 方法创建的或者是由 history.replaceState() 方法修改的，则 popstate 事件的 state 属性包含了这个历史记录条目的 state 对象的一个拷贝。
+
+3. 调用 history.pushState() 或者 history.replaceState() 不会触发 popstate 事件。popstate 事件只会在浏览器某些行为下触发，比如点击后退按钮（或者在 JavaScript 中调用 history.back() 方法）。即，在同一文档的两个历史记录条目之间导航会触发该事件。
+   :::
+
+总结:
+
+- history.pushState 和 history.replaceState 方法是不会触发 popstate 事件的;
+  但是浏览器的某些行为会导致 popstate，比如 go、back、forward
+- popstate 事件对象中的 state 属性，可以理解是我们在通过 history.pushState 或 history.replaceState 方法时，传入的指定的数据
+
+#### 重写 pushState replaceState
+
+popstate 无法监听 history.pushState 和 history.replaceState 方法，那就重新写下你这个 history.pushState 和 history.replaceState 方法吧，让你在这个方法中，也能够暴露出自定义的全局事件，然后我再监听自定义的事件，就能实现路由支持:
+
+```js
+let _wr = function (type) {
+  let orig = history[type];
+  return function () {
+    let rv = orig.apply(this, arguments);
+    let e = new Event(type);
+    e.arguments = arguments;
+    window.dispatchEvent(e);
+    return rv;
+  };
+};
+history.pushState = _wr("pushState");
+history.replaceState = _wr("replaceState");
+```
+
+#### 缺陷
+
+history 模式下，如果你再跳转路由后再次刷新会得到 404 的错误，这个错误说白了就是浏览器会把整个地址当成一个可访问的静态资源路径进行访问，然后服务端并没有这个文件
+
+<div class="f1">
+1. 没刷新时，只是通过 pushState 改变 URL，不刷新页面
+<br><br>
+2. 一旦在某个路由下刷新页面的时候，想当于去该路径下寻找可访问的静态资源 index.html，无果，报错
+</div>
+<br>
+<font color="red">
+所以需要配置下nginx，告诉服务器，当我们访问的路径资源不存在的时候，默认指向静态资源index.html
+</font>
