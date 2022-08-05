@@ -67,6 +67,7 @@ const sidebar = {
     "/other/api.md",
     "/other/suanfa.md",
     "/other/package.md",
+    "/other/GraphQL.md",
   ],
 };
 
