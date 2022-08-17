@@ -107,3 +107,24 @@ const Comp: React.FC = () => {
   return <div className="commom-page">参数: {params.id}</div>;
 };
 ```
+
+## 获取浏览器 ? 后面的参数
+
+```tsx
+import { useSearchParams } from "react-router-dom";
+
+const App: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  // 获取?id=123 的 123
+  const defaultVal = searchParams.get("id") || "";
+
+  const onSelect = (selectedKeys: React.Key[]) => {
+    // 设置 ?id=456 ,会同步到浏览器链接上
+    setSearchParams(`id=456`);
+  };
+
+  return <div>test</div>;
+};
+
+export default App;
+```
