@@ -103,7 +103,7 @@ const uploadChange = (uploadFile) => {
 
 按照如下设置即可
 
-<img src="./imgs/1.png">
+<img width="60%" src="./imgs/1.jpg">
 
 ## node 修改文件名称
 
