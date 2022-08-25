@@ -32,12 +32,6 @@ let decLiteral: number = 6;
 let octalLiteral: number = 0o744;
 ```
 
-### 数组，元组 Tuple
-
-```ts
-
-```
-
 ### 枚举
 
 ```javascript
