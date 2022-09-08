@@ -39,32 +39,6 @@ yarn build:weapp
 
 <img src="./imgs/目录结构.jpg" />
 
-## react
-
-### 事件
-
-```tsx
-function Comp() {
-  function clickHandler(e) {
-    e.stopPropagation(); // 阻止冒泡
-  }
-  function scrollHandler() {}
-  // 只有小程序的 bindtap 对应 Taro 的 onClick
-  // 其余小程序事件名把 bind 换成 on 即是 Taro 事件名
-  return <ScrollView onClick={clickHandler} onScroll={scrollHandler} />;
-}
-```
-
-小程序模板中绑定的 catchtouchmove 事件除了可以阻止回调函数冒泡触发外，还能阻止视图的滚动穿透，这点 Taro 的事件系统是做不到的。解决方案见官网说明:<https://taro-docs.jd.com/taro/docs/react-overall>
-
-### React 的生命周期
-
-1. componentWillMount (): onLoad 之后，页面组件渲染到 Taro 的虚拟 DOM 之前触发
-
-2. componentDidMount (): 页面组件渲染到 Taro 的虚拟 DOM 之后触发。
-   能访问到 Taro 的虚拟 DOM（使用 React ref、document.getElementById 等手段）
-   <font color="red">无法通过 createSelectorQuery 等方法获取小程序渲染层 DOM 节点。 只能在 onReady 生命周期中获取</font>
-
 ## 入口组件
 
 入口文件默认是 `src` 目录下的 `app.js`:
@@ -375,3 +349,9 @@ class Test extends React.Component {
 ```
 
 :::
+
+## hooks
+
+- Taro 的专有 Hooks（例如 usePageScroll, useReachBottom）从 @tarojs/taro 中引入
+- 框架自己的 Hooks （例如 useEffect, useState）从对应的框架引入
+- 文档 <https://taro-docs.jd.com/taro/docs/hooks>
