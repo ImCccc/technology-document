@@ -5,6 +5,7 @@ const sidebar = {
     "/gongchenghua/openapi.md",
     "/gongchenghua/pwa.md",
     "/gongchenghua/小程序.md",
+    "/gongchenghua/taro.md",
     "/gongchenghua/qiankun.md",
     "/gongchenghua/createReactApp.md",
   ],
