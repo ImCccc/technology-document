@@ -355,3 +355,62 @@ class Test extends React.Component {
 - Taro 的专有 Hooks（例如 usePageScroll, useReachBottom）从 @tarojs/taro 中引入
 - 框架自己的 Hooks （例如 useEffect, useState）从对应的框架引入
 - 文档 <https://taro-docs.jd.com/taro/docs/hooks>
+
+## alias 别名配置
+
+`/config/index.js:`
+
+```javascript
+import { resolve } from "path";
+
+module.exports = {
+  alias: {
+    "@/components": resolve(__dirname, "..", "src/components"),
+    "@/package": resolve(__dirname, "..", "package.json"),
+    "@/project": resolve(__dirname, "..", "project.config.json"),
+  },
+};
+```
+
+`/tsconfig.json:`
+
+```ts
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/components/*": ["./src/components/*"],
+      "@/package": ["./package.json"],
+      "@/project": ["./project.config.json"]
+    },
+  },
+}
+```
+
+使用:
+
+```javascript
+import Comp from "@/components/comp1";
+```
+
+## 环境判断
+
+`env` 用于设置环境变量，如 `process.env.NODE_ENV`, 区分开发环境和生产环境，可以如下配置：
+
+```javascript
+// config/dev.js：
+module.exports = {
+  env: {
+    NODE_ENV: '"development"', // 这里需要引号, 因为会使用 JSON.stringify 转义
+  },
+};
+
+// config/prod.js
+module.exports = {
+  env: {
+    NODE_ENV: '"production"',
+  },
+};
+```
+
+这样就能在代码中通过` process.env.NODE_ENV === 'development'` 来判断环境
