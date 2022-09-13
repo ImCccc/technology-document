@@ -595,3 +595,11 @@ Webpack 的运⾏流程是⼀个串⾏的过程，从启动到结束会依次执
 </div>
 
 在以上过程中，Webpack 会在特定的时间点⼴播出特定的事件，插件在监听到感兴趣的事件后会执⾏特定的逻辑，并且插件可以调⽤ Webpack 提供的 API 改变 Webpack 的运⾏结果。
+
+## 什么叫 DevOps
+
+先了解下开发模式的发展: 瀑布流开发 -> 敏捷开发 -> DevOps
+
+<https://baijiahao.baidu.com/s?id=1692918919767968490&wfr=spider&for=pc>
+
+<https://www.zhihu.com/question/58702398>
