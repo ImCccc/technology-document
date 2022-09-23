@@ -6,7 +6,7 @@
 
 ### /i
 
-不区分大小写 将匹配设置为不区分大小写
+不区分大小写, 将匹配设置为不区分大小写
 
 ```js
 var str = "Google runoob taobao RUNoob";
