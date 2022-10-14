@@ -1,6 +1,6 @@
 # nodejs
 
-## 在 node 环境使用 axios
+## node 使用 axios
 
 ```javascript
 const axios = require("axios");
@@ -38,7 +38,7 @@ _request("/xxx/aaa", { name: "lcr" }, "get").then((data) => {
 });
 ```
 
-## 判断是文件夹还是文件
+## isDirectory 是否为文件夹
 
 - isFile() 和 isDirectory() 方法来判断是文件还是文件夹
 - isFile() 方法可检测是否为常规文件，如果是则返回 true
@@ -51,16 +51,14 @@ fileData.isFile(); // 是否是文件
 fileData.isDirectory(); // 是否是文件夹
 ```
 
-## 判断文件是否存在
+## existsSync 文件是否存在
 
 ```js
 const fs = require("fs");
 fs.existsSync("文件地址"); // true 存在, false 不存在
 ```
 
-## 文件的读写
-
-2. 读取文件内容
+## readFileSync 文件读取
 
 ```javascript
 const fs = require("fs");
@@ -69,11 +67,12 @@ if (fs.existsSync("文件地址")) {
 }
 ```
 
-3. 写入文件, 存在则覆盖
+## readFileSync 文件写入
+
+写入文件, 存在则覆盖:
 
 ```javascript
 const fs = require("fs");
-
 fs.writeFileSync(
   "写入文件的地址",
   JSON.stringify({ name: "lcr" }, null, 2),
@@ -96,9 +95,7 @@ https.get("https://minio.dev.inrobot.cloud/smzx/video/icescreen/1", (res) => {
 });
 ```
 
-## 根据路径, 创建文件
-
-### 创建文件夹 mkdirSync
+## mkdirSync 创建文件夹
 
 `mkdirSync` 创建文件夹, 如果文件夹存在会报错 `file already exists`, 创建之前先去判断下是否存在
 
@@ -108,33 +105,7 @@ if (fs.existsSync("../aaa")) return; // 判断文件夹是否存在
 fs.mkdirSync("../aaa"); // 当前目录的上层目录创建文件夹aaa
 ```
 
-- 例子: 传入文件路径, 如果没有文件夹,那么创建文件夹, 一层层创建, 直到创建文件为止
-
-```javascript
-const fs = require("fs");
-
-const createFileByPath = function (filePath, data) {
-  let dirCache = {};
-  if (!fs.existsSync(filePath)) {
-    const arr = filePath.split("/");
-    let dir = arr[0];
-    for (let i = 1; i < arr.length; i++) {
-      if (!dirCache[dir] && !fs.existsSync(dir)) {
-        dirCache[dir] = true;
-        fs.mkdirSync(dir);
-      }
-      dir = dir + "/" + arr[i];
-    }
-    fs.writeFileSync(filePath, data);
-  } else {
-    fs.appendFile(filePath, data, function (err) {});
-  }
-};
-
-createFileByPath("路径1/路径2/路径3/文件.txt", "文件内容");
-```
-
-## 删除文件
+## unlinkSync 删除文件
 
 - 删除一个文件
 
@@ -181,6 +152,34 @@ createFileByPath("路径1/路径2/路径3/文件.txt", "文件内容");
   }
   deleteAll("111/22");
   ```
+
+## 根据路径, 创建文件
+
+- 例子: 传入文件路径, 如果没有文件夹,那么创建文件夹, 一层层创建, 直到创建文件为止
+
+```javascript
+const fs = require("fs");
+
+const createFileByPath = function (filePath, data) {
+  let dirCache = {};
+  if (!fs.existsSync(filePath)) {
+    const arr = filePath.split("/");
+    let dir = arr[0];
+    for (let i = 1; i < arr.length; i++) {
+      if (!dirCache[dir] && !fs.existsSync(dir)) {
+        dirCache[dir] = true;
+        fs.mkdirSync(dir);
+      }
+      dir = dir + "/" + arr[i];
+    }
+    fs.writeFileSync(filePath, data);
+  } else {
+    fs.appendFile(filePath, data, function (err) {});
+  }
+};
+
+createFileByPath("路径1/路径2/路径3/文件.txt", "文件内容");
+```
 
 ## 路径相关
 
