@@ -1,6 +1,6 @@
 # nodejs
 
-## node 使用 axios
+## 使用 axios
 
 ```javascript
 const axios = require("axios");
