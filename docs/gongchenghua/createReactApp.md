@@ -1,3 +1,0 @@
-# createReactApp
-
-createReactApp
