@@ -7,7 +7,6 @@ const sidebar = {
     "/gongchenghua/小程序.md",
     "/gongchenghua/taro.md",
     "/gongchenghua/qiankun.md",
-    "/gongchenghua/nodejs.md",
   ],
   "/mianshi/": [
     "/mianshi/",
@@ -63,6 +62,7 @@ const sidebar = {
     "/js/request.md",
     "/js/",
   ],
+  "/nodejs/": ["/nodejs/", "/nodejs/package.md"],
   "/other/": [
     "/other/",
     "/other/api.md",
@@ -84,6 +84,7 @@ module.exports = {
     sidebarDepth: 2,
     sidebar,
     nav: [
+      { text: "nodejs", link: "/nodejs/" },
       { text: "前端工程化", link: "/gongchenghua/vite.md" },
       { text: "工具", link: "/tool/" },
       { text: "vue", link: "/vue/" },
