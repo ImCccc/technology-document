@@ -1,5 +1,43 @@
 # nodejs
 
+## 在 node 环境使用 axios
+
+```javascript
+const axios = require("axios");
+const axiosService = axios.create({
+  timeout: 600000,
+  baseURL: "https://ybstest.qxfoodom.com/api/",
+});
+axiosService.defaults.headers.post["Content-Type"] =
+  "application/x-www-form-urlencoded";
+axiosService.interceptors.response.use(
+  (res) =>
+    res.status === 200 ? Promise.resolve(res.data) : Promise.reject(res),
+  (error) => Promise.reject(error.response)
+);
+
+const _request = (url, params, method) => {
+  let getParams = {};
+  let postParams = {};
+  method = (method || "post").toLowerCase();
+  if (method === "post") {
+    postParams = params;
+  } else {
+    getParams = params;
+  }
+  return axiosService({
+    url,
+    method: method,
+    data: postParams,
+    params: getParams,
+  }).then((rs) => rs);
+};
+
+_request("/xxx/aaa", { name: "lcr" }, "get").then((data) => {
+  console.log("返回数据:", data);
+});
+```
+
 ## 判断是文件夹还是文件
 
 - isFile() 和 isDirectory() 方法来判断是文件还是文件夹
@@ -60,12 +98,21 @@ https.get("https://minio.dev.inrobot.cloud/smzx/video/icescreen/1", (res) => {
 
 ## 根据路径, 创建文件
 
-传入文件路径, 如果没有文件夹,那么创建文件夹, 一层层创建, 直到创建文件为止
+### 创建文件夹 mkdirSync
+
+`mkdirSync` 创建文件夹, 如果文件夹存在会报错 `file already exists`, 创建之前先去判断下是否存在
+
+```javascript
+const fs = require("fs");
+if (fs.existsSync("../aaa")) return; // 判断文件夹是否存在
+fs.mkdirSync("../aaa"); // 当前目录的上层目录创建文件夹aaa
+```
+
+- 例子: 传入文件路径, 如果没有文件夹,那么创建文件夹, 一层层创建, 直到创建文件为止
 
 ```javascript
 const fs = require("fs");
 
-// 生成会议的音频文件
 const createFileByPath = function (filePath, data) {
   let dirCache = {};
   if (!fs.existsSync(filePath)) {
@@ -135,40 +182,87 @@ createFileByPath("路径1/路径2/路径3/文件.txt", "文件内容");
   deleteAll("111/22");
   ```
 
-## 在 node 环境使用 axios
+## 路径相关
+
+### `process.cwd()`
+
+process.cwd() 是用于获取当前当前终端的目录, 看下面例子:
+
+`C:\Users\licr1\Desktop\test\folder2\index.js`:
 
 ```javascript
-const axios = require("axios");
-const axiosService = axios.create({
-  timeout: 600000,
-  baseURL: "https://ybstest.qxfoodom.com/api/",
-});
-axiosService.defaults.headers.post["Content-Type"] =
-  "application/x-www-form-urlencoded";
-axiosService.interceptors.response.use(
-  (res) =>
-    res.status === 200 ? Promise.resolve(res.data) : Promise.reject(res),
-  (error) => Promise.reject(error.response)
-);
+function testCwd() {
+  const cwd = process.cwd();
+  console.log("cwd: ", cwd);
+}
+module.exports = { testCwd };
+```
 
-const _request = (url, params, method) => {
-  let getParams = {};
-  let postParams = {};
-  method = (method || "post").toLowerCase();
-  if (method === "post") {
-    postParams = params;
-  } else {
-    getParams = params;
-  }
-  return axiosService({
-    url,
-    method: method,
-    data: postParams,
-    params: getParams,
-  }).then((rs) => rs);
-};
+`C:\Users\licr1\Desktop\test\folder1\index.js`:
 
-_request("/xxx/aaa", { name: "lcr" }, "get").then((data) => {
-  console.log("返回数据:", data);
-});
+```javascript
+const { testCwd } = require("../folder2/index");
+testCwd();
+```
+
+如果在 `folder1` 打开终端, 执行 `node index.js` 那么 `process.cwd()` 就是 <font color="red">当前终端的目录</font>, 即使调用的是其他文件夹的方法:
+
+```
+PS C:\Users\licr1\Desktop\test\folder1> node .\index.js
+cwd:  C:\Users\licr1\Desktop\test\folder1
+```
+
+### `__dirname`
+
+`__dirname` 代表<font color="red">当前执行文件的所在目录</font>, 还是上面的例子:
+
+```javascript
+// C:\Users\licr1\Desktop\test\folder2\index.js:
+function testCwd() {
+  const cwd = process.cwd();
+  console.log("folder2 cwd:", cwd);
+  console.log("folder2 __dirname:", __dirname);
+}
+module.exports = { testCwd };
+
+// `C:\Users\licr1\Desktop\test\folder1\index.js`:
+const cwd = process.cwd();
+console.log("folder1 cwd:", cwd);
+console.log("folder1 __dirname:", __dirname);
+
+const { testCwd } = require("../folder2/index");
+testCwd();
+```
+
+终端执行:
+
+```
+PS C:\Users\licr1\Desktop\test\folder1> node .\index.js
+folder1 cwd: C:\Users\licr1\Desktop\test\folder1
+folder1 __dirname: C:\Users\licr1\Desktop\test\folder1
+folder2 cwd: C:\Users\licr1\Desktop\test\folder1
+folder2 __dirname: C:\Users\licr1\Desktop\test\folder2
+```
+
+### `path.join()`
+
+将多个参数组合成一个 path
+
+例子: 在 `C:\Users\licr`下有文件 `index.js` 内容如下, 在该文件夹下启动终端执行 `node index.js`:
+
+```javascript
+const cwd = process.cwd();
+const join = require("path").join;
+
+join(cwd, "1", "2/3", "/4/"); // C:\Users\licr\1\2\3\4\
+
+join(cwd, "1", "2\\3", "/4/"); // // C:\Users\licr\1\2\3\4\
+
+join(cwd, "1", "2/3", "/4"); // C:\Users\licr\1\2\3\4
+
+join(cwd, "1", "2/3", ".."); // C:\Users\licr\1\2
+
+join(cwd, "1", "2///3///", "../../"); // C:\Users\licr\1\
+
+join(cwd, "1", "2/3", "../.."); // C:\Users\licr\1
 ```
