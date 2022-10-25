@@ -314,7 +314,7 @@ package.json 添加：
 
 ```
 "scripts": {
-  "rm": :rimraf node_modules"
+  "rm": "rimraf node_modules"
 }
 ```
 
