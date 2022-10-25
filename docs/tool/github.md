@@ -13,6 +13,40 @@ github 上，拉代码有 2 和地址：
 
 有什么区别呢？https url 直接有效网址打开，但是用户每次通过 git 提交的时候都要输入用户名和密码，有没有简单的一点的办法，一次配置，永久使用呢？当然，所以有了第二种地址，也就是 SSH URL，如何配置下面有说明。
 
+## 现有项目关联 github
+
+1. 初始化
+
+```
+git init
+```
+
+2. 提交本地仓库
+
+```
+git add .
+git commit -m 'first-commot'
+```
+
+3. 关联 github
+
+```
+git remote add origin https://github.com/ImCccc/wavesurfer.git
+```
+
+4. 将分支名称修改为 main
+
+```
+git branch -m main
+```
+
+5. 查看分支名, 推送
+
+```
+git branch
+git push -u origin main
+```
+
 ## 配置 SSH
 
 GitHub 配置 SSH Key 的目的是为了帮助我们在通过 git 提交代码是，不需要繁琐的验证过程，简化操作流程。
