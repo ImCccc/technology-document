@@ -69,6 +69,7 @@ const sidebar = {
     "/other/suanfa.md",
     "/other/package.md",
     "/other/GraphQL.md",
+    "/other/wavesurfer.md",
   ],
 };
 
