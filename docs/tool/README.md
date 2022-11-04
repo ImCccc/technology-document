@@ -204,3 +204,8 @@ npx --ignore-existing create-react-app my-react-app
 ### 版本号 ||
 
 组合集合。例如 < 2.1 || > 2.6。
+
+## package.json 配置
+
+<br/>
+<img src="./imgs/packagejson.png" />
