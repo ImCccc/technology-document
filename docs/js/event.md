@@ -72,7 +72,7 @@
 
 ### `Event.isTrusted`
 
-只读属性，当事件是由用户行为生成的时候，这个属性的值为 `true` ，而当事件是由脚本创建、修改、通过 EventTarget.dispatchEvent() 派发的时候，这个属性的值为 `false`
+只读属性，当事件是由用户行为生成的时候，这个属性的值为 `true` ，而当事件是由脚本创建、修改、通过 `EventTarget.dispatchEvent()` 派发的时候，这个属性的值为 `false`
 
 ## 常见方法
 

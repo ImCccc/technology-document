@@ -1,4 +1,4 @@
-# vscode 常见配置
+# vscode 配置
 
 下面列出 `vscode` 常见问题与配置
 
