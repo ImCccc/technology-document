@@ -501,6 +501,89 @@ type BB = T[number]; // type BB = "a" | "b" | "c"
 type First<T> = T extends [infer P, ...infer Rest] ? P : never;
 ```
 
+## 泛型
+
+### 泛型函数
+
+```tsx
+function identity<T>(value: T): T {
+  return value;
+}
+
+function identity2<T, U>(value: T, message: U): T {
+  return value;
+}
+
+identity2<string, number>("lichirong", 18);
+
+// 简写
+identity2("lichirong", 18);
+```
+
+### 泛型接口
+
+```tsx
+interface Identity<V, U> {
+  value: V;
+  message: U;
+}
+
+function identity<T, U>(value, T, message: U): Identity<T, U> {
+  return {
+    value,
+    message,
+  };
+}
+```
+
+### 泛型类
+
+```tsx
+interface GenericInterface<U> {
+  value: U;
+  getIdentity: () => U;
+}
+
+class IdentityClass<T> implements GenericInterface<T> {
+  value: T;
+
+  constructor(value: T) {
+    this.value = value;
+  }
+
+  getIdentity(): T {
+    return this.value;
+  }
+}
+```
+
+### 泛型约束
+
+```ts
+interface Length {
+  length: number;
+}
+
+function identity<T extends Length>(value: T): number {
+  return value.length;
+}
+
+function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
+  return obj[key];
+}
+```
+
+### 默认参数
+
+```tsx
+interface InterfaceA<T = string> {
+  value: T;
+}
+
+const obj: InterfaceA = { value: "lichirong" };
+const obj1: InterfaceA<number> = { value: 100 };
+```
+
 ## 试题
 
 <https://juejin.cn/post/7110232056826691591>
