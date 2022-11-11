@@ -109,7 +109,10 @@ const Comp: React.FC = () => {
 export default observer(Comp);
 ```
 
-hooks 上不能直接使用, 响应不了数据变化; 需要在组件中通过参数的方式,传递进去:
+<font color="red">注意: hooks 上不能直接使用 !!!</font>因为响应不了数据变化; 需要使用提供 2 种方法:
+
+1. 在组件中通过参数的方式,传递进去;
+2. 调用该 `hooks` 的组件使用 `observer` 包装;
 
 ```tsx
 import { useMobx } from "@/stores";
