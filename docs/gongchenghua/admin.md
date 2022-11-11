@@ -304,6 +304,62 @@ const Comp: React.FC = () => {
 export default observer(Comp);
 ```
 
+## 页面元素权限控制
+
+有时候, 2 个角色都可以访问页面 A, 但是看到的信息却不一样, 这时候需要有一个机制, 根据角色,显示不一样的页面元素; 例如只有管理员才有 "删除" 按钮, 下面是实现方案:
+
+1. 添加权限控制的 hooks `src\hooks\useAuth.tsx`:
+
+```tsx
+// 所有角色
+type AuthorityType = "admin" | "member";
+
+type DataProps<T> = {
+  [key in AuthorityType]?: T;
+};
+
+// role 当前登录人的角色;
+// data: 不一样的角色需要对应的数据
+// defauleValue: 默认值
+function useAuth<T>(role: AuthorityType, data: DataProps<T>, defauleValue?: T) {
+  return data[role] || defauleValue;
+}
+
+export default useAuth;
+```
+
+2. 在页面上使用
+
+```tsx
+import { useMemo, useEffect } from "react";
+import { useMobx } from "@/stores";
+import { observer } from "mobx-react-lite";
+import useAuth from "@/hooks/useAuth";
+
+const Comp: React.FC = () => {
+  const User = useMobx("User");
+
+  // User.thisRole 是当前角色, 只有 admin 才有删除
+  const dataColumn = useAuth<any>(
+    User.thisRole,
+    { admin: [{ label: "删除", callback: () => {} }] },
+    []
+  );
+
+  const columns = useMemo<TableListColumns<SMZX.smzxTaskDetail>>(
+    () => [
+      { title: "任务名称", dataIndex: "name" },
+      { operList: [{ label: "编辑", callback: () => {} }, ...dataColumn] },
+    ],
+    [dataColumn]
+  );
+
+  return <div>{dataColumn.length}</div>;
+};
+
+export default observer(Comp);
+```
+
 ## 请求接口封装
 
 `src\utils\request.ts`
