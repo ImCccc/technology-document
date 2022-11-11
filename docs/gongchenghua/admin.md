@@ -97,25 +97,20 @@ const getRoutes = (routeMenuList: RouteMenuProps[]): RouteProps[] => {
 };
 
 // 过滤路由数据, 获取菜单配置
-export const getMenus = () => {
-  const loop = (routeMenuList: RouteMenuProps[]): MeunProps[] => {
-    return routeMenuList.map((item) => {
-      const { children, path, label, icon, authority } = item;
-      return {
-        icon,
-        label,
-        key: path,
-        authority,
-        children: children ? loop(children) : undefined,
-      };
-    });
-  };
-  return loop(routeMenuList);
-};
+export const getMenus = (list = routeMenuList): MeunProps[] =>
+  list.map((item) => {
+    const { children, path, label, icon, authority, hidemenu } = item;
+    return {
+      icon,
+      label,
+      hidemenu,
+      key: path,
+      authority,
+      children: children ? getMenus(children) : undefined,
+    };
+  });
 
-const routes = getRoutes(routeMenuList);
-
-export default routes;
+export default getRoutes(routeMenuList);
 ```
 
 ## 状态管理 mbox
