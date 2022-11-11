@@ -24,6 +24,7 @@ export type MeunProps = {
   key?: string; // 路由路径
   icon?: JSX.Element; // 图标
   children?: MeunProps[]; // 子菜单
+  hidemenu?: boolean; // 菜单是否隐藏, 通常详情页面需要设置为 true
   authority?: AuthorityType; // 值是角色, 用于指定哪个角色才能显示该菜单
 };
 
@@ -267,10 +268,11 @@ const Comp: React.FC = () => {
   const thisMenus = useMemo<any>(() => {
     const loop = (menus: MeunProps[]) => {
       return menus.filter((menu) => {
-        const { authority, children } = menu;
-        if (children) menu.children = loop([...children]);
-        if (!authority) return true;
-        return authority === User.role;
+        const { authority, children, hidemenu } = menu;
+        if (hidemenu) return false;
+        if (authority && authority !== User.role) return false;
+        if (children) menu.children = loop(children);
+        return true;
       });
     };
     return loop(getMenus());
