@@ -24,14 +24,15 @@ export type MeunProps = {
   key?: string; // 路由路径
   icon?: JSX.Element; // 图标
   children?: MeunProps[]; // 子菜单
-  authority?: AuthorityType; // 用户权限
+  authority?: AuthorityType; // 值是角色, 用于指定哪个角色才能显示该菜单
 };
 
 // 路由配置需要的属性
 export type RouteProps = {
   path: string; // 路径
   Component: React.LazyExoticComponent<React.FC>; // 懒加载的组件
-  authority?: AuthorityType; // 和菜单一样, 用户权限
+  authority?: AuthorityType; // 值是角色, 用于指定哪个角色才能访问该路由
+  isHomepage?: boolean; // 是否主页
   children?: RouteProps[]; // 子路由
 };
 
@@ -71,9 +72,12 @@ const routeMenuList: RouteMenuProps[] = [
 // 打平菜单, 获取路由配置
 const getRoutes = (routeMenuList: RouteMenuProps[]): RouteProps[] => {
   const routes: RouteProps[] = [];
+  // 用于缓存主页的路由配置
+  const homeRoute: RouteProps[] = [];
   const loop = (routeMenuList: RouteMenuProps[]) => {
     routeMenuList.forEach((route) => {
       const { children, path, Component, authority } = route;
+      if (Component && isHomepage) homeRoute.push({ path: "/", Component });
       if (Component && path) routes.push({ path, Component, authority });
       if (children) loop(children);
     }, routes);
@@ -85,7 +89,7 @@ const getRoutes = (routeMenuList: RouteMenuProps[]): RouteProps[] => {
     {
       path: "/",
       Component: lazy(() => import("@/pages/Layout")),
-      children: [...routes, route404],
+      children: [...homeRoute, ...routes, route404],
     },
     route404,
   ];
