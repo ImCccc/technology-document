@@ -311,18 +311,18 @@ export default observer(Comp);
 1. 添加权限控制的 hooks `src\hooks\useAuth.tsx`:
 
 ```tsx
-// 所有角色
-type AuthorityType = "admin" | "member";
+import { useMobx } from "@/stores";
+
+type AuthorityType = "admin" | "mumber"; // 角色
 
 type DataProps<T> = {
   [key in AuthorityType]?: T;
 };
 
-// role 当前登录人的角色;
-// data: 不一样的角色需要对应的数据
-// defauleValue: 默认值
-function useAuth<T>(role: AuthorityType, data: DataProps<T>, defauleValue?: T) {
-  return data[role] || defauleValue;
+function useAuth<T>(data: DataProps<T>, defauleValue?: T) {
+  const User = useMobx("User");
+  // User.role 就是当前用户的角色
+  return data[User.role] || defauleValue;
 }
 
 export default useAuth;
@@ -332,17 +332,20 @@ export default useAuth;
 
 ```tsx
 import { useMemo, useEffect } from "react";
-import { useMobx } from "@/stores";
 import { observer } from "mobx-react-lite";
 import useAuth from "@/hooks/useAuth";
 
 const Comp: React.FC = () => {
-  const User = useMobx("User");
-
-  // User.thisRole 是当前角色, 只有 admin 才有删除
   const dataColumn = useAuth<any>(
-    User.thisRole,
-    { admin: [{ label: "删除", callback: () => {} }] },
+    {
+      admin: [
+        {
+          label: "删除",
+          confirmKey: "name",
+          callback: (row: any) => TaskServiceDelete({ code: row.code }),
+        },
+      ],
+    },
     []
   );
 
@@ -359,6 +362,13 @@ const Comp: React.FC = () => {
 
 export default observer(Comp);
 ```
+
+::: tip
+需要注意的地方是: 在 `useXxx` 的 `hooks` 上, 如果使用 `mbox` 中的响应式数据, 那么它的页面组件必须需要 `observer` 包裹,
+<font color="red">
+上述例子, 如果直接 export default Comp; 那么 useAuth.tsx 上的 User.role 就不是响应式
+</font>
+:::
 
 ## 请求接口封装
 
