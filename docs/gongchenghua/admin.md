@@ -411,12 +411,10 @@ const goLogin = () => {
 
 //拦截器
 request.interceptors.request.use((config) => {
-  try {
-    const token = getToken();
-    if (config.headers instanceof Object) {
-      config.headers["Content-Type"] = "application/json";
-    }
-  } catch (e) {}
+  const token = getToken();
+  if (config.headers instanceof Object) {
+    config.headers["Content-Type"] = "application/json";
+  }
   return config;
 });
 
@@ -429,18 +427,14 @@ request.interceptors.response.use(
     const { data } = response;
     if (data?.code === "OK" || data?.code === 0) {
       return Promise.resolve(data);
-    } else {
-      message.error(`${data.code}: ${data.msg}`);
-      return Promise.reject(data);
-    }
-  },
-  (error) => {
-    if (error.response.status === 401) {
-      return goLogin();
     }
 
+    message.error(`${data.code}: ${data.msg}`);
+    return Promise.reject(data);
+  },
+  (error) => {
+    if (error.response.status === 401) return goLogin();
     message.error(`${error.code}: ${error.message}`);
-    Promise.reject(error);
   }
 );
 
