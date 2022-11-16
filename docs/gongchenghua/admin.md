@@ -448,7 +448,7 @@ class KeepAliveRoute {
   }
 
   addCacheRoute(pathname: string) {
-    pathname = pathname || location.hash.replace("#", "");
+    pathname = pathname || location.hash.replace("#", "").split("?")[0];
     if (!this.cacheRouteList.includes(pathname)) {
       this.cacheRouteList.push(pathname);
     }
