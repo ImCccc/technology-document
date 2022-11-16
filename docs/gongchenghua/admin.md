@@ -430,6 +430,7 @@ export default memo(KeepAlive);
 ```css
 .layout-container-active {
   display: flex;
+  flex-direction: column;
   flex-grow: 1;
   overflow: hidden;
 }
