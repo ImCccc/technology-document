@@ -367,6 +367,180 @@ export default observer(Comp);
 </font>
 :::
 
+## 缓存路由
+
+有时候, 有需求需要在列表界面, 点进去查看详情, 返回需要还原之前界面, vue 有 `KeepAlive`很方便实现, react 就需要自己实现, 以下是解决方案:
+
+1. 添加 `src\pages\Layout\KeepAlive.tsx`:
+
+```tsx
+import { useUpdate } from "ahooks";
+import { useLocation } from "react-router-dom";
+import { useRef, useEffect, memo, ReactNode } from "react";
+
+type KeepAliveProps = {
+  cacheList: string[]; // 缓存的路由
+  children: ReactNode; // 路由界面
+};
+
+const KeepAlive = (props: KeepAliveProps) => {
+  const { cacheList = [], children } = props;
+  const { pathname } = useLocation();
+
+  const componentList = useRef(new Map<string, KeepAliveProps["children"]>());
+  const update = useUpdate();
+  const activeKey = useRef("");
+
+  useEffect(() => {
+    Array.from(componentList.current).map(([key]) => {
+      if (!cacheList.includes(key) && key !== pathname) {
+        componentList.current.delete(key);
+      }
+    });
+
+    activeKey.current = pathname;
+    if (!componentList.current.has(pathname)) {
+      componentList.current.set(pathname, children);
+    }
+
+    // 强制刷新界面
+    update();
+  }, [cacheList, children, pathname, update]);
+
+  return (
+    <>
+      {Array.from(componentList.current).map(([key, component]) => {
+        return key == activeKey.current ? (
+          <div key={key} className="layout-container-active">
+            {component}
+          </div>
+        ) : (
+          <div
+            key={key}
+            style={{ display: "none" }}
+            className="layout-container__keep-alive"
+          >
+            {component}
+          </div>
+        );
+      })}
+    </>
+  );
+};
+
+export default memo(KeepAlive);
+```
+
+2. 添加全局需要缓存的路由`src\stores\KeepAliveRoute.ts`：
+
+```tsx
+import { makeAutoObservable } from "mobx";
+
+class KeepAliveRoute {
+  cacheRouteList: string[] = [];
+
+  constructor() {
+    makeAutoObservable(this);
+  }
+
+  get cacheList() {
+    return this.cacheRouteList;
+  }
+
+  addCacheRoute(pathname: string) {
+    if (!this.cacheRouteList.includes(pathname)) {
+      this.cacheRouteList.push(pathname);
+    }
+  }
+
+  remove(pathname?: string) {
+    if (pathname) {
+      this.cacheRouteList = this.cacheRouteList.filter(
+        (path) => path !== pathname
+      );
+    } else {
+      this.cacheRouteList = [];
+    }
+  }
+}
+
+export default KeepAliveRoute;
+```
+
+3. 替换 `<Outlet/>` 使用 `KeepAlive` 包裹：
+   `src\pages\Layout\Content.tsx`：
+
+```tsx
+import { useMobx } from "@/stores";
+import { useOutlet } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import KeepAlive from "./KeepAlive";
+
+const Comp: React.FC = () => {
+  const outlet = useOutlet();
+  // 缓存的路由
+  const KeepAliveRoute = useMobx("KeepAliveRoute");
+  return <KeepAlive cacheList={KeepAliveRoute.cacheList}>{outlet}</KeepAlive>;
+};
+
+export default observer(Comp);
+```
+
+4. 页面上使用路由缓存：
+
+```tsx
+import { observer } from "mobx-react-lite";
+import { useNavigate } from "react-router-dom";
+import { useMobx } from "@/stores";
+
+const Comp: React.FC = () => {
+  const navigate = useNavigate();
+  const KeepAliveRoute = useMobx("KeepAliveRoute");
+  return (
+    <div
+      className="common-page"
+      onClick={() => {
+        // 缓存当前路由
+        KeepAliveRoute.addCacheRoute("/task/index");
+        // 跳转页面
+        navigate("/test");
+      }}
+    >
+      test
+    </div>
+  );
+};
+
+export default observer(Comp);
+```
+
+5. 点击菜单， 清空缓存的路由 `src\pages\Layout\Sider.tsx`：
+
+```tsx
+import { useNavigate } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import { useMobx } from "@/stores";
+import { Menu } from "antd";
+
+const Comp: React.FC = () => {
+  const KeepAliveRoute = useMobx("KeepAliveRoute");
+  const navigate = useNavigate();
+  return (
+    <Menu
+      mode="inline"
+      theme="dark"
+      items={[]}
+      onClick={(e) => {
+        navigate(e.key);
+        KeepAliveRoute.remove();
+      }}
+    />
+  );
+};
+
+export default observer(Comp);
+```
+
 ## 请求接口封装
 
 `src\utils\request.ts`

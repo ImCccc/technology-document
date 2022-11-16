@@ -96,7 +96,7 @@ git push -u origin master
 
 以上指令正常执行后， 本地仓库的代码就提交到远程仓库了：
 
-<img  src="./imgs/3.jpg">
+<img height="300px" src="./imgs/3.jpg">
 
 ## git 分支命令
 
