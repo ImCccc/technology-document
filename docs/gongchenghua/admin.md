@@ -409,8 +409,8 @@ const KeepAlive = (props: KeepAliveProps) => {
 
   return (
     <>
-      {Array.from(componentList.current).map(([key, component]) => {
-        return key == activeKey.current ? (
+      {Array.from(componentList.current).map(([key, component]) =>
+        key == activeKey.current ? (
           <div key={key} className="layout-container-active">
             {component}
           </div>
@@ -418,8 +418,8 @@ const KeepAlive = (props: KeepAliveProps) => {
           <div key={key} className="layout-container__keep-alive">
             {component}
           </div>
-        );
-      })}
+        )
+      )}
     </>
   );
 };
