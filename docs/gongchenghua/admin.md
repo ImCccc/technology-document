@@ -448,6 +448,7 @@ class KeepAliveRoute {
   }
 
   addCacheRoute(pathname: string) {
+    pathname = pathname || location.hash.replace("#", "");
     if (!this.cacheRouteList.includes(pathname)) {
       this.cacheRouteList.push(pathname);
     }
@@ -501,7 +502,7 @@ const Comp: React.FC = () => {
       className="common-page"
       onClick={() => {
         // 缓存当前路由
-        KeepAliveRoute.addCacheRoute("/task/index");
+        KeepAliveRoute.addCacheRoute();
         // 跳转页面
         navigate("/test");
       }}
