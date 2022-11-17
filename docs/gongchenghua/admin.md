@@ -245,26 +245,36 @@ export default App;
 `src\pages\Layout\Sider.tsx`
 
 ```tsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Menu, MenuProps } from "antd";
 import { getMenus, MeunProps } from "@/config/routes";
-import { useMobx } from "@/stores";
 import { observer } from "mobx-react-lite";
+import { useMobx } from "@/stores";
+import { Menu } from "antd";
 
 const Comp: React.FC = () => {
   const User = useMobx("User");
+  const KeepAliveRoute = useMobx("KeepAliveRoute");
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const [defaultSelectedKeys, setDefaultSelectedKeys] = useState<string[]>([]);
-  const onClick: MenuProps["onClick"] = (e) => navigate(e.key);
+  const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
-  //  getMenus() 获取所有菜单, 需要过滤掉没有权限的菜单
-  const thisMenus = useMemo<any>(() => {
+  // 记录当前实现的左侧菜单的有效路径
+  const menusMap = useRef<{ [k: string]: boolean }>({});
+
+  const thisMenus = useMemo<any[]>(() => {
+    menusMap.current = {};
     const loop = (menus: MeunProps[]) => {
       return menus.filter((menu) => {
-        const { authority, children, hidemenu } = menu;
+        const { authority, children, hidemenu, key } = menu;
         if (hidemenu) return false;
+        if (key) menusMap.current[key] = true;
         if (authority && authority !== User.role) return false;
         if (children) menu.children = loop(children);
         return true;
@@ -273,26 +283,42 @@ const Comp: React.FC = () => {
     return loop(getMenus());
   }, [User.role]);
 
-  // 监听路由变化,更新当前激活的菜单
+  const defaultOpenKeys = useMemo(
+    () => thisMenus.map((v) => v.key),
+    [thisMenus]
+  );
+
+  // 路由变化, 更新激活的菜单, 详情界面: 在哪个子菜单进入详情界面, 就激活哪个子菜单
+  // 详情界面的路径是有规范: /主菜单/子菜单/详情
   useEffect(() => {
-    setDefaultSelectedKeys([pathname]);
+    if (menusMap.current[pathname]) return setSelectedKeys([pathname]);
+    let paths = pathname;
+    let lastIndex = paths.lastIndexOf("/");
+    while (lastIndex > 0) {
+      paths = pathname.slice(0, lastIndex);
+      if (menusMap.current[paths]) return setSelectedKeys([paths]);
+      lastIndex = paths.lastIndexOf("/");
+    }
   }, [pathname]);
 
-  // 展开的菜单
-  const openKeys = useMemo(() => [pathname.split("/")[1]], [pathname]);
+  const _navigate = useCallback(
+    (key = "/") => {
+      KeepAliveRoute.remove();
+      navigate(key);
+    },
+    [KeepAliveRoute, navigate]
+  );
 
   return (
-    <div className={styles.menuwrap}>
-      <div onClick={() => navigate("/")} className={styles.m_title}>
-        语音标记平台
-      </div>
+    <div>
+      <div onClick={() => _navigate()}>语音标记平台</div>
       <Menu
-        mode="inline"
         theme="dark"
+        mode="inline"
         items={thisMenus}
-        onClick={onClick}
-        defaultOpenKeys={openKeys}
-        selectedKeys={defaultSelectedKeys}
+        selectedKeys={selectedKeys}
+        onClick={(e) => _navigate(e.key)}
+        defaultOpenKeys={defaultOpenKeys}
       />
     </div>
   );
@@ -538,7 +564,7 @@ export default observer(Comp);
 
 ### 添加钩子 useEffect
 
-**如果路由已经缓存, 再次进入不会触发 `useEffect`, 下面实现一个类似的功能, 原理其实就是事件监听与派发的模式; <font color="red">下面方案, 不支持多次多个 useEffect</font>**
+**如果路由已经缓存, 再次进入不会触发 `useEffect`, 下面实现一个类似的功能; <font color="red">下面方案, 不支持多次多个 useEffect</font>**
 
 1. `src\hooks\useEffectCacheRoute.tsx`
 
@@ -617,6 +643,78 @@ import useEffectCacheRoute from "@/hooks/useEffectCacheRoute";
 useEffectCacheRoute(() => {
   console.log("模拟的 useEffect");
 });
+```
+
+## 面包屑
+
+经常有需要, 要显示面包屑, 而且可能大于 3 层, 下面介绍如何通过路径规范实现多层面包屑, 本方案不需要使用缓存, <font color="red">缺点是不能动态设置面包屑的文本</font>
+
+1. 修改`src\config\routes.tsx`:
+
+```tsx
+export const getBreadcrumbData = () => {
+  const breadcrumbData: { [key: string]: string } = {};
+  const loop = (routeMenuList: RouteMenuProps[]) => {
+    routeMenuList.forEach((route) => {
+      const { children, path, label } = route;
+      if (path) breadcrumbData[path] = label;
+      if (children) loop(children);
+    });
+  };
+  loop(routeMenuList);
+  return breadcrumbData;
+};
+
+export const breadcrumbData = getBreadcrumbData();
+```
+
+2. 添加 `src\pages\Layout\Breadcrumb.tsx`:
+
+```tsx
+import { breadcrumbData } from "@/config/routes";
+import { Fragment, useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+
+type BreadcrumbProps = {
+  label: string;
+  path: string;
+};
+
+const Comp: React.FC = () => {
+  const { pathname } = useLocation();
+  const [list, setList] = useState<BreadcrumbProps[]>([]);
+
+  useEffect(() => {
+    const paths = pathname.slice(1).split("/");
+    setList(
+      paths.reduce<BreadcrumbProps[]>((data, cur, index) => {
+        const path = index ? `${data[index - 1].path}/${cur}` : `/${cur}`;
+        const label = breadcrumbData[path] || "";
+        data.push({ path, label });
+        return data;
+      }, [])
+    );
+  }, [pathname]);
+
+  return (
+    <div>
+      {list.map((v, index) => (
+        <Fragment key={v.path}>
+          {index ? <Link to={v.path}>{v.label}</Link> : v.label}
+          {index !== list.length - 1 && <span>/</span>}
+        </Fragment>
+      ))}
+    </div>
+  );
+};
+
+export default Comp;
+```
+
+3. 使用
+
+```tsx
+<Breadcrumb />
 ```
 
 ## 请求接口封装
