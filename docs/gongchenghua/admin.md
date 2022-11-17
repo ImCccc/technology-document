@@ -551,6 +551,89 @@ const Comp: React.FC = () => {
 export default observer(Comp);
 ```
 
+### 添加钩子 useEffect
+
+**如果路由已经缓存, 再次进入不会触发 `useEffect`, 下面实现一个类似的功能, 原理其实就是事件监听与派发的模式; <font color="red">下面方案, 不支持多次多个 useEffect</font>**
+
+1. `src\hooks\useEffectCacheRoute.tsx`
+
+```tsx
+import { useCallback, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+class EventBus {
+  allEvent: { [key: string]: any } = {};
+
+  removeEventListener(eventName: string, callback: any) {
+    window.removeEventListener(eventName, callback);
+    this.allEvent[eventName] = undefined;
+  }
+
+  addEventListener(eventName: string, callback: any) {
+    if (this.allEvent[eventName]) {
+      this.removeEventListener(eventName, this.allEvent[eventName]);
+    }
+    this.allEvent[eventName] = callback;
+    window.addEventListener(eventName, callback);
+  }
+
+  dispatchEvent(name: string) {
+    window.dispatchEvent(new CustomEvent(name));
+  }
+}
+
+const eventBus = new EventBus();
+
+function useEffectCacheRoute(callback: () => void) {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    eventBus.addEventListener(pathname, callback);
+    return () => eventBus.removeEventListener(pathname, callback);
+  }, [callback, pathname]);
+}
+
+export function useDispatchEvent() {
+  const { pathname } = useLocation();
+  const dispatchEvent = useCallback(() => {
+    eventBus.dispatchEvent(pathname);
+  }, [pathname]);
+
+  return dispatchEvent;
+}
+
+export default useEffectCacheRoute;
+```
+
+2. 改造 `src\components\KeepAlive\index.tsx`:
+
+```tsx
+// .....
+import { useDispatchEvent } from "@/hooks/useEffectCacheRoute";
+const KeepAlive: React.FC<KeepAliveProps> = ({ cacheList = [], children }) => {
+  const dispatchEvent = useDispatchEvent();
+  useEffect(() => {
+    // .....
+    if (!componentList.current.has(pathname)) {
+      componentList.current.set(pathname, children);
+    } else {
+      // 缓存的路由, 再次进入不会触发 useEffect, 使用事件派发模式模拟
+      dispatchEvent();
+    }
+    // .....
+  }, [cacheList, children, dispatchEvent, pathname, update]);
+  // .....
+};
+```
+
+3. 界面使用:
+
+```tsx
+import useEffectCacheRoute from "@/hooks/useEffectCacheRoute";
+useEffectCacheRoute(() => {
+  console.log("模拟的 useEffect");
+});
+```
+
 ## 请求接口封装
 
 `src\utils\request.ts`
