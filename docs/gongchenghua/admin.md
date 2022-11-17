@@ -1,5 +1,7 @@
 # 管理后台系统
 
+gitHub 地址: <https://github.com/ImCccc/react-ts-admin>
+
 react + ts + hooks + vite3 + ant design 构建后台管理系统的技术方案, 主要是纯前端<font color="red">菜单路由权限控制的技术方案设计</font>
 
 ::: tip
