@@ -409,17 +409,15 @@ const KeepAlive = (props: KeepAliveProps) => {
 
   return (
     <>
-      {Array.from(componentList.current).map(([key, component]) =>
-        key == activeKey.current ? (
-          <div key={key} className="layout-container-active">
-            {component}
-          </div>
-        ) : (
-          <div key={key} className="layout-container__keep-alive">
-            {component}
-          </div>
-        )
-      )}
+      {Array.from(componentList.current).map(([key, component]) => (
+        <div
+          key={key}
+          className="layout-container__keep-alive"
+          style={{ display: key == activeKey.current ? "" : "none" }}
+        >
+          {component}
+        </div>
+      ))}
     </>
   );
 };
