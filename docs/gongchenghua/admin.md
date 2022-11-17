@@ -425,19 +425,6 @@ const KeepAlive = (props: KeepAliveProps) => {
 export default memo(KeepAlive);
 ```
 
-```css
-.layout-container-active {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  overflow: hidden;
-}
-
-.layout-container__keep-alive {
-  display: none;
-}
-```
-
 2. 添加全局需要缓存的路由`src\stores\KeepAliveRoute.ts`：
 
 ```tsx
