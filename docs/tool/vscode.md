@@ -422,3 +422,18 @@ yarn add -D typescript-plugin-css-modules
 3. 此时会出现输入框,输入新名称,按下回车键即可完成
 
 <img src="./imgs/vscode12.jpg" />
+
+## 保存自动修复和去掉无效导入
+
+- 在 `setting.json` 添加配置:
+
+```json
+{
+  "editor.formatOnSave": true, // 保存时格式化
+  "editor.formatOnPaste": true, // 粘贴时格式化
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true, // 保存自动修复 eslint 报错
+    "source.organizeImports": true // 保存时，自动去掉无效的import
+  }
+}
+```
