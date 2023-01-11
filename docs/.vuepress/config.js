@@ -54,12 +54,12 @@ const sidebar = {
     "/css/background.md",
   ],
   "/js/": [
+    "/js/event.md",
     "/js/node.md",
     "/js/element.md",
     "/js/document.md",
     "/js/nodeList.md",
     "/js/htmlCollection.md",
-    "/js/event.md",
     "/js/request.md",
     "/js/",
   ],
