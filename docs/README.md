@@ -24,3 +24,6 @@
 <a class="link" target="_blank" href="https://tool.oschina.net/codeformat/json/">格式化 JSON</a>
 <a class="link" target="_blank" href="https://boardmix.cn/user/login/">在线流程图</a>
 <a class="link" target="_blank" href="https://www.zhangxinxu.com/life/about/">张鑫旭</a>
+<a class="link" target="_blank" href="https://leetcode.cn/">leetcode</a>
+<a class="link" target="_blank" href="https://www.ruanyifeng.com/blog/">阮一峰</a>
+<a class="link" target="_blank" href="https://caniuse.com/">caniuse</a>
