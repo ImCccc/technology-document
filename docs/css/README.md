@@ -331,3 +331,46 @@ text-overflow 属性规定当文本溢出包含元素时发生的事情。一般
 ## tailwindcss
 
 <https://www.tailwindcss.cn/>
+
+## gap
+
+让每个元素之间隔开 20px:
+
+```css
+.container {
+  display: flex | grid；
+  gap: 20px;
+}
+```
+
+## :empty 选择器
+
+Vue 的小伙伴是不是经常这么做:
+
+```js
+<div>
+  <template v-if="datas.length">
+    <div v-for="data in datas"></div>
+  </template>
+  <template v-else>
+    <div>暂无数据</div>
+  </template>
+</div>
+```
+
+样式解决:
+
+```css
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container:empty::after {
+  content: "暂无数据";
+}
+```
+
+## :focus-within 伪类
+
+:focus-within 表示一个元素获得焦点，或该元素的后代元素获得焦点，就会匹配上, 可以根据子元素的状态来改变父元素的样式.
