@@ -374,3 +374,27 @@ Vue 的小伙伴是不是经常这么做:
 ## :focus-within 伪类
 
 :focus-within 表示一个元素获得焦点，或该元素的后代元素获得焦点，就会匹配上, 可以根据子元素的状态来改变父元素的样式.
+
+## 页面处于灰色模式
+
+```css
+body {
+  filter: grayscale(1);
+}
+```
+
+## 不允许选择的文本
+
+```css
+.classname {
+  user-select: none;
+}
+```
+
+## 子元素添加样式-除了最后一个
+
+```css
+li:not(:last-child) {
+  border-bottom: 1px solid #ebedf0;
+}
+```
