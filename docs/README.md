@@ -6,7 +6,7 @@
 
 <a class="link" target="_blank" href="https://www.tslang.cn/docs/home.html">TypeScript</a>
 <a class="link" target="_blank" href="https://juejin.cn/">稀土掘金</a>
-<a class="link" target="_blank" href="https://github.com/ImCccc>">github</a>
+<a class="link" target="_blank" href="https://github.com/ImCccc">github</a>
 <a class="link" target="_blank" href="https://www.npmjs.com/settings/vs1435/packages">npm</a>
 <a class="link" target="_blank" href="https://cn.vuejs.org/">vue</a>
 <a class="link" target="_blank" href="https://vue3js.cn/start/">vue 源码分析</a>
