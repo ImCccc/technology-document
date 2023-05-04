@@ -139,7 +139,37 @@ export default function App({ Component, pageProps }: AppProps) {
 }
 ```
 
-### 获取外部数据预渲染 getStaticProps
+## 页面生成
+
+Next.js 具有两种形式的预渲染：
+
+1. 静态生成（Static Generation）
+2. 服务器端渲染（Server-side Rendering）。
+
+这两种方式的不同之处在于为 page（页面）生成 HTML 页面的时机:
+
+1. 静态生成（推荐）：HTML 在构建时生成，并在每次页面请求时重用。
+2. 服务器端渲染：在每次页面请求时重新生成 HTML。
+
+Next.js 允许你为每个页面选择预渲染的方式:
+
+- 你可以对大多数页面使用`静态生成`，对其它页面使用`服务器端渲染`
+- 你可以将`客户端渲染`与`静态生成`或`服务器端渲染`一起使用。这意味着页面的某些部分可以完全由客户端 JavaScript 呈现
+
+### 静态生成-不带数据
+
+默认情况下，Next.js 使用 “静态生成” 来预渲染页面但不涉及获取数据。如下例所示：
+
+```tsx
+function About() {
+  return <div>About</div>;
+}
+export default About;
+```
+
+在这种情况下，Next.js 只需在构建时为每个页面生成一个 HTML 文件即可。
+
+### 静态生成-获取外部数据预渲染 getStaticProps
 
 要在预渲染时获取此数据，Next.js 允许你从同一文件 export 一个名为 getStaticProps 的 async 函数。该函数在构建时被调用，并允许你在预渲染时将获取的数据作为 props 参数传递给页面。
 
@@ -171,7 +201,7 @@ export default function Home({ data }: any) {
 }
 ```
 
-### 动态路由预渲染 getStaticPaths
+### 静态生成-动态路由预渲染 getStaticPaths
 
 使用场景:
 
@@ -228,4 +258,34 @@ export default function Home({ params, name }) {
 
 ::: danger 注意
 不能访问: http://localhost:3000/task/5, 因为 getStaticPaths 没有生成该路径
+:::
+
+### 服务器端渲染 (实时更新)
+
+page（页面）使用的是 服务器端渲染，则会在 每次页面请求时 重新生成页面的 HTML, 你需要 `export` 一个名为 `getServerSideProps` 的 `async` 函数。服务器将在每次页面请求时调用此函数
+
+::: tip
+`getServerSideProps` 和 `getStaticProps` 的区别在于 `getServerSideProps` 在每次页面请求时都会运行，在构建时不运行
+:::
+
+例子:
+
+```tsx
+// 此函数在每次请求时被调用
+export async function getServerSideProps() {
+  const data = await new Promise((resolve) =>
+    setTimeout(() => resolve({ name: "lichirong" }), 3000)
+  );
+  return {
+    props: { data },
+  };
+}
+
+export default function Home({ data }) {
+  return <div>getServerSideProps 函数返回的数据: {JSON.stringify(data)}</div>;
+}
+```
+
+::: tip
+服务器端渲染会导致性能比“静态生成”慢，因此仅在绝对必要时才使用此功能
 :::
