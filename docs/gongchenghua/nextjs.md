@@ -171,25 +171,36 @@ export default About;
 
 ### 静态生成-获取外部数据预渲染 getStaticProps
 
+<a class="link" target="_blank" href="https://www.nextjs.cn/docs/basic-features/data-fetching">getStaticProps 文档</a>
+
 要在预渲染时获取此数据，Next.js 允许你从同一文件 export 一个名为 getStaticProps 的 async 函数。该函数在构建时被调用，并允许你在预渲染时将获取的数据作为 props 参数传递给页面。
 
 `src/pages/posts/first-post.tsx`
 
 ```tsx
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import styles from "./first-post.module.css";
 
+type Post = {
+  name: string;
+};
 // 此函数在构建时被调用
-export async function getStaticProps() {
-  const data = await new Promise((resolve) =>
-    setTimeout(() => resolve({ name: "lichirong" }), 3000)
+export const getStaticProps: GetStaticProps = async (context) => {
+  const data = await new Promise<Post>((resolve) =>
+    setTimeout(() => {
+      resolve({ name: "lichirong" });
+    }, 3000)
   );
+
   return {
     props: { data },
   };
-}
+};
 
-export default function Home({ data }: any) {
+export default function Home({
+  data,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <main className={styles.page}>
       <Link href="/" className={styles.link}>
@@ -198,6 +209,47 @@ export default function Home({ data }: any) {
       <div>getStaticProps 函数返回的数据: {JSON.stringify(data)}</div>
     </main>
   );
+}
+```
+
+- 在 getStaticProps 跳转 404
+
+返回 { notFound: true } 就会跳转 404
+
+```tsx
+export async function getStaticProps(context) {
+  const res = await fetch(`https://.../data`);
+  const data = await res.json();
+
+  if (!data) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: { data },
+  };
+}
+```
+
+- 在 getStaticProps 重定向
+
+```tsx
+export async function getStaticProps(context) {
+  const res = await fetch(`https://...`);
+  const data = await res.json();
+  if (!data) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { data },
+  };
 }
 ```
 
@@ -214,10 +266,11 @@ export default function Home({ data }: any) {
 `src/pages/task/[id].tsx`
 
 ```tsx
+import { GetStaticPaths } from "next";
 import Link from "next/link";
 
 // 此函数在构建时被调用
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   // 据博文列表生成所有需要预渲染的路径
   const paths = [
     { params: { id: "1" } },
@@ -226,10 +279,10 @@ export async function getStaticPaths() {
     { params: { id: "4" } },
   ];
   return { paths, fallback: false };
-}
+};
 
 // 在构建时也会被调用
-export async function getStaticProps({ params }) {
+export async function getStaticProps({ params }: any) {
   return {
     props: {
       params,
@@ -238,7 +291,7 @@ export async function getStaticProps({ params }) {
   };
 }
 
-export default function Home({ params, name }) {
+export default function Home({ params, name }: any) {
   return (
     <main>
       <Link href="/" className="link padding">
@@ -256,9 +309,42 @@ export default function Home({ params, name }) {
 
 ![1683182631937](./image/nextjs/1683182631937.png)
 
-::: danger 注意
-不能访问: http://localhost:3000/task/5, 因为 getStaticPaths 没有生成该路径
-:::
+#### fallback 说明
+
+如果 fallback: false, 那么如果访问未生成的界面, 会跳转 404;
+
+如果 fallback: true, 那么如果访问未生成的界面, 可以动态生成新的 HTML 界面, 后续可以重复使用;
+
+```tsx
+// pages/posts/[id].js
+import { useRouter } from "next/router";
+
+function Post({ post }) {
+  const router = useRouter();
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
+  return <div>界面内容</div>;
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [{ params: { id: "1" } }, { params: { id: "2" } }],
+    fallback: true,
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const res = await fetch(`https://.../posts/${params.id}`);
+  const post = await res.json();
+  return {
+    props: { post },
+    revalidate: 1,
+  };
+}
+
+export default Post;
+```
 
 ### 服务器端渲染 (实时更新)
 
