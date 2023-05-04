@@ -99,3 +99,133 @@ import styles from "./first-post.module.css";
 ```
 
 ![1683172576508](./image/nextjs/1683172576508.png)
+
+### 添加全局样式
+
+1. 添加全局样式 `src/styles/globals.css`
+
+```css
+:root {
+  --max-width: 1100px;
+  --border-radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+```
+
+2. 添加 `src/pages/_app.tsx`, 导入全局样式 (\_app.tsx 是所有页面通用的)
+
+```tsx
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+
+export default function App({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />;
+}
+```
+
+### 获取外部数据预渲染 getStaticProps
+
+要在预渲染时获取此数据，Next.js 允许你从同一文件 export 一个名为 getStaticProps 的 async 函数。该函数在构建时被调用，并允许你在预渲染时将获取的数据作为 props 参数传递给页面。
+
+`src/pages/posts/first-post.tsx`
+
+```tsx
+import Link from "next/link";
+import styles from "./first-post.module.css";
+
+// 此函数在构建时被调用
+export async function getStaticProps() {
+  const data = await new Promise((resolve) =>
+    setTimeout(() => resolve({ name: "lichirong" }), 3000)
+  );
+  return {
+    props: { data },
+  };
+}
+
+export default function Home({ data }: any) {
+  return (
+    <main className={styles.page}>
+      <Link href="/" className={styles.link}>
+        返回主页
+      </Link>
+      <div>getStaticProps 函数返回的数据: {JSON.stringify(data)}</div>
+    </main>
+  );
+}
+```
+
+### 动态路由预渲染 getStaticPaths
+
+使用场景:
+
+如果向数据库添加一篇文章（标记为 id: 1），你想在构建时针对 posts/1 进行预渲染; 稍后又添加了第二篇文章，(标记为 id: 2)。你希望对 posts/2 也进行预渲染
+
+预渲染的页面 paths（路径） 取决于外部数据。为了解决这个问题，Next.js 允许你从动态页面（在这里是 pages/posts/[id].js）中 export（导出） 一个名为 getStaticPaths 的 async（异步） 函数。该函数在构建时被调用，并允许你指定要预渲染的路径。
+
+下面是例子:
+
+`src/pages/task/[id].tsx`
+
+```tsx
+import Link from "next/link";
+
+// 此函数在构建时被调用
+export async function getStaticPaths() {
+  // 据博文列表生成所有需要预渲染的路径
+  const paths = [
+    { params: { id: "1" } },
+    { params: { id: "2" } },
+    { params: { id: "3" } },
+    { params: { id: "4" } },
+  ];
+  return { paths, fallback: false };
+}
+
+// 在构建时也会被调用
+export async function getStaticProps({ params }) {
+  return {
+    props: {
+      params,
+      name: "licr",
+    },
+  };
+}
+
+export default function Home({ params, name }) {
+  return (
+    <main>
+      <Link href="/" className="link padding">
+        返回主页
+      </Link>
+      <div>动态路由:</div>
+      <div>params参数: {JSON.stringify(params)}</div>
+      <div>name参数: {name}</div>
+    </main>
+  );
+}
+```
+
+此时访问 `http://localhost:3000/task/1`
+
+![1683182631937](./image/nextjs/1683182631937.png)
+
+::: danger 注意
+不能访问: http://localhost:3000/task/5, 因为 getStaticPaths 没有生成该路径
+:::
