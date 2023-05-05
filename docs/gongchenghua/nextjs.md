@@ -52,6 +52,25 @@ yarn create next-app --typescript
 2. `pages/posts/first-post.js` 对应路由 `/posts/first-post`
 3. `pages/xxx/xxx.js` 对应路由 `/xxx/xxx`
 
+### 获取路由参数 useRouter
+
+```tsx
+import { useRouter } from "next/router";
+
+export default function Test() {
+  const router = useRouter();
+  // console.log(router.pathname);
+  // console.log(router.query);
+  console.log("router:", router);
+
+  const myFunc = () => {
+    router.push("/");
+  };
+
+  return <span>Test</span>;
+}
+```
+
 ### 页面跳转(导航)
 
 ```tsx
@@ -390,3 +409,124 @@ function Profile() {
   return <div>hello {data.name}!</div>;
 }
 ```
+
+## 自定义 404
+
+pages 文件夹下创建特殊文件 404.js，Next.js 将会在返回 404 错误时，自动加载组件。相当于用户可以自定义 404 页面。
+
+## 页面预渲染
+
+传统 React 应用返回的 HTML 文件中，不包含应用的信息，因为页面是在客户端进行渲染的，所以服务端返回的源码通常只有一个 id 为 root 的 div 标签，不利于做 SEO（搜索引擎优化）。
+
+而页面预渲染就可以解决这个问题，浏览器收到的 HTML 文件源码是包含了页面信息的代码。
+
+Next.js 提供了两种页面预渲染方案，SSG 与 SSR
+
+### SSG
+
+SSG 是静态站点生成，就是在文件打包阶段，预先生成页面。
+
+Next.js 默认会预渲染所有没有动态数据的页面，而动态的数据还是像 React 一样在客户端渲染的。如果要在 HTML 源码中展现动态数据，可以使用 page 下 getStaticProps 方法。这个方法是跑在服务端环境下的，可以在服务端获取数据并渲染。
+
+此外，Next.js 拓展了一些功能，比如 fetch 是浏览器的接口，在服务端是不能用的，而在 getStaticProps  方法中是可以使用 fetch API 的，背后使用的是 node-fetch 这个库实现的。（Node.js18.0.0 版本开始原生支持了 fetch 方法）
+
+getStaticProps  方法返回值类型如下:
+
+```tsx
+export type GetStaticPropsResult<P> =
+  | { props: P; revalidate?: number | boolean }
+  | { redirect: Redirect; revalidate?: number | boolean }
+  | { notFound: true; revalidate?: number | boolean };
+```
+
+- props: 服务端需要传给组件的数据
+- revalidate : getStaticProps  调用的间隔秒数，600 就是 600 秒，10 分钟
+- notFound: true 跳转 404
+- redirect: 重定向相关
+
+getStaticPaths  返回
+
+```tsx
+export type GetStaticPathsResult<P extends ParsedUrlQuery = ParsedUrlQuery> = {
+  paths: Array<string | { params: P; locale?: string }>;
+  fallback: boolean | "blocking";
+};
+```
+
+- paths: 定义了需要预先生成静态页面的 URL 请求参数
+
+- fallback: 定义了在访问 paths 中未列出的 URL 请求参数时的表现，适用于如果有很多页面需要预生成的情况
+
+  - false: 如果 URL 请求参数不在 paths 属性中定义了，那么会直接返回 404 页面。
+
+  - true: 如果通过 Link 组件在页面中导航，那不会有问题。但是如果是直接在 URL 中访问未在 paths 中列出的路径，会直接报错，需要在 React 组件中判断对应 props 的参数，在服务器还未准备好时，先返回一个加载中的提示。如果访问不存在的请求路径，就可以在 `getStaticProps` 中直接返回`{ notFound: true }`来返回 404 页面。
+
+  - blocking: 请求页面时如果数据未准备好就阻塞请求，等待页面渲染完毕后再返回页面。相比第二种情况，相当于免除了组件中判断这一环节。
+
+### SSR
+
+- SSR 是服务端渲染，getServerSideProps  方法可以针对每次请求作出处理，适用于数据变化比较频繁的页面。
+- getStaticProps  与  getServerSideProps  只能二选一
+- getServerSideProps 也是运行在服务器上的方法，这个方法的参数  context  可以完整获取请求的所有数据，context  的类型如下：
+
+#### getServerSideProps 参数 context 的类型
+
+```tsx
+export type GetServerSidePropsContext<
+  Q extends ParsedUrlQuery = ParsedUrlQuery,
+  D extends PreviewData = PreviewData
+> = {
+  req: IncomingMessage & { cookies: NextApiRequestCookies };
+  res: ServerResponse;
+  params?: Q;
+  query: ParsedUrlQuery;
+  preview?: boolean;
+  previewData?: D;
+  resolvedUrl: string;
+  locale?: string;
+  locales?: string[];
+  defaultLocale?: string;
+};
+```
+
+#### getServerSideProps 返回类型
+
+```tsx
+export type GetServerSidePropsResult<P> =
+  | { props: P | Promise<P> }
+  | { redirect: Redirect }
+  | { notFound: true };
+```
+
+getServerSideProps  的返回值类型基本同  getStaticProps，只是少了  revalidate  属性，因为 getServerSideProps  会对每次请求进行重新渲染。实际使用时，可以将服务端预渲染的数据作为对应数据  useState  的默认值。
+
+**不适合使用页面预渲染的情况**
+
+以下三种情况不适合使用服务端预渲染:
+
+1. 数据变化非常频繁的页面（比如股票数据）
+2. 与用户身份高度耦合的页面（比如用户最近 xxx 的 xxx）
+
+碰到这些情况，还是在客户端使用 useEffect 中 fetch 来获取数据，Next.js 团队也编写了一个 React 钩子库 SWR 来简化客户端请求，示例如下：
+
+```tsx
+import useSWR from "swr";
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
+function Profile() {
+  const { data, error } = useSWR("/api/profile-data", fetcher);
+  if (error) return <div>Failed to load</div>;
+  if (!data) return <div>Loading...</div>;
+  return (
+    <div>
+      <h1>{data.name}</h1>
+      <p>{data.bio}</p>
+    </div>
+  );
+}
+```
+
+## 参考
+
+<https://www.bilibili.com/read/cv20992052>
+
+<https://www.bilibili.com/video/BV1G54y1o7RP/?p=2&spm_id_from=pageDriver&vd_source=7e7a5cca5f48eb83db0e5eccf1453626>
