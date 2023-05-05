@@ -375,3 +375,18 @@ export default function Home({ data }) {
 ::: tip
 服务器端渲染会导致性能比“静态生成”慢，因此仅在绝对必要时才使用此功能
 :::
+
+### 客户端渲染 SWR
+
+```tsx
+import useSWR from "swr";
+
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
+function Profile() {
+  const { data, error } = useSWR("/api/user", fetcher);
+  if (error) return <div>failed to load</div>;
+  if (!data) return <div>loading...</div>;
+  return <div>hello {data.name}!</div>;
+}
+```
