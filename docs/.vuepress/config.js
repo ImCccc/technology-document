@@ -8,7 +8,7 @@ const sidebar = {
     "/gongchenghua/nextjs.md",
     "/gongchenghua/小程序.md",
     "/gongchenghua/taro.md",
-    "/gongchenghua/qiankun.md",
+    "/gongchenghua/electron.md",
   ],
   "/mianshi/": [
     "/mianshi/",
