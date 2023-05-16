@@ -6,6 +6,22 @@
 
 下面列出开发过程中, 常见的问题
 
+### 打开开发者工具
+
+```tsx
+win.webContents.openDevTools();
+```
+
+### 注册快键键
+
+```tsx
+const { globalShortcut } = require("electron");
+function registerFastkey() {
+  globalShortcut.register("Alt + ctrl + q", () => app.quit());
+  globalShortcut.register("ctrl + k", () => win.webContents.openDevTools());
+}
+```
+
 ### 获取当前系统
 
 ```ts
