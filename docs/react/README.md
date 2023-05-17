@@ -309,6 +309,73 @@ const Comp: React.FC = () => {
 };
 ```
 
+## 动态加载 react 组件
+
+下面的例子: 可以通过模板(一般是 html), 生成静态页面, 但是可以在模板中配置自定义组件, 在自定义组件实现特有的逻辑;
+
+原理: 如果模板中有`component-root="false"`说明需要动态加载自定义组件, 组件名称是`component-name`属性的值, 通过 `createRoot` 将组件加载在 dom 中
+
+1. 动态组件
+
+```tsx
+import React, { Suspense } from "react";
+
+const modules = {
+  Child1: React.lazy(() => import("./Child1")),
+  Child2: React.lazy(() => import("./Child2")),
+};
+
+const ChangeComponents: React.FC<{
+  componentName: string;
+}> = ({ componentName }) => {
+  const Comp = modules[componentName];
+  return (
+    Comp && (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Comp />
+      </Suspense>
+    )
+  );
+};
+
+export default React.memo(ChangeComponents);
+```
+
+2. 调用的父组件
+
+```tsx
+import Dynamic from "@/components/ChangeComponents";
+import { useEffect } from "react";
+import { createRoot } from "react-dom/client";
+
+const tpl = `
+  <div style="background:red;">
+    <div component-root="false" component-name="Child1"></div>
+    <div component-root="false" component-name="Child2"></div>
+  </div>
+`;
+
+const Comp: React.FC = () => {
+  useEffect(() => {
+    const doms = document.querySelectorAll('[component-root="false"]');
+    doms.forEach((dom) => {
+      const componentName = dom.getAttribute("component-name");
+      dom.setAttribute("component-root", "true");
+      if (!componentName) return;
+      createRoot(dom).render(<Dynamic componentName={componentName} />);
+    });
+  }, []);
+
+  return (
+    <>
+      <div dangerouslySetInnerHTML={{ __html: tpl }}></div>
+    </>
+  );
+};
+
+export default Comp;
+```
+
 ## React.memo
 
 `React.memo()`是一个高阶函数，它与 `React.PureComponent` 类似，但是一个函数组件而非一个类。
