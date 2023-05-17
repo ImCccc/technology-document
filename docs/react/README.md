@@ -317,9 +317,14 @@ const Comp: React.FC = () => {
 
 使用场景: 如果只有静态界面, 那么可以上传模板, 不用前端发版, 就可以生成界面;
 
+下面例子, 所有动态组件的目录结构:
+
+![1684311764143](./image/README/1684311764143.png)
+
 1. 动态组件
 
 ```tsx
+// src\components\ChangeComponents\index.tsx
 import React, { Suspense } from "react";
 
 const modules = {
@@ -342,6 +347,38 @@ const ChangeComponents: React.FC<{
 
 export default React.memo(ChangeComponents);
 ```
+
+::: tip 如果使用 vite, 可以这样加载组件
+
+加载 ChangeComponents 文件夹下, 非 index 组件
+
+```tsx
+// src\components\ChangeComponents\index.tsx
+import React, { Suspense } from "react";
+
+const modules = Object.keys(import.meta.glob("./*.tsx")).reduce((data, cur) => {
+  // cur: './Child1.tsx'
+  data[cur.replace(/[\.\/|\.tsx]/g, "")] = React.lazy(() => import(cur));
+  return data;
+}, {} as any);
+
+const ChangeComponents: React.FC<{
+  componentName: string;
+}> = ({ componentName }) => {
+  const Comp = modules[componentName];
+  return (
+    Comp && (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Comp />
+      </Suspense>
+    )
+  );
+};
+
+export default React.memo(ChangeComponents);
+```
+
+:::
 
 2. 调用的父组件
 
