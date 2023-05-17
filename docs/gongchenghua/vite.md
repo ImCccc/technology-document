@@ -313,6 +313,46 @@ server: {
 },
 ```
 
+## 动态加载 react 组件
+
+下面的例子是传递一个字符串, 动态加载组件
+
+index.tsx
+![1684302181888](./image/vite/1684302181888.png)
+
+```tsx
+import { useEffect, useState } from "react";
+const modules = import.meta.glob("./*.tsx");
+
+const ChangeComponents: React.FC<{
+  componentName: string;
+  className?: string;
+}> = ({ componentName, className }) => {
+  const [comp, setComp] = useState<any>();
+  useEffect(() => {
+    if (modules[`./${componentName}.tsx`]) {
+      modules[`./${componentName}.tsx`]().then((c) => setComp(c.default));
+    } else {
+      console.error(`没有实现组件: ${componentName}.tsx`);
+    }
+  }, [componentName]);
+  return comp && <div className={className}>{comp}</div>;
+};
+
+export default ChangeComponents;
+```
+
+使用:
+
+```tsx
+import ChangeComponents from "@/components/ChangeComponents";
+const Comp: React.FC = () => {
+  return <ChangeComponents componentName="Child1" />;
+};
+
+export default Comp;
+```
+
 ## 插件
 
 <https://vitejs.cn/guide/api-plugin.html#authoring-a-plugin>
