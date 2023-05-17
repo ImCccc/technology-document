@@ -322,7 +322,9 @@ index.tsx
 
 ```tsx
 import { useEffect, useState } from "react";
+
 const modules = import.meta.glob("./*.tsx");
+console.log("modules:", modules);
 
 const ChangeComponents: React.FC<{
   componentName: string;
@@ -341,6 +343,8 @@ const ChangeComponents: React.FC<{
 
 export default ChangeComponents;
 ```
+
+![1684304116031](./image/vite/1684304116031.png)
 
 使用:
 
