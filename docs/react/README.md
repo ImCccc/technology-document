@@ -434,15 +434,57 @@ const HtmlContent: React.FC<{ html: string }> = ({ html, ...rest }) => {
   }, [html, divRef]);
   return <div {...rest} ref={divRef} />;
 };
+```
 
-<HtmlContent
-  html={`
-  <div style="padding:20px;">
-    <script> console.log(111111); </script>
-    <div component-root="false" component-name="Child1"></div>
-    <div component-root="false" component-name="Child2"></div>
-  </div>`}
-/>;
+:::
+
+::: details 完整代码
+
+```tsx
+import Dynamic from "@/components/ChangeComponents";
+import { useEffect, useRef } from "react";
+import { createRoot } from "react-dom/client";
+
+const HtmlContent: React.FC<{ html: string }> = ({ html, ...rest }) => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (!divRef.current || !isFirstRender.current) return;
+    isFirstRender.current = false;
+    divRef.current.innerHTML = "";
+    divRef.current.appendChild(
+      document.createRange().createContextualFragment(html)
+    );
+  }, [html, divRef]);
+  return <div {...rest} ref={divRef} />;
+};
+
+const Comp: React.FC = () => {
+  useEffect(() => {
+    const doms = document.querySelectorAll('[component-root="false"]');
+    doms.forEach((dom) => {
+      const componentName = dom.getAttribute("component-name");
+      dom.setAttribute("component-root", "true");
+      if (!componentName) return;
+      createRoot(dom).render(<Dynamic componentName={componentName} />);
+    });
+  }, []);
+
+  return (
+    <HtmlContent
+      html={`
+        <div style="padding:20px;">
+          <script>
+            console.log(111111);
+          </script>
+          <div component-root="false" component-name="Child1"></div>
+          <div component-root="false" component-name="Child2"></div>
+        </div>`}
+    />
+  );
+};
+
+export default Comp;
 ```
 
 :::
