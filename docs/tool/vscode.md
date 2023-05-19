@@ -448,6 +448,8 @@ yarn add -D typescript-plugin-css-modules
 
 2. 添加配置文件 `.prettierrc.js` ( 和`package.json`同级 )
 
+::: details 我的 .prettierrc.js 配置
+
 ```js
 module.exports = {
   printWidth: 80,
@@ -513,9 +515,13 @@ module.exports = {
 };
 ```
 
+:::
+
 3. 修改 `vscode` 配置 `setting.json`
 
 ![](./2023-05-19-10-55-51.png)
+
+::: details 我的 setting.json 配置
 
 ```json
 {
@@ -562,6 +568,16 @@ module.exports = {
   // 删除文件是否弹出2次确认框
   "explorer.confirmDelete": false,
 
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+
+  // git 推送不需要2次确认
+  "git.confirmSync": false,
+
+  // md 文档设置代码片段
+  "[markdown]": {
+    "editor.quickSuggestions": true
+  }
 }
 ```
+
+:::
