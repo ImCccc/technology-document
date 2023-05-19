@@ -437,3 +437,131 @@ yarn add -D typescript-plugin-css-modules
   }
 }
 ```
+
+## 配置 prettier
+
+<https://www.prettier.cn/docs/options.html>
+
+1. 安装插件 `Prettier - Code formatter`
+
+![](./2023-05-19-10-47-05.png)
+
+2. 添加配置文件 `.prettierrc.js` ( 和`package.json`同级 )
+
+```js
+module.exports = {
+  printWidth: 80,
+  tabWidth: 2,
+
+  // 是否使用分号结尾, 默认true
+  semi: true,
+
+  // 使用单引号, 默认 false
+  singleQuote: true,
+
+  /*
+    行尾逗号, 默认 none
+    all: {
+      name: 'xxx'
+    }
+    none: {
+      name: 'xxx'
+    }
+  */
+  trailingComma: "all",
+
+  /*
+    JSX标签闭合位置,默认 false
+    false:
+      <div
+        style={{}}
+        className={styles.main}
+      >
+        test
+      </div>
+    true:
+      <div
+        style={{}}
+        className={styles.main}>
+        test
+      </div>
+  */
+  jsxBracketSameLine: false,
+
+  proseWrap: "never",
+  endOfLine: "lf",
+  overrides: [
+    {
+      files: ".prettierrc",
+      options: { parser: "json" },
+    },
+  ],
+  importOrder: [
+    "^react(.*)$",
+    "^ice(.*)$",
+    "<THIRD_PARTY_MODULES>",
+    "^(?!.*(.css|.less|.sass|.scss|.jpg|.png|.gif|.svg|.jpeg|.bmp|.webp|.tiff|.ico|@/services))(@/.*)",
+    "^(?!.*(.css|.less|.sass|.scss|.jpg|.png|.gif|.svg|.jpeg|.bmp|.webp|.tiff|.ico))(@/services.*)",
+    "^(?!.*(.css|.less|.sass|.scss|.jpg|.png|.gif|.svg|.jpeg|.bmp|.webp|.tiff|.ico))(..?/.*)",
+    "(.jpg|.png|.gif|.svg|.jpeg|.bmp|.webp|.tiff|.ico)$",
+    "(.css|.less|.sass|.scss)$",
+  ],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
+  importOrderCaseInsensitive: true,
+  importOrderParserPlugins: ["typescript", "jsx", "classProperties"],
+};
+```
+
+3. 修改 `vscode` 配置 `setting.json`
+
+![](./2023-05-19-10-55-51.png)
+
+```json
+{
+  // 保存时格式化
+  "editor.formatOnSave": true,
+
+  "editor.codeActionsOnSave": {
+    // 保存自动修复 eslint 报错
+    "source.fixAll.eslint": true,
+    // 保存时，自动去掉无效的 import
+    "source.organizeImports": true
+  },
+
+  // tsx 代码格式化, 使用 prettier
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // ts 代码格式化, 使用 prettier
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // json 代码格式化, 使用 prettier
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // json 代码格式化, 使用 prettier
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // js 代码格式化, 使用 prettier
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // html 代码格式化, 使用 prettier
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // 删除文件是否弹出2次确认框
+  "explorer.confirmDelete": false,
+
+  "editor.tabSize": 2
+}
+```
