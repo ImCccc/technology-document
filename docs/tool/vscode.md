@@ -286,7 +286,7 @@ git remote update origin --prune
 }
 ```
 
-## 不能使用 rm-rf 删除文件夹
+## 使用 rm-rf 删除文件夹
 
 - 方法 1
 
@@ -405,7 +405,7 @@ yarn add -D typescript-plugin-css-modules
 }
 ```
 
-## less 使用函数或者混入报红
+## less 使用函数/混入报红
 
 原因 vscode 安装了插件 Stylelint, 禁用就行了
 
@@ -415,28 +415,13 @@ yarn add -D typescript-plugin-css-modules
 
 <img height="150px" src="./imgs/vscode11.jpg" />
 
-## 如何批量重命名变量和函数
+## 批量重命名变量和函数
 
 1. 双击变量名
 2. 右键 或者 按下 F2
 3. 此时会出现输入框,输入新名称,按下回车键即可完成
 
 <img src="./imgs/vscode12.jpg" />
-
-## 保存自动修复和去掉无效导入
-
-- 在 `setting.json` 添加配置:
-
-```json
-{
-  "editor.formatOnSave": true, // 保存时格式化
-  "editor.formatOnPaste": true, // 粘贴时格式化
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true, // 保存自动修复 eslint 报错
-    "source.organizeImports": true // 保存时，自动去掉无效的import
-  }
-}
-```
 
 ## 配置 prettier
 
@@ -584,3 +569,66 @@ module.exports = {
 ```
 
 :::
+
+## 配置 eslint
+
+<https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint#settings-options>
+
+1. 安装 `vscode` 插件 `ESLint`
+
+![](./2023-05-19-11-23-43.png)
+
+2. 添加配置文件 `.eslintrc.js` ( 和`package.json`同级 )
+
+::: details 我的配置(react + ts)
+
+```js
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
+  },
+  parser: "@typescript-eslint/parser",
+  extends: [
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended",
+  ],
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 13,
+    sourceType: "module",
+  },
+  plugins: ["react", "react-hooks", "@typescript-eslint"],
+  rules: {
+    "no-duplicate-imports": [1, { includeExports: true }], // 不能重复import
+    "react-hooks/rules-of-hooks": "error",
+    "react/react-in-jsx-scope": 0, // 关闭掉 页面必须引入React
+    "@typescript-eslint/no-explicit-any": 0, // 关闭 any
+    "react/prop-types": 0,
+    "react/display-name": 0,
+  },
+};
+```
+
+:::
+
+3. 需要安装一些包
+
+```js
+"devDependencies": {
+  "typescript": "5.0.4",
+  "@types/node": "18.16.3",
+  "@types/react": "18.2.2",
+  "@types/react-dom": "18.2.3",
+  "eslint": "8.39.0",
+  "eslint-plugin-react": "^7.30.0",
+  "eslint-plugin-react-hooks": "^4.6.0",
+  "@typescript-eslint/eslint-plugin": "^5.29.0",
+  "@typescript-eslint/parser": "^5.29.0"
+}
+```
