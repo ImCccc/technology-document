@@ -573,6 +573,9 @@ module.exports = {
   // git 推送不需要2次确认
   "git.confirmSync": false,
 
+  // git 推送不需要2次确认
+  "git.enableSmartCommit": true,
+
   // md 文档设置代码片段
   "[markdown]": {
     "editor.quickSuggestions": true
