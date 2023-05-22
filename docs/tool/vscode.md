@@ -651,7 +651,8 @@ mock
 ],
 "editor.quickSuggestions": {
   "strings": true
-}
+},
+"css.lint.unknownAtRules": "ignore"
 ```
 
 ::: danger
@@ -763,6 +764,8 @@ npm run dev
   // tailwindCSS 配置
   "editor.quickSuggestions": {
     "strings": true
-  }
+  },
+  //  屏蔽 @tailwind 警告
+  "css.lint.unknownAtRules": "ignore"
 }
 ```
