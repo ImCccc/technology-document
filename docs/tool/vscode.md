@@ -636,7 +636,7 @@ dist
 mock
 ```
 
-## Tailwind CSS IntelliSense 插件
+## Tailwind CSS IntelliSense
 
 安装插件:
 
@@ -653,6 +653,11 @@ mock
   "strings": true
 }
 ```
+
+::: danger
+有些 vscode 的版本如果太低了(好像是 1.66 以下), 插件不会正常工作, 如果遇到怎么配置都不行,可以更新 vscode 再试试
+
+:::
 
 ### 在 vite 项目使用的步骤
 
