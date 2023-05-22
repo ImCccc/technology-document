@@ -120,7 +120,9 @@ git remote update origin --prune
 
 :::
 
-### tsx 代码片段 (typescriptreact.json)
+### tsx 代码片段
+
+.tsx 的配置文件对应的是 `typescriptreact.json`
 
 ::: details 点击查看 typescriptreact.json
 
@@ -355,7 +357,7 @@ setting.json:
 
 <img height="80px" src="./imgs/vscode4.jpg">
 
-## css module 配置代码提示
+## css module 代码提示
 
 1. 安装
 
@@ -394,16 +396,6 @@ yarn add -D typescript-plugin-css-modules
 
 例子: `@import '../../styles/var.less';`
 :::
-
-## 保存自动格式化
-
-配置 setting.json
-
-```json
-{
-  "editor.formatOnSave": true
-}
-```
 
 ## less 使用函数/混入报红
 
@@ -630,5 +622,143 @@ module.exports = {
   "eslint-plugin-react-hooks": "^4.6.0",
   "@typescript-eslint/eslint-plugin": "^5.29.0",
   "@typescript-eslint/parser": "^5.29.0"
+}
+```
+
+4. 如果需要忽略某些文件, 可以添加 `.eslintignore` 文件忽略
+
+```text
+/lambda/
+/scripts
+/config
+public
+dist
+mock
+```
+
+## Tailwind CSS IntelliSense 插件
+
+安装插件:
+
+![](./2023-05-22-09-53-21.png)
+
+添加配置
+
+```javascript
+"tailwindCSS.experimental.classRegex": [
+  "classnames\\(([^)]*)\\)",
+  "class:\\s*\"([^\"]*)\""
+],
+"editor.quickSuggestions": {
+  "strings": true
+}
+```
+
+### 在 vite 项目使用的步骤
+
+```javascript
+npm create vite@latest my-project -- --template react
+cd my-project
+
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+tailwind.config.js:
+
+```javascript
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+index.css:
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+```javascript
+npm run dev
+```
+
+## 我的 vscode 配置
+
+`settings.json`
+
+```json
+{
+  // 保存时格式化
+  "editor.formatOnSave": true,
+
+  "editor.codeActionsOnSave": {
+    // 保存自动修复 eslint 报错
+    "source.fixAll.eslint": true,
+    // 保存时，自动去掉无效的 import
+    "source.organizeImports": true
+  },
+
+  // tsx 代码格式化, 使用 prettier
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // ts 代码格式化, 使用 prettier
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // json 代码格式化, 使用 prettier
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // json 代码格式化, 使用 prettier
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // js 代码格式化, 使用 prettier
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // html 代码格式化, 使用 prettier
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // 删除文件是否弹出2次确认框
+  "explorer.confirmDelete": false,
+
+  "editor.tabSize": 2,
+
+  // git 同步更改不需要2次确认
+  "git.confirmSync": false,
+
+  // git 推送不需要2次确认
+  "git.enableSmartCommit": true,
+
+  // md 文档设置代码片段
+  "[markdown]": {
+    "editor.quickSuggestions": true
+  },
+
+  // tailwindCSS 配置
+  "tailwindCSS.experimental.classRegex": [
+    "classnames\\(([^)]*)\\)",
+    "class:\\s*\"([^\"]*)\""
+  ],
+  // tailwindCSS 配置
+  "editor.quickSuggestions": {
+    "strings": true
+  }
 }
 ```
