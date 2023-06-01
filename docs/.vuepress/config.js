@@ -7,6 +7,7 @@ const sidebar = {
     "/gongchenghua/openapi.md",
     "/gongchenghua/nextjs.md",
     "/gongchenghua/小程序.md",
+    "/gongchenghua/低代码.md",
     "/gongchenghua/taro.md",
     "/gongchenghua/electron.md",
   ],
