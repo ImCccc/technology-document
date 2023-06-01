@@ -51,6 +51,7 @@ const sidebar = {
     "/css/css-module.md",
     "/css/animation.md",
     "/css/selector.md",
+    "/css/tailwindcss.md",
     "/css/transform.md",
     "/css/background.md",
   ],
