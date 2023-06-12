@@ -2,6 +2,8 @@
 
 以下例子中, 配置文件都放在项目根目录的 config 文件夹中, 设计到地址配置,稍微留言下
 
+项目的 github 地址: <https://github.com/ImCccc/webpack5>
+
 ## 开发环境插件
 
 1. 安装
@@ -153,6 +155,21 @@ module.exports = {
 ```
 yarn add image-minimizer-webpack-plugin -D
 yarn add imagemin-gifsicle imagemin-jpegtran imagemin-optipng imagemin-svgo -D
+```
+
+## 其他资源
+
+```javascript
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.(woff2?|ttf)$/,
+        type: "asset/resource",
+      },
+    ],
+  },
+};
 ```
 
 ## html 插件
@@ -594,16 +611,21 @@ module.exports = config;
 - 安装 `npm i serve -g`
 - 启动 `serve dist`
 
+## 集成 vue
+
+## 集成 react
+
 ## 总结
 
 webpack 优化方案包括:
 
-1. eslint 开启缓存配置
-2. babel 开启缓存配置
-3. 多进程打包
-4. 图片压缩
-5. 开启 SourceMap
-6. Tree shaking 移除 js 中无用的代码,依赖 Es Module, webpack 默认开启该功能
-7. 使用 import 方法实现动态导入
-8. 使用 runtimeChunk 实现文件缓存
-9. 使用 PWA 离线优化
+- 图片压缩
+- 对 eslint babel 处理结果进行缓存
+- 使用 Thead 多进程打包
+- 开启 SourceMap
+- Tree shaking 移除 js 中无用的代码,依赖 Es Module, webpack 默认开启该功能
+- 使用 code Split 对代码进行分割, 然后使用 import 方法实现动态导入
+- 使用 network cache 实现文件缓存
+- 使用 PWA 离线优化
+- Preload Prefetch 对代码提前加载
+- corejs 对 js 兼容性处理
