@@ -585,9 +585,11 @@ if ("serviceWorker" in navigator) {
 
 ## 一些使用技巧
 
-**1. 使用 JSDoc 添加配置文件的代码提示, 已 pwd 配置为例:**
+### 使用 JSDoc
 
 文档: <https://jsdoc.bootcss.com/about-plugins.html>
+
+使用 JSDoc 添加配置文件的代码提示, 以 pwd 插件 配置为例:
 
 ```javascript
 const WorkboxPlugin = require("workbox-webpack-plugin");
@@ -606,10 +608,94 @@ module.exports = config;
 
 注意不能这样写 `module.exports = {xxxx}`
 
-**2. 使用 serve 在某一个目录下开启服务**
+### 使用 serve
+
+使用 serve 在某一个目录下开启服务
 
 - 安装 `npm i serve -g`
 - 启动 `serve dist`
+
+### 合并配置文件
+
+将 webpack 配置分散写, 方便维护(一个插件一个配置), 然后写一个方法, 将 config 文件夹下的所 webpack 配置文件合并, 文件目录结构如下:
+
+![](./2023-06-12-13-42-44.png)
+
+```js
+// utils.js
+const fs = require("fs");
+let config = require("./base.config");
+
+const isNull = (v) => v === undefined || v === null;
+const isArray = (v) => Object.prototype.toString.call(v) === "[object Array]";
+const isObject = (v) => Object.prototype.toString.call(v) === "[object Object]";
+const isBaseType = (v) => ["string", "number", "boolean"].includes(typeof v);
+
+const mergeOptions = (option1, option2) => {
+  const keys = [...new Set([...Object.keys(option1), ...Object.keys(option2)])];
+  keys.forEach((key) => {
+    const v1 = option1[key];
+    const v2 = option2[key];
+    if (isNull(v2)) return;
+    if (isNull(v1)) return (option1[key] = v2);
+    const v1IsBaseType = isBaseType(v1);
+    const v2IsBaseType = isBaseType(v2);
+    const v1IsArray = isArray(v1);
+    const v2IsArray = isArray(v2);
+    const v1IsObject = isObject(v1);
+    const v2IsObject = isObject(v2);
+    // 基本类型合并， option2 覆盖 option1
+    if (v1IsBaseType && v2IsBaseType) {
+      option1[key] = v2;
+      return;
+    }
+    // v1 是数组， v2 是基本类型 或者 对象
+    if (v1IsArray && (v2IsBaseType || v2IsObject)) {
+      v1.push(v2);
+      option1[key] = v1;
+      return;
+    }
+    // v2 是数组， v1 是基本类型 或者 对象
+    if (v2IsArray && (v1IsBaseType || v1IsObject)) {
+      v2.push(v1);
+      option1[key] = v2;
+      return;
+    }
+    // 都是数组
+    if (v1IsArray && v2IsArray) {
+      option1[key] = [...v1, ...v2];
+      return;
+    }
+    // 都是对象
+    if (v1IsObject && v2IsObject) {
+      option1[key] = mergeOptions(v1, v2);
+      return;
+    }
+    option1[key] = v2;
+  });
+  return option1;
+};
+
+const getWebpackConfig = () => {
+  const files = fs.readdirSync(__dirname);
+  files.forEach(function (file) {
+    let curPath = __dirname + "/" + file;
+    if (file === "utils.js" || file === "webpack.config.js") return;
+    const curConfig = require(curPath);
+    if (curConfig.__ignore) return;
+    config = mergeOptions(config, curConfig);
+  });
+  return config;
+};
+
+module.exports = { getWebpackConfig };
+```
+
+```javascript
+// webpack.config.js
+const { getWebpackConfig } = require("./utils");
+module.exports = getWebpackConfig();
+```
 
 ## 集成 vue
 
