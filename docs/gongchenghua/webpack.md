@@ -697,6 +697,34 @@ const { getWebpackConfig } = require("./utils");
 module.exports = getWebpackConfig();
 ```
 
+## 复制文件的插件
+
+```javascript
+/*
+  复制文件的插件
+  yarn add copy-webpack-plugin -D
+*/
+
+const path = require("path");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+
+const config = {
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "../public"),
+          to: path.resolve(__dirname, "../dist"),
+          globOptions: { ignore: ["**/index.html"] }, // 忽略 indx.html
+        },
+      ],
+    }),
+  ],
+};
+
+module.exports = config;
+```
+
 ## 集成 vue
 
 ## 集成 react
