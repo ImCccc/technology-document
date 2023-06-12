@@ -523,6 +523,77 @@ module.exports = {
 
 :::
 
+## PWA
+
+参考: <https://www.webpackjs.com/guides/progressive-web-application/#registering-our-service-worker>
+
+解决断网不能访问的问题, 下面是使用方法:
+
+1. webpack5 配置
+
+```javascript
+/*
+  yarn add workbox-webpack-plugin -D
+*/
+const WorkboxPlugin = require("workbox-webpack-plugin");
+const config = {
+  plugins: [
+    new WorkboxPlugin.GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true,
+    }),
+  ],
+};
+module.exports = config;
+```
+
+2. 入口文件添加如下代码
+
+```javascript
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then((registration) => {
+        console.log("注册成功: ", registration);
+      })
+      .catch((registrationError) => {
+        console.log("注册失败: ", registrationError);
+      });
+  });
+}
+```
+
+打包后, 会自动生成 `service-worker.js`, 启动时候会加载该文件, 不过 pwa 兼容性比较差
+
+## 一些使用技巧
+
+**1. 使用 JSDoc 添加配置文件的代码提示, 已 pwd 配置为例:**
+
+文档: <https://jsdoc.bootcss.com/about-plugins.html>
+
+```javascript
+const WorkboxPlugin = require("workbox-webpack-plugin");
+
+/** @type import("webpack").Configuration */
+const config = {
+  plugins: [
+    new WorkboxPlugin.GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true,
+    }),
+  ],
+};
+module.exports = config;
+```
+
+注意不能这样写 `module.exports = {xxxx}`
+
+**2. 使用 serve 在某一个目录下开启服务**
+
+- 安装 `npm i serve -g`
+- 启动 `serve dist`
+
 ## 总结
 
 webpack 优化方案包括:
@@ -535,3 +606,4 @@ webpack 优化方案包括:
 6. Tree shaking 移除 js 中无用的代码,依赖 Es Module, webpack 默认开启该功能
 7. 使用 import 方法实现动态导入
 8. 使用 runtimeChunk 实现文件缓存
+9. 使用 PWA 离线优化
