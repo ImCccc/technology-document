@@ -117,13 +117,13 @@ module.exports = {
 
 **说明**
 
-1. [mini-css-extract-plugin](https://www.webpackjs.com/plugins/mini-css-extract-plugin/): 将 CSS 提取到单独的文件中
-2. postcss-loader: 解决样式兼容性
-3. style-loader: 将样式插入到 html 中(使用 MiniCssExtractPlugin 插件后需要替换)
-4. css-loader: 将 css 转化为 js 能
-5. less-loader: less 转 css
-6. sass-loader: scss 转 css
-7. css-minimizer-webpack-plugin: 压缩 css
+- 生产环境使用: [mini-css-extract-plugin](https://www.webpackjs.com/plugins/mini-css-extract-plugin/) 将 CSS 提取到单独的文件中
+- 生产环境使用: css-minimizer-webpack-plugin 压缩 css
+- 开发环境使用: style-loader: 将样式插入到 html 中(使用 MiniCssExtractPlugin 插件后需要替换)
+- css-loader: 将 css 转化为 js 能
+- postcss-loader: 解决样式兼容性
+- less-loader: less 转 css
+- sass-loader: scss 转 css
 
 ## 图片资源
 
@@ -701,7 +701,6 @@ module.exports = getWebpackConfig();
 
 ```javascript
 /*
-  复制文件的插件
   yarn add copy-webpack-plugin -D
 */
 
@@ -903,15 +902,361 @@ const config = {
 module.exports = config;
 ```
 
+### 集成 antd
+
+1. 安装
+
+```
+yarn add antd
+```
+
+2. main.js 引入
+
+```js
+import "antd/dist/antd";
+```
+
+3. 使用
+
+```jsx
+import { Button } from "antd";
+<Button>测试</Button>;
+```
+
+4. 修改主题颜色
+
+antd 5 版本修改起来很简单, 文档 <https://ant.design/docs/react/customize-theme-cn>
+
+```jsx
+import { Button, ConfigProvider } from "antd";
+const App: React.FC = () => (
+  <ConfigProvider theme={{ token: { colorPrimary: "#00b96b" } }}>
+    <Button />
+  </ConfigProvider>
+);
+```
+
+antd5,还可以针对某一个组件修改主题:
+
+```jsx
+<ConfigProvider theme={{ components: { Radio: { colorPrimary: "#00b96b" } } }}>
+  <Radio>Radio</Radio>
+  <Checkbox>Checkbox</Checkbox>
+</ConfigProvider>
+```
+
+### 打包分组
+
+如果页面引入很多第三方包, 例如 react react-dom react-router-dom antd 等等, 那么打包出来的文件就会很大, 这时候可以使用如下方法进行分组:
+
+```javascript
+const config = {
+  optimization: {
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        // react react-dom react-router-dom
+        react: {
+          test: /[\\/]node_modules[\\/]react(.*)?[\\/]/,
+          name: "chunk-react",
+          priority: 10,
+        },
+        // antd-design
+        antd: {
+          test: /[\\/]node_modules[\\/]antd(.*)?[\\/]/,
+          name: "chunk-antd",
+          priority: 9,
+        },
+        // 剩下的 node_modules
+        libs: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "chunk-libs",
+          priority: 8,
+        },
+      },
+    },
+  },
+};
+```
+
+打包后的结果:
+
+```
+js/runtime~main.js.1b17003f8c.js
+js/chunk-react.8e1ab83a56.js
+js/chunk-antd.c9f2dc20ff.js
+js/chunk-libs.f170381f60.js
+js/main.5967e94206.js
+```
+
+### 所有配置
+
+webpack.config.js
+
+```javascript
+/*
+  webpack 相关:
+  yarn add webpack webpack-cli -D
+
+  html插件:
+  yarn add html-webpack-plugin -D
+  
+  复制文件插件:
+  yarn add copy-webpack-plugin -D
+
+  css相关:
+  yarn add style-loader css-loader -D
+  yarn add less less-loader css-loader -D
+  yarn add postcss postcss-loader postcss-preset-env -D
+  yarn add mini-css-extract-plugin css-minimizer-webpack-plugin -D
+
+  babel相关:
+  yarn add babel-loader @babel/core babel-preset-react-app -D
+
+  eslint相关:
+  yarn add eslint eslint-webpack-plugin eslint-config-react-app -D
+
+  react 组件热更新:
+  yarn add @pmmmwh/react-refresh-webpack-plugin react-refresh -D
+
+  开发服务器:
+  yarn add webpack-dev-server -D
+*/
+
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const EslintPlugin = require("eslint-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+
+const path = require("path");
+const mode = process.env.NODE_ENV;
+const isDev = mode === "development";
+const isPrd = mode === "production";
+
+let output = {
+  clean: true,
+  path: path.join(__dirname, "../dist"),
+  filename: "js/[name].[contenthash:10].js",
+  chunkFilename: "js/chunk.[name].[contenthash:5].js",
+  assetModuleFilename: "imgs/[hash:5][ext][query]",
+};
+
+if (isDev) {
+  output = {
+    filename: "js/[name].js",
+    chunkFilename: "js/chunk.[name].js",
+    assetModuleFilename: "imgs/[hash:5][ext][query]",
+  };
+}
+
+const postcssLoader = {
+  loader: "postcss-loader",
+  options: {
+    postcssOptions: { plugins: ["postcss-preset-env"] },
+  },
+};
+
+/** @type import("webpack").Configuration */
+const config = {
+  mode,
+  output,
+  entry: "/src/main.js",
+  devtool: isDev ? "cheap-module-source-map" : "source-map",
+
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          isDev ? "style-loader" : MiniCssExtractPlugin.loader,
+          "css-loader",
+          postcssLoader,
+        ],
+      },
+      {
+        test: /\.less$/,
+        use: [
+          isDev ? "style-loader" : MiniCssExtractPlugin.loader,
+          "css-loader",
+          postcssLoader,
+          "less-loader",
+        ],
+      },
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            cacheDirectory: true,
+            cacheCompression: false,
+            // 开发环境需要 react 组件热更新的配置
+            plugins: [isDev && "react-refresh/babel"].filter(Boolean),
+          },
+        },
+      },
+      {
+        test: /\.(png|jpe?g|git|webp|svg)$/,
+        type: "asset",
+        parser: {
+          dataUrlCondition: { maxSize: 10 * 1024 },
+        },
+        generator: {
+          filename: "imgs/[hash:10][ext][query]",
+        },
+      },
+      {
+        test: /\.(woff2?|ttf)$/,
+        type: "asset/resource",
+      },
+    ],
+  },
+
+  resolve: {
+    extensions: [".jsx", ".js", ".json"],
+  },
+
+  optimization: {
+    // 控制是否进行压缩
+    minimize: isPrd,
+    minimizer: [
+      // js 压缩
+      new TerserPlugin(),
+      // 样式压缩
+      new CssMinimizerPlugin(),
+    ],
+
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        // react react-dom react-router-dom
+        react: {
+          test: /[\\/]node_modules[\\/]react(.*)?[\\/]/,
+          name: "chunk-react",
+          priority: 10,
+        },
+        // antd-design
+        antd: {
+          test: /[\\/]node_modules[\\/]antd(.*)?[\\/]/,
+          name: "chunk-antd",
+          priority: 9,
+        },
+        // 剩下的 node_modules
+        libs: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "chunk-libs",
+          priority: 8,
+        },
+      },
+    },
+
+    runtimeChunk: {
+      name: (entrypoint) => `runtime~${entrypoint.name}.js`,
+    },
+  },
+
+  plugins: [
+    // 生产环境:复制静态资源
+    isPrd &&
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: path.resolve(__dirname, "../public"),
+            to: path.resolve(__dirname, "../dist"),
+            globOptions: { ignore: ["**/index.html"] }, // 忽略 indx.html
+          },
+        ],
+      }),
+
+    // 生产环境:css 压缩
+    isPrd &&
+      new MiniCssExtractPlugin({
+        filename: "css/[name].[hash:5].css",
+        chunkFilename: "css/chunk.[name].[hash:5].css",
+      }),
+
+    // 开发环境:react 组件热更新的配置
+    isDev && new ReactRefreshWebpackPlugin(),
+
+    new EslintPlugin({
+      context: path.resolve(__dirname, "../src"),
+      cache: true,
+      cacheLocation: path.resolve(
+        __dirname,
+        "../node_modules/.cache/eslintcache"
+      ),
+    }),
+
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "../public/index.html"),
+    }),
+  ].filter(Boolean),
+
+  devServer: {
+    host: "localhost",
+    port: 3001,
+    open: true,
+    hot: true,
+    // 解决前端 history 路由 404 问题
+    historyApiFallback: true,
+  },
+
+  // 关闭性能分析, 提高打包速度
+  performance: false,
+};
+
+module.exports = config;
+```
+
+.eslintrc.js
+
+```js
+/* .eslintrc.js */
+module.exports = {
+  extends: ["react-app"],
+  parserOptions: {
+    babelOptions: {
+      presets: [
+        ["babel-preset-react-app", false],
+        "babel-preset-react-app/prod",
+      ],
+    },
+  },
+};
+```
+
+babel.config.js
+
+```js
+module.exports = {
+  presets: ["react-app"],
+};
+```
+
+package.json
+
+```json
+{
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack server --config ./config/webpack.config.js",
+    "prd": "cross-env NODE_ENV=production webpack --config ./config/webpack.config.js"
+  },
+  "browserslist": ["last 2 version", "> 1%", "not dead"]
+}
+```
+
 ## 总结
 
 webpack 优化方案包括:
 
-- 图片压缩
+- 图片压缩, js css 压缩
 - 对 eslint babel 处理结果进行缓存
 - 使用 Thead 多进程打包
 - 开启 SourceMap
-- Tree shaking 移除 js 中无用的代码,依赖 Es Module, webpack 默认开启该功能
+- Tree shaking 移除 js 中无用的代码, 需要依赖 Es Module, webpack 默认开启该功能
 - 使用 code Split 对代码进行分割, 然后使用 import 方法实现动态导入
 - 使用 network cache 实现文件缓存
 - 使用 PWA 离线优化
