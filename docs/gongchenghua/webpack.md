@@ -726,6 +726,8 @@ module.exports = config;
 
 ## 集成 react
 
+gitHub 地址: <https://github.com/ImCccc/webpack5-react>
+
 1. 安装相关包
 
 ```
@@ -1247,6 +1249,8 @@ package.json
 ```
 
 ## 集成 vue
+
+gitHub 地址: <https://github.com/ImCccc/webpack5-vue>
 
 因为和 react 配置差不多, 所以只说差异的地方
 
