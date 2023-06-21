@@ -43,8 +43,7 @@ const sidebar = {
     "/react/mobx.md",
     "/react/react-router-dom.md",
     "/react/hooks.md",
-    "/react/ahooks.md",
-    "/react/AntDesignPro.md",
+    "/react/源码解读.md",
   ],
   "/css/": [
     "/css/",

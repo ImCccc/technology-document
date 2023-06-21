@@ -1763,6 +1763,97 @@ const config = {
 module.exports = config;
 ```
 
+## loader
+
+文档: <https://www.webpackjs.com/loaders/>
+
+### loader 执行顺序
+
+1. 前置 loader (pre)
+2. 普通 loader (normal)
+3. 内联 loader (inline)
+4. 后置 loader (post)
+
+- 优先级 1 > 2 > 3 > 4
+- 执行顺序：右 -> 左; 下 -> 上
+
+```javascript
+// 前置 loader => enforce: "pre"
+{
+  enforce: "pre",
+  test: /\.js$/,
+  loader: "loader1",
+},
+// 不设置 enforce 普通olader
+{
+  test: /\.js$/,
+  loader: "loader2",
+},
+// 后置 loader => enforce: "post"
+{
+  enforce: "post",
+  test: /\.js$/,
+  loader: "loader3",
+}
+```
+
+### loader 分类
+
+- 同步 loader
+
+```javascript
+// 写法1
+module.exports = function (content, map, meta) {
+  return content;
+};
+
+// 写法2
+module.exports = function (content, map, meta) {
+  /*
+    参数1: err 代表是否有错误
+    参数2: 处理后的内容
+    参数3: source-map 继续传递
+    参数4: meta 给下一个loader 传递的参数
+  */
+  this.callback(null, content, map, meta);
+};
+```
+
+- 异步 loader
+
+```javascript
+module.exports = function (content, map, meta) {
+  // 参数和同步loader一样, 需要等2秒,才会执行后面的 loader
+  const callback = this.async();
+  setTimeout(() => {
+    callback(null, content, map, meta);
+  }, 2000);
+};
+```
+
+- raw loader 处理图片
+
+```javascript
+module.exports = function (content) {
+  return content;
+};
+module.exports.raw = true;
+```
+
+- pitch loader
+
+![](./2023-06-19-11-27-20.png)
+
+![](./2023-06-19-11-36-37.png)
+
+```javascript
+module.exports = function (content) {
+  return content;
+};
+// pitch 方法会在所有loader 执行之前执行
+module.exports.pitch = () => {};
+```
+
 ## 总结
 
 webpack 优化方案包括:
