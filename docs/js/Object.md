@@ -79,6 +79,24 @@ a.propertyIsEnumerable("age"); // true
 a.propertyIsEnumerable("name"); // false
 ```
 
+## Object.create
+
+Object.create() 静态方法以一个现有对象作为原型，创建一个新对象。
+
+```javascript
+const person = {
+  isHuman: false,
+  print: () => console.log(`${this.name} ${this.isHuman}`),
+};
+
+const me = Object.create(person);
+me.name = "Matthew";
+me.isHuman = true;
+
+// Matthew true
+me.print();
+```
+
 ## Object.is
 
 比较两个值是否严格相等，与严格比较运算符（===）的行为基本一致 ，不同之处只有两个：一是+0 不等于-0，二是 NaN 等于自身。
@@ -86,6 +104,35 @@ a.propertyIsEnumerable("name"); // false
 ```javascript
 Object.is(+0, -0); // false
 Object.is(NaN, NaN); // true
+```
+
+## Object.isExtensible
+
+Object.isExtensible() 静态方法判断一个对象是否是可扩展的（是否可以在它上面添加新的属性） `Object.isExtensible(obj)` obj 要检查的对象。
+
+可以使用 Object.preventExtensions()、Object.seal()、Object.freeze() 或 Reflect.preventExtensions() 中的任一方法将对象标记为不可扩展
+
+```javascript
+const object1 = {};
+
+// true
+console.log(Object.isExtensible(object1));
+
+// 新对象是可拓展的。
+const empty = {};
+Object.isExtensible(empty); // true
+
+// 它们可以变为不可拓展的
+Object.preventExtensions(empty);
+Object.isExtensible(empty); // false
+
+// 根据定义，密封对象是不可拓展的。
+const sealed = Object.seal({});
+Object.isExtensible(sealed); // false
+
+// 根据定义，冻结对象同样也是不可拓展的。
+const frozen = Object.freeze({});
+Object.isExtensible(frozen); // false
 ```
 
 ## Object.assign
