@@ -16,7 +16,8 @@
 <a class="link" target="_blank" href="https://www.tslang.cn/docs/home.html">TypeScript</a>
 <a class="link" target="_blank" href="https://www.webpackjs.com/concepts/">webpack</a>
 <a class="link" target="_blank" href="https://cn.vuejs.org/">vue</a>
-<a class="link" target="_blank" href="https://vue3js.cn/start/">vue 源码分析</a>
+<a class="link" target="_blank" href="https://vue3js.cn/start/">vue3 源码分析</a>
+<a class="link" target="_blank" href="https://vue-js.com/learn-vue/start/">vue2 源码分析</a>
 <a class="link" target="_blank" href="https://vitejs.cn/guide/">vite</a>
 <a class="link" target="_blank" href="https://uniapp.dcloud.net.cn/">uniapp</a>
 <a class="link" target="_blank" href="https://zh-hans.react.dev/learn">react</a>
