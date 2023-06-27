@@ -79,7 +79,7 @@ a.propertyIsEnumerable("age"); // true
 a.propertyIsEnumerable("name"); // false
 ```
 
-## Object.create
+## create
 
 Object.create() 静态方法以一个现有对象作为原型，创建一个新对象。
 
@@ -97,7 +97,7 @@ me.isHuman = true;
 me.print();
 ```
 
-## Object.is
+## is
 
 比较两个值是否严格相等，与严格比较运算符（===）的行为基本一致 ，不同之处只有两个：一是+0 不等于-0，二是 NaN 等于自身。
 
@@ -106,7 +106,7 @@ Object.is(+0, -0); // false
 Object.is(NaN, NaN); // true
 ```
 
-## Object.isExtensible
+## isExtensible
 
 Object.isExtensible() 静态方法判断一个对象是否是可扩展的（是否可以在它上面添加新的属性） `Object.isExtensible(obj)` obj 要检查的对象。
 
@@ -135,7 +135,7 @@ const frozen = Object.freeze({});
 Object.isExtensible(frozen); // false
 ```
 
-## Object.assign
+## assign
 
 用于对象的合并，将源对象（source）的所有可枚举属性，复制到目标对象（target）, 合并策略如下：
 
@@ -143,7 +143,7 @@ Object.isExtensible(frozen); // false
 2. 只拷贝源对象的自身属性（不拷贝继承属性），也不拷贝不可枚举的属性（enumerable: false）
 3. 实行的是浅拷贝，而不是深拷贝。也就是说，如果源对象某个属性的值是对象，那么目标对象拷贝得到的是这个对象的引用
 
-## Object.getOwnPropertyDescriptor
+## getOwnPropertyDescriptor
 
 获取该对象的描述对象
 
@@ -160,19 +160,19 @@ Object.getOwnPropertyDescriptor(obj, "foo");
 */
 ```
 
-## Object.values
+## values
 
 `Object.values` 方法返回一个数组，成员是参数对象自身的（不含继承的）所有可枚举属性（不含 Symbol 属性）的值
 
-## Object.entries
+## entries
 
 `Object.entries` 方法返回一个数组，成员是参数对象自身的（不含继承的）所有可枚举属性（不含 Symbol 属性）的键值对数组
 
-## Object.keys
+## keys
 
 `Object.keys` 返回一个数组，包括对象自身的（不含继承的）所有可枚举属性（不含 Symbol 属性）
 
-## Object.getOwnPropertyNames
+## getOwnPropertyNames
 
 `Object.getOwnPropertyNames` 和 `Object.keys` 一样， 返回一个数组，包含对象自身的所有属性（不含 Symbol 属性），但是包括不可枚举属性
 
