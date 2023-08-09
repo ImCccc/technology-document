@@ -23,10 +23,8 @@ tsc greeter.ts
 ```javascript
 // 布尔值
 let isDone: boolean = false;
-
 // 字符串
 let name: string = "bob";
-
 // 数字
 let decLiteral: number = 6;
 let octalLiteral: number = 0o744;
@@ -48,21 +46,72 @@ enum Color {Red = 1, Green, Blue}
 let colorName: string = Color[2]; // 'Green'
 ```
 
-### void 和 any
+### any
+
+any 类型表示没有任何限制，该类型的变量可以赋予任意类型的值。变量类型一旦设为 any，TypeScript 实际上会关闭这个变量的类型检查。即使有明显的类型错误，只要句法正确，都不会报错。尽量避免使用 any 类型，否则就失去了使用 TypeScript 的意义。
+
+1. 对于开发者没有指定类型、TypeScript 必须自己推断类型的那些变量，如果无法推断出类型，TypeScript 就会认为该变量的类型是 any。
 
 ```javascript
-// any : 不希望类型检查器对这些值进行检查而是直接让它们通过编译阶段的检查
-let notSure: any = 4;
-notSure = "maybe a string instead";
-notSure = false;
-
-// void类型像是与any类型相反，它表示没有任何类型。 当一个函数没有返回值时，返回void：
-function warnUser(): void {
-  console.log("This is my warning message");
+function add(x, y) {
+  return x + y;
 }
-// void 只能为它赋予undefined和null
-let unusable: void = undefined;
+add(1, [1, 2, 3]); // 不报错
 ```
+
+2. any 类型除了关闭类型检查，还有一个很大的问题，就是它会“污染”其他变量。它可以赋值给其他任何类型的变量（因为没有类型检查），导致其他变量出错。
+
+```javascript
+let x: any = "hello";
+let y: number;
+y = x; // 不报错
+y * 123; // 不报错
+y.toFixed(); // 不报错
+```
+
+### unknown
+
+1. 跟 any 的相似之处，在于所有类型的值都可以分配给 unknown 类型;
+2. unknown 类型跟 any 类型的不同之处在于，它不能直接使用
+
+   > 首先，unknown 类型的变量，不能直接赋值给其他类型的变量（除了 any 类型和 unknown 类型）。
+   >
+   > 其次，不能直接调用 unknown 类型变量的方法和属性。
+   >
+   > 再次，unknown 类型变量能够进行的运算是有限的，只能进行比较运算（运算符==、===、!=、!==、||、&&、?）、取反运算（运算符!）、typeof 运算符和 instanceof 运算符这几种，其他运算都会报错。
+
+   ```javascript
+   let v: unknown = 123;
+   let v1: boolean = v; // 报错
+   let v2: number = v; // 报错
+
+   let v1: unknown = { foo: 123 };
+   v1.foo; // 报错
+
+   let v2: unknown = "hello";
+   v2.trim(); // 报错
+
+   let v3: unknown = (n = 0) => n + 1;
+   v3(); // 报错
+   ```
+
+3. 怎么才能使用 unknown 类型变量呢？“类型缩小”，unknown 类型变量才可以使用。
+
+   ```javascript
+   let a: unknown = 1;
+   if (typeof a === "number") {
+     let r = a + 10; // 正确
+   }
+
+   let s: unknown = "hello";
+   if (typeof s === "string") {
+     s.length; // 正确
+   }
+   ```
+
+::: tip 总结:
+unknown 可以看作是更安全的 any。一般来说，凡是需要设为 any 类型的地方，通常都应该优先考虑设为 unknown 类型。
+:::
 
 ### undefined 和 null
 
