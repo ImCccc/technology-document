@@ -1,6 +1,7 @@
 # typescript
 
 官网：<https://www.tslang.cn/>
+教程: <https://wangdoc.com/typescript/any>
 
 TypeScript 是一种由微软开发的开源的编程语言，它是 JavaScript 的一个超集，扩展了 JavaScript 的语法
 
@@ -18,7 +19,21 @@ tsc greeter.ts
 
 ## ts 数据类型
 
-### 布尔值， 字符串，数字
+JavaScript 语言（注意，不是 TypeScript）将值分成 8 种类型。
+
+1. boolean
+2. string
+3. number
+4. bigint
+5. symbol
+6. object
+7. undefined
+8. null
+
+TypeScript 继承了 JavaScript 的类型设计，以上 8 种类型可以看作 TypeScript 的基本类型。
+undefined 和 null 既可以作为值，也可以作为类型，取决于在哪里使用它们;
+
+### 布尔值，字符串，数字
 
 ```javascript
 // 布尔值
@@ -29,6 +44,51 @@ let name: string = "bob";
 let decLiteral: number = 6;
 let octalLiteral: number = 0o744;
 ```
+
+#### 包装对象
+
+JavaScript 的 8 种类型之中，undefined 和 null 其实是两个特殊值，object 属于复合类型，剩下的五种属于原始类型，代表最基本的、不可再分的值。
+
+`boolean,string,number,bigint,symbol` 这五种原始类型的值，都有对应的包装对象。所谓“包装对象”，指的是这些值在需要时，会自动产生的对象。
+
+`'hello'.charAt(1)`: 字符串 hello 执行了 charAt()方法。但在 JavaScript 语言中，只有对象才有方法，原始类型的值本身没有方法。这行代码之所以可以运行，就是因为在调用方法时，字符串会自动转为包装对象，charAt()方法其实是定义在包装对象上。
+
+五种包装对象之中， `symbol` 类型和 `bigint` 类型无法直接获取它们的包装对象（即 Symbol()和 BigInt()不能作为构造函数使用），但是剩下三种可以。
+
+- Boolean()
+- String()
+- Number()
+
+```javascript
+const s = new String("hello");
+typeof s; // 'object'
+s.charAt(1); // 'e'
+```
+
+#### 包装对象类型与字面量类型
+
+TypeScript 对五种原始类型分别提供了大写和小写两种类型。
+
+- Boolean 和 boolean
+- String 和 string
+- Number 和 number
+- BigInt 和 bigint
+- Symbol 和 symbol
+
+其中，大写类型同时包含包装对象和字面量两种情况，小写类型只包含字面量，不包含包装对象。
+
+```javascript
+const s1: String = "hello"; // 正确
+const s2: String = new String("hello"); // 正确
+
+const s3: string = "hello"; // 正确
+const s4: string = new String("hello"); // 报错
+```
+
+::: tip
+建议只使用小写类型，不使用大写类型。因为绝大部分使用原始类型的场合，都是使用字面量，不使用包装对象。
+而且，TypeScript 把很多内置方法的参数，定义成小写类型，使用大写类型会报错。
+:::
 
 ### 枚举
 
