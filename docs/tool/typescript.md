@@ -366,6 +366,42 @@ function draw({ shape: Shape, xPos: number = 100 }) {
 }
 ```
 
+#### 严格字面量检查
+
+```ts
+// 触发严格字面量检查，只要有类型声明中不存在的属性（本例是z），就会导致报错。
+const point: { x: number } = {
+  x: 1,
+  z: 1, // 报错
+};
+
+// 不会触发严格字面量检查
+const myPoint = { x: 1, z: 1 };
+const point: { x: number } = myPoint; // 正确
+```
+
+TypeScript 对字面量进行严格检查的目的，主要是防止拼写错误。一般来说，字面量大多数来自手写，容易出现拼写错误，或者误用 API。编译器选项 suppressExcessPropertyErrors，可以关闭多余属性检查。下面是它在 tsconfig.json 文件里面的写法。
+
+```tsx
+{
+  "compilerOptions": {
+    "suppressExcessPropertyErrors": true
+  }
+}
+```
+
+#### 最小可选属性规则
+
+如果一个对象的所有属性都是可选的，会触发最小可选属性规则。
+
+```tsx
+type Options = { a?: number; b?: number };
+// 报错
+const obj: Options = { d: 123 };
+```
+
+上面示例中，类型 Options 是一个对象，它的所有属性都是可选的，这导致任何对象实际都符合 Options 类型。为了避免这种情况，TypeScript 添加了最小可选属性规则，规定这时属于 Options 类型的对象，必须至少存在一个可选属性，不能所有可选属性都不存在。
+
 ## tsconfig.json 配置
 
 如果一个目录下存在一个 tsconfig.json 文件，那么它意味着这个目录是 TypeScript 项目的根目录。 tsconfig.json 文件中指定了用来编译这个项目的根文件和编译选项
