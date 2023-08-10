@@ -402,6 +402,329 @@ const obj: Options = { d: 123 };
 
 上面示例中，类型 Options 是一个对象，它的所有属性都是可选的，这导致任何对象实际都符合 Options 类型。为了避免这种情况，TypeScript 添加了最小可选属性规则，规定这时属于 Options 类型的对象，必须至少存在一个可选属性，不能所有可选属性都不存在。
 
+### interface
+
+文档: <https://wangdoc.com/typescript/interface>
+
+interface 是对象的模板，可以看作是一种类型约定，中文译为“接口”。使用了某个模板的对象，就拥有了指定的类型结构。
+
+```ts
+interface Person {
+  firstName: string;
+  age?: number;
+  [prop: string]: number;
+}
+const p: Person = { firstName: "John", age: 25 };
+```
+
+1. 方括号运算符可以取出 interface 某个属性的类型
+
+```tsx
+interface Foo {
+  a: string;
+}
+type A = Foo["a"]; // string
+```
+
+2. 字符串索引会约束该类型中所有名字为字符串的属性
+
+```tsx
+interface MyObj {
+  [prop: string]: number;
+  a: boolean; // 编译错误
+}
+```
+
+3. 数值索性必须服从于字符串索引, JavaScript 中数值属性名最终是自动转换成字符串属性名
+
+```tsx
+interface A {
+  [prop: string]: number;
+  [prop: number]: string; // 报错
+}
+interface B {
+  [prop: string]: number;
+  [prop: number]: number; // 正确
+}
+```
+
+4. 对象方法写法
+
+```tsx
+// 写法一
+interface A {
+  f(x: boolean): string;
+}
+// 写法二
+interface B {
+  f: (x: boolean) => string;
+}
+// 写法三
+interface C {
+  f: { (x: boolean): string };
+}
+
+// 写法四
+const f = "f";
+interface A {
+  [f](x: boolean): string;
+}
+```
+
+5. 方法可以重载
+
+```tsx
+interface A {
+  f(): number;
+  f(x: boolean): boolean;
+  f(x: string, y: string): string;
+}
+
+function MyFunc(): number;
+function MyFunc(x: boolean): boolean;
+function MyFunc(x: string, y: string): string;
+function MyFunc(x?: boolean | string, y?: string): number | boolean | string {
+  if (x === undefined && y === undefined) return 1;
+  if (typeof x === "boolean" && y === undefined) return true;
+  if (typeof x === "string" && typeof y === "string") return "hello";
+  throw new Error("wrong parameters");
+}
+const a: A = { f: MyFunc };
+```
+
+6. 声明函数
+
+```tsx
+interface Add {
+  (x: number, y: number): number;
+}
+const myAdd: Add = (x, y) => x + y;
+```
+
+#### interface 的继承
+
+1. interface 继承 interface
+
+```tsx
+interface Style {
+  color: string;
+}
+interface Shape {
+  name: string;
+}
+// interface 允许多重继承, Circle 同时继承了 Style 和 Shape ，所以拥有三个属性 color、name 和 radius。
+interface Circle extends Style, Shape {
+  radius: number;
+}
+
+// 子接口与父接口存在同名属性，那么子接口的属性会覆盖父接口的属性, 子接口与父接口的同名属性必须是类型兼容的, 否则会报错
+interface Foo {
+  id: string;
+}
+interface Bar extends Foo {
+  id: number; // 报错
+}
+
+// 多重继承时，如果多个父接口存在同名属性，那么这些同名属性不能有类型冲突，否则会报错。
+interface Foo {
+  id: string;
+}
+interface Bar {
+  id: number;
+}
+// 报错
+interface Baz extends Foo, Bar {
+  type: string;
+}
+```
+
+2. interface 继承 type class
+
+```tsx
+// interface 继承 type
+type Country = {
+  name: string;
+  capital: string;
+};
+interface CountryWithPop extends Country {
+  population: number;
+}
+
+// interface 继承 class
+class A {
+  x: string = "";
+  y(): boolean {
+    return true;
+  }
+}
+interface B extends A {
+  z: number;
+}
+
+const b: B = {
+  x: "",
+  z: 123,
+  y: () => true,
+};
+```
+
+#### 接口合并
+
+多个同名接口会合并成一个接口。
+
+```tsx
+interface Box {
+  height: number;
+  width: number;
+}
+interface Box {
+  length: number;
+}
+```
+
+上面示例中，两个 Box 接口会合并成一个接口，同时有 height、width 和 length 三个属性。这样的设计主要是为了兼容 JavaScript 的行为。开发者常常对全局对象或者外部库，添加自己的属性和方法。那么，只要使用 interface 给出这些自定义属性和方法的类型，就能自动跟原始的 interface 合并，使得扩展外部类型非常方便。
+
+举例来说，如果给 document 对象添加自定义属性，可以把自定义属性写成 interface，合并进原始定义。
+
+```tsx
+interface Document {
+  foo: string;
+}
+document.foo = "hello";
+```
+
+1. 同名接口合并时，同一个属性如果有多个类型声明，彼此不能有类型冲突。
+
+```tsx
+interface A {
+  a: number;
+}
+interface A {
+  a: string; // 报错
+}
+```
+
+2. 两个 interface 组成的联合类型存在同名属性，那么该属性的类型也是联合类型。
+
+```tsx
+interface Circle {
+  area: bigint;
+}
+interface Rectangle {
+  area: number;
+}
+declare const s: Circle | Rectangle;
+s.area; // bigint | number
+```
+
+3. 同名方法有不同的类型声明，那么会发生函数重载。而且，后面的定义比前面的定义具有更高的优先级。下面示例中，clone()方法有不同的类型声明，会发生函数重载。这时，越靠后的定义，优先级越高，排在函数重载的越前面。(参数是字面量类型的例外)
+
+```tsx
+interface Cloner {
+  clone(animal: Sheep): Sheep;
+}
+interface Cloner {
+  clone(animal: Dog): Dog;
+  clone(animal: Cat): Cat;
+}
+// 等同于
+interface Cloner {
+  clone(animal: Dog): Dog;
+  clone(animal: Cat): Cat;
+  clone(animal: Sheep): Sheep;
+}
+
+// 这个规则有一个例外。同名方法之中，如果有一个参数是字面量类型，字面量类型有更高的优先级。
+interface A {
+  f(x: "foo"): boolean;
+}
+interface A {
+  f(x: any): void;
+}
+// 等同于
+interface A {
+  f(x: "foo"): boolean;
+  f(x: any): void;
+}
+```
+
+### interface 与 type 的异同
+
+都能为对象类型起名。
+class 命令也有类似作用，通过定义一个类，同时定义一个对象类型。但是，它会创造一个值，编译后依然存在。如果只是单纯想要一个类型，应该使用 type 或 interface。
+
+**interface 与 type 的区别有下面几点**
+
+1. type 能够表示非对象类型，而 interface 只能表示对象类型（包括数组、函数等）。
+
+2. interface 可以继承其他类型，type 不支持继承, 但能使用 & 运算符，重新定义一个类型。
+
+```tsx
+interface Animal {
+  name: string;
+}
+interface Bear extends Animal {
+  honey: boolean;
+}
+
+type Animal = {
+  name: string;
+};
+type Bear = Animal & {
+  honey: boolean;
+};
+
+// 继承时，type 和 interface 是可以换用的。interface 可以继承 type。
+type Foo = { x: number };
+interface Bar extends Foo {
+  y: number;
+}
+
+interface Foo {
+  x: number;
+}
+type Bar = Foo & { y: number };
+```
+
+3. 同名 interface 会自动合并，同名 type 则会报错。 TypeScript 不允许使用 type 多次定义同一个类型。
+
+```tsx
+type A = { foo: number }; // 报错
+type A = { bar: number }; // 报错
+
+interface A {
+  foo: number;
+}
+interface A {
+  bar: number;
+}
+const obj: A = { foo: 1, bar: 1 };
+```
+
+4. interface 不能包含属性映射（mapping），type 可以
+
+```tsx
+interface Point {
+  x: number;
+  y: number;
+}
+// 正确
+type PointCopy1 = {
+  [Key in keyof Point]: Point[Key];
+};
+// 报错
+interface PointCopy2 {
+  [Key in keyof Point]: Point[Key];
+};
+
+```
+
+5. this 关键字只能用于 interface
+6. type 可以扩展原始数据类型，interface 不行。
+7. interface 无法表达某些复杂类型（比如交叉类型和联合类型），但是 type 可以。
+
+综上所述，如果有复杂的类型运算，那么没有其他选择只能使用 type；一般情况下，interface 灵活性比较高，便于扩充类型或自动合并，建议优先使用。
+
 ## tsconfig.json 配置
 
 如果一个目录下存在一个 tsconfig.json 文件，那么它意味着这个目录是 TypeScript 项目的根目录。 tsconfig.json 文件中指定了用来编译这个项目的根文件和编译选项
