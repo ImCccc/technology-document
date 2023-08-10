@@ -183,10 +183,6 @@ let n: null = null;
 
 > 默认情况下 null 和 undefined 是所有类型的子类型。 就是说你可以把 null 和 undefined 赋值给 number 类型的变量。
 
-### Object
-
-表示非原始类型，也就是除 number，string，boolean，symbol，null 或 undefined 之外的类型
-
 ### 类型断言
 
 - <尖括号>
@@ -282,6 +278,91 @@ function repeat(...[str, times]: [string, number]): string {
 }
 function repeat(str: string, times: number): string {
   return str.repeat(times);
+}
+```
+
+### Object
+
+表示非原始类型，也就是除 number，string，boolean，symbol，null 或 undefined 之外的类型
+
+```javascript
+const obj: {
+  x: number,
+  y: number,
+  add(x: number, y: number): number,
+  // 或者写成
+  add1: (x: number, y: number) => number,
+} = {
+  x: 1,
+  y: 1,
+  add: (x, y) => x + y,
+};
+```
+
+#### 方括号读取属性的类型
+
+```ts
+type User = {
+  name: string;
+  age: number;
+};
+type Name = User["name"]; // string
+```
+
+#### 继承的属性
+
+TypeScript 不区分对象自身的属性和继承的属性，一律视为对象的属性。
+
+```ts
+interface MyInterface {
+  toString(): string; // 继承的属性
+  prop: number; // 自身的属性
+}
+
+// obj只写了prop属性，但是不报错。因为它可以继承原型上面的toString()方法
+const obj: MyInterface = { prop: 123 };
+```
+
+#### 属性名的索引类型
+
+JavaScript 对象的属性名（即上例的 property）的类型有三种可能， `string` ，还有 `number` 和 `symbol` 。
+
+```ts
+// 数值索引不能与字符串索引发生冲突，必须服从后者，这是因为在 JavaScript 语言内部，所有的数值属性名都会自动转为字符串属性名。
+type MyType = {
+  [x: number]: boolean; // 报错
+  [x: string]: string;
+};
+
+// 单个属性名符合属性名索引的范围，两者不能有冲突，否则报错。
+type MyType = {
+  foo: boolean; // 报错
+  [x: string]: string;
+};
+```
+
+#### 对象解构
+
+```ts
+const { id, name }: { id: string; name: string } = product;
+```
+
+目前没法为解构变量指定类型，因为对象解构里面的冒号，JavaScript 指定了其他用途。
+
+```ts
+let { x: foo, y: bar } = obj;
+// 等同于
+let foo = obj.x;
+let bar = obj.y;
+
+// 冒号不是表示属性 x 和 y 的类型，而是为这两个属性指定新的变量名。
+// 如果要为 x 和 y 指定类型，不得不写成下面这样。
+let { x: foo, y: bar }: { x: string; y: number } = obj;
+
+// 下面报错原因是因为： TypeScript 就会解读成，函数体内不存在变量shape，而是属性 shape 的值被赋值给了变量 Shape。
+function draw({ shape: Shape, xPos: number = 100 }) {
+  let myShape = shape; // 报错
+  let x = xPos; // 报错
 }
 ```
 
