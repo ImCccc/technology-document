@@ -1,6 +1,7 @@
 # typescript
 
 官网：<https://www.tslang.cn/>
+
 教程: <https://wangdoc.com/typescript/any>
 
 TypeScript 是一种由微软开发的开源的编程语言，它是 JavaScript 的一个超集，扩展了 JavaScript 的语法
@@ -200,6 +201,88 @@ let strLength: number = (<string>someValue).length;
 ```javascript
 let someValue: any = "this is a string";
 let strLength: number = (someValue as string).length;
+```
+
+### 函数
+
+函数的类型声明，需要在声明函数时，给出参数的类型和返回值的类型。
+
+```javascript
+// void 类型表示没有返回值
+function hello(txt: string): void {
+  console.log("hello " + txt);
+}
+
+/* 变量被赋值为一个函数，变量的类型有两种写法。 */
+
+// 写法一
+const hello = function (txt: string): string {
+  return txt;
+};
+
+// 写法二
+const hello: (txt: string) => void = function (txt) {
+  console.log("hello " + txt);
+};
+```
+
+#### 箭头函数
+
+```javascript
+const repeat = (str: string, times: number): string => {
+  str.repeat(times);
+};
+
+function greet(fn: (a: string) => void): void {
+  fn("world");
+}
+
+type Person = { name: string };
+const people = ["alice", "bob", "jan"].map((name): Person => ({ name }));
+```
+
+#### 参数解构
+
+```javascript
+function f([x, y]: [number, number]) {
+  // ...
+}
+
+function sum({ a, b, c }: { a: number, b: number, c: number }) {
+  console.log(a + b + c);
+}
+
+// 代码会看起来简洁一些
+type ABC = { a: number, b: number, c: number };
+function sum({ a, b, c }: ABC) {
+  console.log(a + b + c);
+}
+
+// rest 参数为数组
+function joinNumbers(...nums: number[]) {
+  // ...
+}
+
+// rest 参数为元组
+function f(...args: [boolean, number]) {
+  // ...
+}
+
+function f(...args:[boolean, ...string[]]) {
+  // ...
+}
+
+function multiply(n: number, ...m: number[]) {
+  return m.map((x) => n * x);
+}
+
+// 等同于下面写法
+function repeat(...[str, times]: [string, number]): string {
+  return str.repeat(times);
+}
+function repeat(str: string, times: number): string {
+  return str.repeat(times);
+}
 ```
 
 ## tsconfig.json 配置
