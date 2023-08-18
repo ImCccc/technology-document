@@ -51,7 +51,7 @@ git push -u origin main
 
 GitHub 配置 SSH Key 的目的是为了帮助我们在通过 git 提交代码是，不需要繁琐的验证过程，简化操作流程。
 
-### 设置 git 的 user name 和 email
+### 设置 username 和 email
 
 ```
 git config --global user.name "ImCccc"

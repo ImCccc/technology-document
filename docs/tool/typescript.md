@@ -1,6 +1,6 @@
 # typescript
 
-官网：<https://www.tslang.cn/>
+官网: <https://www.tslang.cn/>
 
 教程: <https://wangdoc.com/typescript/any>
 
