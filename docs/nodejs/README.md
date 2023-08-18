@@ -185,7 +185,7 @@ createFileByPath("路径1/路径2/路径3/文件.txt", "文件内容");
 
 ### `process.cwd()`
 
-process.cwd() 是用于获取当前当前终端的目录, 看下面例子:
+process.cwd() 是用于获取<font color="red">当前终端</font>的目录, 不管在哪里调用, 都是不变的, 看下面例子:
 
 `C:\Users\licr1\Desktop\test\folder2\index.js`:
 
@@ -204,7 +204,7 @@ const { testCwd } = require("../folder2/index");
 testCwd();
 ```
 
-如果在 `folder1` 打开终端, 执行 `node index.js` 那么 `process.cwd()` 就是 <font color="red">当前终端的目录</font>, 即使调用的是其他文件夹的方法:
+如果在 `folder1` 打开终端, 执行 `node index.js` 那么 `process.cwd()` 就是 <font color="red">folder1 所在的目录</font>, 即使调用的是其他文件夹的方法:
 
 ```
 PS C:\Users\licr1\Desktop\test\folder1> node .\index.js
