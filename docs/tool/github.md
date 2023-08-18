@@ -184,7 +184,7 @@ git checkout head .
 git pull 或者 git merge dev
 ```
 
-### 解决冲突后提交本地修改
+### 解决冲突后提交修改
 
 1. 将本地修改放入缓存区(成功后本地工作区间的代码跟本地仓库代码会同步)， 具体指令：
 
@@ -252,7 +252,7 @@ git checkout -- readme.txt
 
 ## 常见问题
 
-### 只合并分支 A 的某一个 commit
+### 只合并某一个 commit
 
 在 A 分支上提交了一个 commit，B 分支也同样需要这个 commit 的代码，但是分支 B 不能合并分支 A, 因为分支 A 有些代码不能直接上线，下面就教你如何只合并分支 A 的某一个 commit
 
