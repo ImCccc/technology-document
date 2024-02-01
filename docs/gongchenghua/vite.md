@@ -146,7 +146,7 @@ interface ImportMeta {
 
 <img height="120" src="./imgs/7.jpg">
 
-## 创建 react 管理后台遇到问题
+## react 管理后台遇到问题
 
 github 地址：<https://github.com/ImCccc/vite-react-demo>
 
@@ -159,9 +159,9 @@ yarn
 yarn dev
 ```
 
-### React 18 中 useEffect 会运行两次
+### useEffect 运行两次
 
-将严格模式去掉
+18 版本, useEffect 运行两次, 将严格模式去掉就行了
 
 ```jsx
 // main.tsx
