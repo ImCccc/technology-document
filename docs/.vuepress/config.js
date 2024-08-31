@@ -33,6 +33,7 @@ const sidebar = {
     "/vue/ProvideInject.md",
     "/vue/directive.md",
     "/vue/element-plus.md",
+    "/vue/vue3.md",
   ],
   "/react/": [
     "/react/",

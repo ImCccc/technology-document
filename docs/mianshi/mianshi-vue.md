@@ -22,3 +22,5 @@ Vue2：`Object.defineProperty` 重新定义 `data` 中所有的属性， `Object
 - key 保证唯一性
 - 路由懒加载、异步组件
 - 防抖节流
+
+## vue 的性能优化

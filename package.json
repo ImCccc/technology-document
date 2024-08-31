@@ -1,7 +1,6 @@
 {
-  "name": "cs",
+  "name": "developer-docmnent",
   "version": "1.0.0",
-  "description": "ssss",
   "main": "index.js",
   "author": "lcr",
   "license": "MIT",
@@ -9,12 +8,7 @@
     "dev": "vuepress dev docs",
     "build": "vuepress build docs"
   },
-  "dependencies": {
-    "element-plus": "^2.2.0",
-    "element-ui": "^2.15.8"
-  },
   "devDependencies": {
-    "vuepress": "^1.9.7",
-    "vuepress-plugin-demo-container": "^0.2.0"
+    "vuepress": "^1.9.10"
   }
 }
