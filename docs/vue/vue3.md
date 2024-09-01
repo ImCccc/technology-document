@@ -700,3 +700,87 @@ watchPostEffect(() => {});
 
 1. watchEffect 仅会在其同步执行期间，才追踪依赖。
 2. 在使用异步回调时，只有在第一个 await 正常工作前访问到的属性才会被追踪。
+
+## 访问 vue 实例
+
+### 基本使用
+
+```html
+<script setup>
+  import { ref, onMounted, watchEffect } from "vue";
+  const input = ref(null);
+
+  onMounted(() => input.value.focus());
+
+  // 需要侦听一个模板引用 ref 的变化，确保考虑到其值为 null 的情况：
+  watchEffect(() => {
+    if (input.value) input.value.focus();
+  });
+</script>
+
+<input ref="input" />
+
+<!-- 函数模板引用 -->
+<input :ref="e => { /* 将 el 赋值给 ref 变量 */ }" />
+```
+
+ref 使用在自定义组件，获取的就是组件实例
+
+### v-for 使用
+
+```html
+<script setup>
+  import { ref, onMounted } from "vue";
+  const list = ref([1, 2, 3, 4]);
+  const itemRefs = ref([]);
+  // 输出数组，数组是实例
+  onMounted(() => console.log(itemRefs.value));
+</script>
+
+<template>
+  <li v-for="item in list" ref="itemRefs">{{ item }}</li>
+</template>
+```
+
+### setup 访问实例
+
+使用了 `<script setup>` 的组件是默认私有的，父组件无法访问到一个使用了 `<script setup>` 的子组件中的任何东西，除非子组件在其中通过 defineExpose 宏显式暴露：
+
+```html
+<script setup>
+  import { ref } from "vue";
+  const a = 1;
+  const b = ref(2);
+
+  // 像 defineExpose 这样的编译器宏不需要导入
+  defineExpose({ a, b });
+</script>
+```
+
+## 组件相关
+
+### props
+
+```html
+<!-- 子组件 BlogPost.vue -->
+<script setup>
+  // defineProps 是一个仅 <script setup> 中可用的编译宏命令，并不需要显式地导入。
+  defineProps(["title"]);
+
+  const props = defineProps(["title"]);
+  console.log(props.title);
+</script>
+<template>
+  <h4>{{ title }}</h4>
+</template>
+
+<!-- 父组件 -->
+<script setup>
+  import { ref } from "vue";
+  import BlogPost from "./BlogPost.vue";
+  const title = ref("李cr");
+</script>
+<template>
+  <BlogPost :title="title" />
+</template>
+```
