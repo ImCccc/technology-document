@@ -759,20 +759,54 @@ ref 使用在自定义组件，获取的就是组件实例
 
 ## 组件相关
 
+### 基本使用
+
+```html
+<!-- 父组件 -->
+<script setup>
+  import ComponentA from "./ComponentA.vue";
+</script>
+<template>
+  <ComponentA />
+</template>
+
+<!-- 父组件：没有使用 script setup 
+ import ComponentA from './ComponentA.js'
+  export default {
+    components: { ComponentA },
+    setup() { }
+  }
+-->
+```
+
 ### props
+
+注意事项：
+
+1. 子组件的 Prop 名字格式应使用 camelCase 形式: `defineProps({ greetingMessage: String })`
+2. 父组件模板传递属性使用 kebab-case 形式：`<MyComponent greeting-message="hello" />`
+3. 传递静态值：`<BlogPost title="xxx" />`; 动态值需要添加冒号 `<BlogPost :title="post.title" />`
+
+#### 基本使用
 
 ```html
 <!-- 子组件 BlogPost.vue -->
 <script setup>
-  // defineProps 是一个仅 <script setup> 中可用的编译宏命令，并不需要显式地导入。
-  defineProps(["title"]);
-
+  // 通过 defineProps 宏来声明需要接受的属性, 返回所有的props
   const props = defineProps(["title"]);
   console.log(props.title);
 </script>
 <template>
   <h4>{{ title }}</h4>
 </template>
+
+<!-- 
+  // 子组件没有使用 script setup:
+  export default {
+    props: ['title'],
+    setup(props) { console.log(props.title) }
+  }
+ -->
 
 <!-- 父组件 -->
 <script setup>
@@ -783,4 +817,324 @@ ref 使用在自定义组件，获取的就是组件实例
 <template>
   <BlogPost :title="title" />
 </template>
+```
+
+#### 所有的使用方式
+
+```jsx
+// 使用 <script setup>
+defineProps({
+  title: String,
+  likes: Number,
+});
+
+// 非 <script setup>
+export default {
+  props: {
+    title: String,
+    likes: Number,
+  },
+};
+
+// TypeScript
+<script setup lang="ts">
+  defineProps<{
+    title?: string
+    likes?: number
+  }>()
+</script>
+```
+
+#### 将一个对象所有的属性向子组件传递
+
+```js
+const post = { id: 1, title: "xxx" };
+<BlogPost v-bind="post" />;
+// 而这实际上等价于:
+<BlogPost :id="post.id" :title="post.title" />
+```
+
+#### 检验
+
+```js
+defineProps({
+  // （给出 `null` 和 `undefined` 值则会跳过任何类型检查）
+  propA: Number,
+  propB: [String, Number],
+  propC: {
+    type: String,
+    required: true,
+  },
+  propD: {
+    type: [String, null],
+    required: true,
+  },
+  propE: {
+    type: Number,
+    default: 100,
+  },
+  // 对象类型的默认值
+  propF: {
+    type: Object,
+    // 必须从一个工厂函数返回。该函数接收组件所接收到的原始 prop 作为参数。
+    default(rawProps) {
+      return { message: "hello" };
+    },
+  },
+  // 自定义类型校验函数, 在 3.4+ 中完整的 props 作为第二个参数传入
+  propG: {
+    validator(value, props) {
+      return ["success", "warning", "danger"].includes(value);
+    },
+  },
+  propH: {
+    type: Function,
+    default: () => {},
+  },
+});
+```
+
+### 事件
+
+1. 模板表达式中，使用 $emit 方法触发自定义事件：`<button @click="$emit('eventName')">Click</button>`
+2. 父组件可以通过 v-on(缩写@)来监听事件：`<MyComponent @event-name="callback" />`
+
+#### 基本使用
+
+```html
+<!-- 子组件 BlogPost.vue -->
+<script setup>
+  // 通过 defineEmits 宏来声明需要抛出的事件, 返回emit函数触发事件
+  const emit = defineEmits(["enlarge-text"]);
+  function emitEvent() {
+    emit("enlarge-text");
+  }
+</script>
+
+<!-- 组件没使用 setup, 可从 setup() 函数的第二个参数访问到 emit 函数：
+  export default {
+    emits: ['enlarge-text'],
+    setup(props, ctx) { ctx.emit('enlarge-text') }
+  }
+-->
+
+<template>
+  <h4>{{ title }}</h4>
+  <button @click="$emit('enlarge-text')">模板触发事件</button>
+  <button @click="emitEvent">script 触发事件</button>
+</template>
+
+<!-- 父组件 -->
+<script setup>
+  import { ref } from "vue";
+  import BlogPost from "./BlogPost.vue";
+  const title = ref("李cr");
+</script>
+<template>
+  <BlogPost :title="title" @enlarge-text="($event) => { }" />
+</template>
+```
+
+#### 事件参数
+
+```html
+<!-- 子组件 -->
+<button @click="$emit('eventName', '参数1', '参数2')">click</button>
+
+<!-- 父组件 -->
+<MyButton @event-name="(p1, p2) => { } />
+```
+
+#### TypeScript 使用
+
+```html
+<script setup lang="ts">
+  const emit = defineEmits<{
+    (e: "change", id: number): void;
+    (e: "update", value: string): void;
+  }>();
+  emit("change", 123);
+  emit("update", "123");
+</script>
+```
+
+#### 事件校验
+
+```html
+<script setup>
+  const emit = defineEmits({
+    // 没有校验
+    click: null,
+    // 校验 submit 事件
+    submit: ({ email, password }) => {
+      if (email && password) return true;
+      return false;
+    },
+  });
+  function submitForm(email, password) {
+    emit("submit", { email, password });
+  }
+</script>
+```
+
+### 插槽 slot
+
+```html
+<!-- 子组件 AlertBox.vue -->
+<template>
+  <strong>.....</strong>
+  <slot />
+</template>
+<style scoped></style>
+
+<!-- 父组件 -->
+<AlertBox> Something bad happened. </AlertBox>
+```
+
+### 全局注册组件
+
+使用 Vue 应用实例的 .component() 方法，让组件在当前 Vue 应用中全局可用。
+
+```js
+import { createApp } from "vue";
+import ComponentA from "./ComponentA.vue";
+import ComponentB from "./ComponentB.vue";
+const app = createApp({});
+app.component("ComponentA", ComponentA).component("ComponentB", ComponentB);
+```
+
+存在问题：
+
+1. 不能被 tree-shaking。全局注册了一个组件，即使它并没有被使用，仍会出现在打包后的 JS 文件中。
+2. 使项目的依赖关系变得不那么明确。在父组件中使用子组件时，不太容易定位子组件的实现。和使用过多的全局变量一样，这可能会影响应用长期的可维护性。
+
+### 透传 Attributes
+
+“透传 attribute” 父组件传递一个属性给子组件， 但子组件没写接收属性的代码。常见例子：class、style、id；
+
+注意：多个根节点的组件没有自动 attribute 透传行为
+
+#### 样式透传
+
+对 class 和 style 属性：如果一个子组件的根元素已经有了 class 或 style，它会和从父组件上继承的值合并。
+
+```html
+<!-- 子组件 MyButton.vue -->
+<button>子组件</button>
+<!-- 父组件 -->
+<MyButton class="large" />
+<!-- 最后渲染出的 DOM 结果是 -->
+<button class="large">Click</button>
+```
+
+#### 深层组件继承
+
+1. 有些情况下一个组件会在根节点上渲染另一个组件，这样的情况属性会透传到孙子组件；
+2. 如果子组件已经使用过属性， 使用过的属性不会透传到孙子组件；
+
+```html
+<!-- 父组件 -->
+<template>
+  <Child msg="你好" title="我是谁" />
+</template>
+
+<!-- 子组件 Child.vue-->
+<script setup>
+  import BaseButton from "./BaseButton.vue";
+  defineProps({ title: String }); // title 不会传到 BaseButton 组件
+</script>
+<template>
+  <BaseButton />
+</template>
+
+<!-- 孙子组件 BaseButton.vue-->
+<script setup>
+  defineProps({ msg: String, title: String });
+</script>
+<template>
+  <h1>能接收到 msg：{{ msg }}</h1>
+  <h1>不能接收到 title： {{ title }}</h1>
+</template>
+```
+
+**禁用继承**
+
+组件选项中设置 `inheritAttrs: false`
+
+```html
+<!-- 3.3+ -->
+<script setup>
+  defineOptions({ inheritAttrs: false });
+</script>
+```
+
+**$attrs**
+
+$attrs 对象包含了除组件所声明的 props 和 emits 之外的所有其他 attribute，例如 class，style，v-on 监听器等。
+
+```html
+<!-- 父组件 -->
+<template>
+  <HelloWorld msg="Vite-Vue" title="licr" class="ddd" />
+</template>
+
+<!-- 子组件 -->
+<script setup>
+  defineProps({ title: String });
+</script>
+
+<template>
+  <!-- $attrs：{ "msg": "Vite-Vue", "class": "ddd" } -->
+  <span> {{ $attrs }}</span>
+</template>
+```
+
+**透传到非外层的组件**
+
+如果需要被透传的组件不在最外层，又或者子组件最外层有多个组件，
+可以通过设定 `inheritAttrs: false` 和使用 `v-bind="$attrs"` 来实现
+
+```html
+<!-- 父组件 -->
+<HelloWorld msg="Vue" title="licr" class="ddd" />
+
+<!-- 子组件：最外层有2个元素 -->
+<script setup>
+  import BaseButton from "./BaseButton.vue";
+  defineProps({ title: String });
+  defineOptions({ inheritAttrs: false });
+</script>
+<template>
+  <BaseButton v-bind="$attrs" />
+  <!-- { "msg": "Vue", "class": "ddd" } -->
+  <h1>{{ $attrs }}</h1>
+</template>
+
+<!-- 孙子组件 -->
+<script setup>
+  defineProps({ msg: String, title: String });
+</script>
+<template>
+  <!-- vue -->
+  <h1>{{ msg }}</h1>
+  <!-- 空 -->
+  <h1>{{ title }}</h1>
+  <!-- { "class": "ddd" } -->
+  <h1>{{ $attrs }}</h1>
+</template>
+```
+
+**js 访问透传 Attr**
+
+```html
+<script setup>
+  import { useAttrs } from "vue";
+  const attrs = useAttrs();
+</script>
+
+<!-- 没使用 script setup 
+  export default {
+    setup(props, ctx) { console.log(ctx.attrs) }
+  }  
+-->
 ```
