@@ -1,6 +1,6 @@
 # vue3
 
-## 模板语法 v-bind
+## 模板语法
 
 v-bind 指令指示 Vue 将元素的 id attribute 与 dynamicId 变量保持一致。
 
@@ -43,7 +43,7 @@ const objectOfAttrs = {
 
 用户附加在 window 上的不能访问，如果需要可以在 `app.config.globalProperties` 上显式地添加它们，供所有的 Vue 表达式使用。
 
-## 指令 Directives
+## 指令
 
 ```js
 <a v-on:click="doSomething"> ... </a>
@@ -116,6 +116,144 @@ const myObject = reactive({
 ```
 
 注意： v-if 比 v-for 的优先级更高。这意味着 v-if 的条件将无法访问到 v-for 作用域内定义的变量别名
+
+### v-model
+
+<https://cn.vuejs.org/guide/components/v-model.html>
+
+#### 原理
+
+```html
+<input v-model="val" />
+<!-- 等价于： -->
+<input :value="val" @input="val = $event.target.value" />
+```
+
+#### 基本使用
+
+```html
+<!-- 在“change”时而非“input”时更新 -->
+<input v-model.lazy="msg" />
+
+<!-- 自动将用户的输入值转为数值类型 -->
+<input v-model.number="age" />
+
+<!-- 自动过滤用户输入的首尾空白字符 -->
+<input v-model.trim="msg" />
+```
+
+#### v-model 自定义组件实现
+
+Vue 3.4 开始，推荐 defineModel() 宏实现。defineModel 是一个便利宏。编译器将其展开为以下内容：
+
+1. 一个名为 modelValue 的 prop，本地 ref 的值与其同步；
+2. 一个名为 update:modelValue 的事件，当本地 ref 的值发生变更时触发。
+
+```html
+<!-- Child.vue -->
+<script setup>
+  const model = defineModel();
+</script>
+
+<template>
+  <button @click=" model.value++">click {{ model }}</button>
+</template>
+
+<!-- Parent.vue -->
+<Child v-model="countModel" />
+```
+
+3.4 版本之前的实现
+
+```html
+<!-- Child.vue -->
+<script setup>
+  const props = defineProps(["modelValue"]);
+  const emit = defineEmits(["update:modelValue"]);
+</script>
+
+<input
+  :value="modelValue"
+  @input="emit('update:modelValue', $event.target.value)"
+/>
+
+<!-- Parent.vue -->
+<Child :modelValue="foo" @update:modelValue="$event => (foo = $event)" />
+```
+
+<font color="red">如果为 defineModel 设置了一个 default 值且父组件没有为该 prop 提供任何值，会导致父组件与子组件之间不同步。</font>
+
+#### v-model 参数
+
+```html
+<!-- 子组件 -->
+<script setup>
+  const title = defineModel("title");
+</script>
+
+<template>
+  <input type="text" v-model="title" />
+</template>
+
+<!-- 父组件 -->
+<MyComponent v-model:title="bookTitle" />
+
+<!-- 需要额外的 prop 选项 -->
+const title = defineModel('title', { required: true })
+
+<!-- 3.4 之前的用法 -->
+<!-- 子组件 -->
+<script setup>
+  defineEmits(["update:title"]);
+  defineProps({
+    title: { required: true },
+  });
+</script>
+
+<input :value="title" @input="$emit('update:title', $event.target.value)" />
+```
+
+#### 多个 v-model
+
+```html
+<!-- 子组件 -->
+<script setup>
+  const firstName = defineModel("firstName");
+  const lastName = defineModel("lastName");
+</script>
+<template>
+  <input type="text" v-model="firstName" />
+  <input type="text" v-model="lastName" />
+</template>
+
+<!-- 父组件 -->
+<UserName v-model:first-name="first" v-model:last-name="last" />
+```
+
+3.4 之前的用法
+
+```html
+<!-- 父组件 -->
+<UserName v-model:first-name="first" v-model:last-name="last" />
+
+<!-- 子组件 -->
+<script setup>
+  defineProps({
+    firstName: String,
+    lastName: String,
+  });
+  defineEmits(["update:firstName", "update:lastName"]);
+</script>
+
+<input
+  :value="firstName"
+  @input="$emit('update:firstName', $event.target.value)"
+/>
+<input
+  :value="lastName"
+  @input="$emit('update:lastName', $event.target.value)"
+/>
+```
 
 ### 动态参数
 
@@ -336,3 +474,229 @@ const fullName = computed({
 
 <!-- 现在当你再运行 fullName.value = '111 222' 时，setter 会被调用而 firstName 和 lastName 会随之更新。-->
 ```
+
+## 事件
+
+### 参数
+
+```jsx
+function greet(event) {
+  // `event` 是 DOM 原生事件
+  alert(event.target.tagName)
+}
+<button @click="greet">Greet</button>
+
+// 参数
+const items = ref([{ message: 'Foo' }, { message: 'Bar' }])
+function something(item, e) {
+  e.preventDefault()
+}
+<li v-for="item in items" @click="something(item, $event)"></li>
+```
+
+### 事件修饰符
+
+1. .stop
+2. .prevent
+3. .self
+4. .capture
+5. .once
+6. .passive
+
+```html
+<!-- 单击事件将停止传递 -->
+<a @click.stop="doThis"></a>
+
+<!-- 提交事件将不再重新加载页面 -->
+<form @submit.prevent="onSubmit"></form>
+
+<!-- 修饰语可以使用链式书写 -->
+<a @click.stop.prevent="doThat"></a>
+
+<!-- 也可以只有修饰符 -->
+<form @submit.prevent></form>
+
+<!-- 仅当 event.target 是元素本身时才会触发事件处理器。例如：事件处理器不来自子元素 -->
+<div @click.self="doThat">...</div>
+
+<!-- 添加事件监听器时，使用 `capture` 捕获模式 -->
+<div @click.capture="doThis">...</div>
+
+<!-- 点击事件最多被触发一次 -->
+<a @click.once="doThis"></a>
+```
+
+### 按键修饰符
+
+按键别名：
+
+1. enter
+2. tab
+3. delete (捕获“Delete”和“Backspace”两个按键)
+4. esc
+5. space
+6. up
+7. down
+8. left
+9. right
+
+```html
+<!-- 仅在 `key` 为 `Enter` 时调用 `submit` -->
+<input @keyup.enter="submit" />
+
+<!-- Alt + Enter -->
+<input @keyup.alt.enter="clear" />
+
+<!-- Ctrl + 点击 -->
+<div @click.ctrl="doSomething">Do something</div>
+```
+
+官方文档地址： <https://cn.vuejs.org/guide/essentials/event-handling.html>
+
+**方法与内联事件判断**
+
+模板编译器会通过检查 v-on 的值是否是合法的 JavaScript 标识符或属性访问路径来断定是何种形式的事件处理器。举例来说，foo、foo.bar 和 foo['bar'] 会被视为方法事件处理器，而 foo() 和 count++ 会被视为内联事件处理器。
+
+## 生命周期
+
+```html
+<script setup>
+  import { onMounted } from "vue";
+
+  // onMounted 钩子可以用来在组件完成初始渲染并创建 DOM 节点后运行代码：
+  onMounted(() => {
+    console.log(`the component is now mounted.`);
+  });
+</script>
+```
+
+## watch
+
+基本使用：
+
+```html
+<script setup>
+  import { ref, watch } from "vue";
+
+  const x = ref(0);
+  const y = ref(0);
+
+  // 基本使用
+  watch(x, async (newX, oldX) => {
+    const res = await fetch("https://yesno.wtf/api");
+  });
+
+  // getter 函数
+  watch(
+    () => x.value + y.value,
+    (sum) => {}
+  );
+
+  // 多个来源
+  watch([x, () => y.value], ([newX, newY]) => {});
+
+  /*
+    不能直接侦听响应式对象的属性值
+    const obj = reactive({ count: 0 });
+    watch(obj.count, (count) => {});  // 错误
+    watch(() => obj.count, (count) => {}); // 正确
+  */
+</script>
+```
+
+深层侦听器：
+
+```js
+const state = reactive({
+  age: 1,
+  count: 0,
+  someObject: { a: 1 },
+});
+
+// 直接传入一个响应式对象，会创建一个深层侦听器
+watch(state, (newValue, oldValue) => {
+  // 在嵌套的属性变更时触发，例如 age 和 count 变化就会触发
+  // 注意：`newValue` 此处和 `oldValue` 是相等的, 因为它们是同一个对象！
+});
+
+// 一个返回响应式对象的 getter 函数，只有在返回不同的对象时，才会触发回调：
+watch(
+  () => state.someObject,
+  () => {} // 仅当 state.someObject 被替换时触发
+);
+
+// deep
+watch(
+  () => state.someObject,
+  (newValue, oldValue) => {}, // 强制转成深层侦听器
+  { deep: true }
+);
+
+// immediate
+watch(
+  state,
+  (newValue, oldValue) => {}, // 立即执行
+  { immediate: true }
+);
+
+// once 3.4+
+watch(
+  state,
+  (newValue, oldValue) => {} // 源变化时触发一次
+  { once: true }
+);
+
+/*
+  默认情况下，侦听器回调会在父组件更新之后、所属组件的 DOM 更新之前被调用。
+  在侦听器回调中访问所属组件的 DOM，那么 DOM 将处于更新前的状态。
+  flush: 'post' 可以解决这个问题
+*/
+watch(
+  state,
+  (newValue, oldValue) => {} // 能访问最新的dom
+  { flush: 'post' }
+);
+```
+
+## watchEffect
+
+下面的代码，在每当 todoId 的引用发生变化时使用侦听器来加载一个远程资源：
+
+```js
+const todoId = ref(1);
+const data = ref(null);
+watch(
+  todoId,
+  async () => {
+    const response = await fetch(`https://jsonplaceholder/${todoId.value}`);
+    data.value = await response.json();
+  },
+  { immediate: true }
+);
+```
+
+watchEffect 简化上面的代码：
+
+```js
+const todoId = ref(1);
+const data = ref(null);
+
+// 回调会立即执行，不需要指定 immediate: true
+watchEffect(async () => {
+  const response = await fetch(`https://jsonplaceholder/${todoId.value}`);
+  // 为什么 data.value 发生变化不会触发回调？
+  // 因为 watchEffect 使用异步回调时，只有在第一个 await 正常工作前访问到的属性才会被追踪。
+  data.value = await response.json();
+});
+
+// 访问最新的dom
+watchEffect(callback, { flush: "post" });
+// 访问最新的dom， 有个更方便的别名 watchPostEffect()
+import { watchPostEffect } from "vue";
+watchPostEffect(() => {});
+```
+
+注意：
+
+1. watchEffect 仅会在其同步执行期间，才追踪依赖。
+2. 在使用异步回调时，只有在第一个 await 正常工作前访问到的属性才会被追踪。
