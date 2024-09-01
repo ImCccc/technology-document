@@ -477,21 +477,85 @@ const fullName = computed({
 
 ## 事件
 
-### 参数
+1. 模板表达式中，使用 $emit 方法触发自定义事件：`<button @click="$emit('eventName')">Click</button>`
+2. 父组件可以通过 v-on(缩写@)来监听事件：`<MyComponent @event-name="callback" />`
 
-```jsx
-function greet(event) {
-  // `event` 是 DOM 原生事件
-  alert(event.target.tagName)
-}
-<button @click="greet">Greet</button>
+### 基本使用
 
-// 参数
-const items = ref([{ message: 'Foo' }, { message: 'Bar' }])
-function something(item, e) {
-  e.preventDefault()
-}
-<li v-for="item in items" @click="something(item, $event)"></li>
+```html
+<!-- 子组件 BlogPost.vue -->
+<script setup>
+  // 通过 defineEmits 宏来声明需要抛出的事件, 返回emit函数触发事件
+  const emit = defineEmits(["enlarge-text"]);
+  function emitEvent() {
+    emit("enlarge-text");
+  }
+</script>
+
+<!-- 组件没使用 setup, 可从 setup() 函数的第二个参数访问到 emit 函数：
+  export default {
+    emits: ['enlarge-text'],
+    setup(props, ctx) { ctx.emit('enlarge-text') }
+  }
+-->
+
+<template>
+  <h4>{{ title }}</h4>
+  <button @click="$emit('enlarge-text')">模板触发事件</button>
+  <button @click="emitEvent">script 触发事件</button>
+</template>
+
+<!-- 父组件 -->
+<script setup>
+  import { ref } from "vue";
+  import BlogPost from "./BlogPost.vue";
+  const title = ref("李cr");
+</script>
+<template>
+  <BlogPost :title="title" @enlarge-text="($event) => { }" />
+</template>
+```
+
+### 事件参数
+
+```html
+<!-- 子组件 -->
+<button @click="$emit('eventName', '参数1', '参数2')">click</button>
+
+<!-- 父组件 -->
+<MyButton @event-name="(p1, p2) => { } />
+```
+
+### TypeScript 使用
+
+```html
+<script setup lang="ts">
+  const emit = defineEmits<{
+    (e: "change", id: number): void;
+    (e: "update", value: string): void;
+  }>();
+  emit("change", 123);
+  emit("update", "123");
+</script>
+```
+
+#### 事件校验
+
+```html
+<script setup>
+  const emit = defineEmits({
+    // 没有校验
+    click: null,
+    // 校验 submit 事件
+    submit: ({ email, password }) => {
+      if (email && password) return true;
+      return false;
+    },
+  });
+  function submitForm(email, password) {
+    emit("submit", { email, password });
+  }
+</script>
 ```
 
 ### 事件修饰符
@@ -894,103 +958,6 @@ defineProps({
 });
 ```
 
-### 事件
-
-1. 模板表达式中，使用 $emit 方法触发自定义事件：`<button @click="$emit('eventName')">Click</button>`
-2. 父组件可以通过 v-on(缩写@)来监听事件：`<MyComponent @event-name="callback" />`
-
-#### 基本使用
-
-```html
-<!-- 子组件 BlogPost.vue -->
-<script setup>
-  // 通过 defineEmits 宏来声明需要抛出的事件, 返回emit函数触发事件
-  const emit = defineEmits(["enlarge-text"]);
-  function emitEvent() {
-    emit("enlarge-text");
-  }
-</script>
-
-<!-- 组件没使用 setup, 可从 setup() 函数的第二个参数访问到 emit 函数：
-  export default {
-    emits: ['enlarge-text'],
-    setup(props, ctx) { ctx.emit('enlarge-text') }
-  }
--->
-
-<template>
-  <h4>{{ title }}</h4>
-  <button @click="$emit('enlarge-text')">模板触发事件</button>
-  <button @click="emitEvent">script 触发事件</button>
-</template>
-
-<!-- 父组件 -->
-<script setup>
-  import { ref } from "vue";
-  import BlogPost from "./BlogPost.vue";
-  const title = ref("李cr");
-</script>
-<template>
-  <BlogPost :title="title" @enlarge-text="($event) => { }" />
-</template>
-```
-
-#### 事件参数
-
-```html
-<!-- 子组件 -->
-<button @click="$emit('eventName', '参数1', '参数2')">click</button>
-
-<!-- 父组件 -->
-<MyButton @event-name="(p1, p2) => { } />
-```
-
-#### TypeScript 使用
-
-```html
-<script setup lang="ts">
-  const emit = defineEmits<{
-    (e: "change", id: number): void;
-    (e: "update", value: string): void;
-  }>();
-  emit("change", 123);
-  emit("update", "123");
-</script>
-```
-
-#### 事件校验
-
-```html
-<script setup>
-  const emit = defineEmits({
-    // 没有校验
-    click: null,
-    // 校验 submit 事件
-    submit: ({ email, password }) => {
-      if (email && password) return true;
-      return false;
-    },
-  });
-  function submitForm(email, password) {
-    emit("submit", { email, password });
-  }
-</script>
-```
-
-### 插槽 slot
-
-```html
-<!-- 子组件 AlertBox.vue -->
-<template>
-  <strong>.....</strong>
-  <slot />
-</template>
-<style scoped></style>
-
-<!-- 父组件 -->
-<AlertBox> Something bad happened. </AlertBox>
-```
-
 ### 全局注册组件
 
 使用 Vue 应用实例的 .component() 方法，让组件在当前 Vue 应用中全局可用。
@@ -1137,4 +1104,145 @@ $attrs 对象包含了除组件所声明的 props 和 emits 之外的所有其�
     setup(props, ctx) { console.log(ctx.attrs) }
   }  
 -->
+```
+
+## 插槽 slot
+
+```html
+<!-- 子组件 AlertBox.vue -->
+<template>
+  <strong> xxx </strong>
+  <slot> 默认内容 </slot>
+</template>
+<style scoped></style>
+
+<!-- 父组件 -->
+<AlertBox> Something bad happened. </AlertBox>
+```
+
+### 具名插槽
+
+```html
+<!-- 子组件 BaseLayout.vue -->
+<div class="container">
+  <header><slot name="header"></slot></header>
+  <main><slot></slot></main>
+</div>
+
+<!-- 父组件 -->
+<BaseLayout>
+  <template v-slot:header>header</template>
+  <template v-slot:default>main</template>
+</BaseLayout>
+
+<!-- 父组件: 简写 -->
+<BaseLayout>
+  <template #header>header</template>
+  <template #default>main</template>
+</BaseLayout>
+
+<!-- 父组件: 带参数简写，默认插槽 -->
+<BaseLayout>
+  <template #header="{ item }">header</template>
+  <!-- 所有位于顶级的非 <template> 节点都被隐式地视为默认插槽的内容 -->
+  <p>默认插槽内容1</p>
+  <p>默认插槽内容2</p>
+</BaseLayout>
+```
+
+### 条件插槽
+
+当 header、 default 存在时，我们希望包装它们以提供额外的样式：
+
+```html
+<template>
+  <div v-if="$slots.header" class="card-header">
+    <slot name="header" />
+  </div>
+  <div v-if="$slots.default" class="card-content">
+    <slot />
+  </div>
+</template>
+```
+
+### 作用域插槽
+
+意思是子组件传递参数，父组件接收参数
+
+```html
+<!-- 子组件 MyComponent.vue  -->
+<slot :text="2" :count="1"></slot>
+
+<!-- 父组件：只有默认插槽接收参数可写在 MyComponent 上 -->
+<MyComponent v-slot="slotProps">
+  {{ slotProps.text }} {{ slotProps.count }}
+</MyComponent>
+
+<!-- 子组件：有具名插槽 BaseLayout.vue -->
+<header><slot name="header" :text="2"></slot></header>
+<header><slot name="main" :text="2"></slot></header>
+<main><slot :text="1"></slot></main>
+
+<!-- 父组件写法 -->
+<BaseLayout>
+  <!-- 正常 -->
+  <template v-slot:header="heaProps"> {{ heaProps.text }} </template>
+  <!-- 简写 -->
+  <template #main="mainProps"> {{ mainProps.text }} </template>
+  <!-- 解构 -->
+  <template #default="{ text }"> {{ text }} </template>
+</BaseLayout>
+```
+
+## provide 和 inject
+
+一个父组件相对于其所有的后代组件，会作为依赖提供者。任何后代的组件树，无论层级有多深，都可以注入由父组件提供给整条链路的依赖。
+
+```html
+<!-- 父组件 -->
+<script setup>
+  import { provide } from "vue";
+  const location = ref("123");
+  function updateLocation() {
+    location.value = "345";
+  }
+  provide("location", { location, updateLocation });
+</script>
+
+<!-- 后代组件 -->
+<script setup>
+  import { inject } from "vue";
+  const { location, updateLocation } = inject("location");
+</script>
+
+<!-- 
+  父组件：
+  import { provide } from 'vue'
+  export default {
+    setup() { provide("location", {}) }
+  }
+  后代组件：
+  import { inject } from 'vue'
+  export default {
+    setup() {
+      const location = inject("location", "默认值");
+      return { location }
+    }
+  } 
+-->
+```
+
+**使用 Symbol 作注入名**
+
+```js
+// keys.js
+export const myInjectionKey = Symbol();
+
+// 在供给方组件中
+import { myInjectionKey } from "./keys.js";
+provide(myInjectionKey, {});
+
+// 注入方组件
+import { myInjectionKey } from "./keys.js";
+const injected = inject(myInjectionKey);
 ```
