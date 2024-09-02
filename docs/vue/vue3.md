@@ -1,6 +1,234 @@
 # vue3
 
-## 模板语法
+## 1. 基本 api
+
+### computed
+
+1. 返回值为一个计算属性 ref。
+2. .value 访问计算结果。
+3. 在模板中自动解包，模板引用时无需添加 .value。
+
+```html
+<script setup>
+  import { reactive, computed } from "vue";
+  const author = reactive({ name: "Doe", books: ["Vue2", "Vue3"] });
+  const publishedBooksMessage = computed(() => author.books.length);
+</script>
+```
+
+**与方法区别**
+
+计算属性值会基于其响应式依赖被缓存，一个计算属性仅会在其响应式依赖更新时才重新计算。
+方法调用总是会在重渲染发生时再次执行函数。
+
+**可写计算属性**
+
+使用场景：依赖发生变化，计算属性发生变化；计算属性发生变化，依赖也发生变化；
+通过同时提供 getter 和 setter 来创建：
+
+```vue
+<script setup>
+import { ref, computed } from "vue";
+const firstName = ref("John");
+const lastName = ref("Doe");
+const fullName = computed({
+  get() {
+    return firstName.value + " " + lastName.value;
+  },
+  set(newValue) {
+    [firstName.value, lastName.value] = newValue.split(" ");
+  },
+});
+</script>
+```
+
+运行 fullName.value = '111 222' 时，setter 会被调用而 firstName 和 lastName 会随之更新。
+
+### watch
+
+基本使用：
+
+```html
+<script setup>
+  import { ref, watch } from "vue";
+
+  const x = ref(0);
+  const y = ref(0);
+
+  // 基本使用
+  watch(x, async (newX, oldX) => {
+    const res = await fetch("https://yesno.wtf/api");
+  });
+
+  // getter 函数
+  watch(
+    () => x.value + y.value,
+    (sum) => {}
+  );
+
+  // 多个来源
+  watch([x, () => y.value], ([newX, newY]) => {});
+
+  /*
+    不能直接侦听响应式对象的属性值
+    const obj = reactive({ count: 0 });
+    watch(obj.count, (count) => {});  // 错误
+    watch(() => obj.count, (count) => {}); // 正确
+  */
+</script>
+```
+
+深层侦听器：
+
+```js
+const state = reactive({
+  age: 1,
+  count: 0,
+  someObject: { a: 1 },
+});
+
+// 直接传入一个响应式对象，会创建一个深层侦听器
+watch(state, (newValue, oldValue) => {
+  // 在嵌套的属性变更时触发，例如 age 和 count 变化就会触发
+  // 注意：`newValue` 此处和 `oldValue` 是相等的, 因为它们是同一个对象！
+});
+
+// 一个返回响应式对象的 getter 函数，只有在返回不同的对象时，才会触发回调：
+watch(
+  () => state.someObject,
+  () => {} // 仅当 state.someObject 被替换时触发
+);
+
+// deep
+watch(
+  () => state.someObject,
+  (newValue, oldValue) => {}, // 强制转成深层侦听器
+  { deep: true }
+);
+
+// immediate
+watch(
+  state,
+  (newValue, oldValue) => {}, // 立即执行
+  { immediate: true }
+);
+
+// once 3.4+
+watch(
+  state,
+  (newValue, oldValue) => {} // 源变化时触发一次
+  { once: true }
+);
+
+/*
+  默认情况下，侦听器回调会在父组件更新之后、所属组件的 DOM 更新之前被调用。
+  在侦听器回调中访问所属组件的 DOM，那么 DOM 将处于更新前的状态。
+  flush: 'post' 可以解决这个问题
+*/
+watch(
+  state,
+  (newValue, oldValue) => {} // 能访问最新的dom
+  { flush: 'post' }
+);
+```
+
+### watchEffect
+
+下面的代码，在每当 todoId 的引用发生变化时使用侦听器来加载一个远程资源：
+
+```js
+const todoId = ref(1);
+const data = ref(null);
+watch(
+  todoId,
+  async () => {
+    const response = await fetch(`https://jsonplaceholder/${todoId.value}`);
+    data.value = await response.json();
+  },
+  { immediate: true }
+);
+```
+
+watchEffect 简化上面的代码：
+
+```js
+const todoId = ref(1);
+const data = ref(null);
+
+// 回调会立即执行，不需要指定 immediate: true
+watchEffect(async () => {
+  const response = await fetch(`https://jsonplaceholder/${todoId.value}`);
+  // 为什么 data.value 发生变化不会触发回调？
+  // 因为 watchEffect 使用异步回调时，只有在第一个 await 正常工作前访问到的属性才会被追踪。
+  data.value = await response.json();
+});
+
+// 访问最新的dom
+watchEffect(callback, { flush: "post" });
+// 访问最新的dom， 有个更方便的别名 watchPostEffect()
+import { watchPostEffect } from "vue";
+watchPostEffect(() => {});
+```
+
+注意：
+
+1. watchEffect 仅会在其同步执行期间，才追踪依赖。
+2. 在使用异步回调时，只有在第一个 await 正常工作前访问到的属性才会被追踪。
+
+### provide(inject)
+
+一个父组件相对于其所有的后代组件，会作为依赖提供者。任何后代的组件树，无论层级有多深，都可以注入由父组件提供给整条链路的依赖。
+
+```html
+<!-- 父组件 -->
+<script setup>
+  import { provide } from "vue";
+  const location = ref("123");
+  function updateLocation() {
+    location.value = "345";
+  }
+  provide("location", { location, updateLocation });
+</script>
+
+<!-- 后代组件 -->
+<script setup>
+  import { inject } from "vue";
+  const { location, updateLocation } = inject("location");
+</script>
+
+<!-- 
+  父组件：
+  import { provide } from 'vue'
+  export default {
+    setup() { provide("location", {}) }
+  }
+  后代组件：
+  import { inject } from 'vue'
+  export default {
+    setup() {
+      const location = inject("location", "默认值");
+      return { location }
+    }
+  } 
+-->
+```
+
+**使用 Symbol 作注入名**
+
+```js
+// keys.js
+export const myInjectionKey = Symbol();
+
+// 在供给方组件中
+import { myInjectionKey } from "./keys.js";
+provide(myInjectionKey, {});
+
+// 注入方组件
+import { myInjectionKey } from "./keys.js";
+const injected = inject(myInjectionKey);
+```
+
+## 2. 模板语法
 
 v-bind 指令指示 Vue 将元素的 id attribute 与 dynamicId 变量保持一致。
 
@@ -43,7 +271,7 @@ const objectOfAttrs = {
 
 用户附加在 window 上的不能访问，如果需要可以在 `app.config.globalProperties` 上显式地添加它们，供所有的 Vue 表达式使用。
 
-## 指令
+## 3. 指令
 
 ```js
 <a v-on:click="doSomething"> ... </a>
@@ -275,7 +503,11 @@ const title = defineModel('title', { required: true })
 
 动态参数中表达式的值应当是一个字符串，或者是 null。特殊值 null 意为显式移除该绑定。其他非字符串的值会触发警告。
 
-## 响应式基础
+### 自定义指令
+
+参考文档：<https://cn.vuejs.org/guide/reusability/custom-directives.html>
+
+## 4. 响应式基础
 
 ### ref
 
@@ -419,63 +651,7 @@ callSomeFunction(state.count);
 callSomeFunction(state);
 ```
 
-## 计算属性
-
-1. 返回值为一个计算属性 ref。
-2. .value 访问计算结果。
-3. 在模板中自动解包，模板引用时无需添加 .value。
-
-```vue
-<script setup>
-import { reactive, computed } from "vue";
-
-const author = reactive({
-  name: "John Doe",
-  books: ["Vue 2 - Advanced Guide", "Vue 3 - Basic Guide"],
-});
-
-// 一个计算属性 ref
-const publishedBooksMessage = computed(() => {
-  return author.books.length > 0 ? "Yes" : "No";
-});
-</script>
-
-<template>
-  <span>{{ publishedBooksMessage }}</span>
-</template>
-```
-
-### 与方法区别
-
-计算属性值会基于其响应式依赖被缓存，一个计算属性仅会在其响应式依赖更新时才重新计算。
-方法调用总是会在重渲染发生时再次执行函数。
-
-### 可写计算属性
-
-使用场景：依赖发生变化，计算属性发生变化；计算属性发生变化，依赖也发生变化；
-通过同时提供 getter 和 setter 来创建：
-
-```vue
-<script setup>
-import { ref, computed } from "vue";
-
-const firstName = ref("John");
-const lastName = ref("Doe");
-
-const fullName = computed({
-  get() {
-    return firstName.value + " " + lastName.value;
-  },
-  set(newValue) {
-    [firstName.value, lastName.value] = newValue.split(" ");
-  },
-});
-</script>
-
-<!-- 现在当你再运行 fullName.value = '111 222' 时，setter 会被调用而 firstName 和 lastName 会随之更新。-->
-```
-
-## 事件
+## 5. 事件
 
 1. 模板表达式中，使用 $emit 方法触发自定义事件：`<button @click="$emit('eventName')">Click</button>`
 2. 父组件可以通过 v-on(缩写@)来监听事件：`<MyComponent @event-name="callback" />`
@@ -621,151 +797,7 @@ const fullName = computed({
 
 模板编译器会通过检查 v-on 的值是否是合法的 JavaScript 标识符或属性访问路径来断定是何种形式的事件处理器。举例来说，foo、foo.bar 和 foo['bar'] 会被视为方法事件处理器，而 foo() 和 count++ 会被视为内联事件处理器。
 
-## 生命周期
-
-```html
-<script setup>
-  import { onMounted } from "vue";
-
-  // onMounted 钩子可以用来在组件完成初始渲染并创建 DOM 节点后运行代码：
-  onMounted(() => {
-    console.log(`the component is now mounted.`);
-  });
-</script>
-```
-
-## watch
-
-基本使用：
-
-```html
-<script setup>
-  import { ref, watch } from "vue";
-
-  const x = ref(0);
-  const y = ref(0);
-
-  // 基本使用
-  watch(x, async (newX, oldX) => {
-    const res = await fetch("https://yesno.wtf/api");
-  });
-
-  // getter 函数
-  watch(
-    () => x.value + y.value,
-    (sum) => {}
-  );
-
-  // 多个来源
-  watch([x, () => y.value], ([newX, newY]) => {});
-
-  /*
-    不能直接侦听响应式对象的属性值
-    const obj = reactive({ count: 0 });
-    watch(obj.count, (count) => {});  // 错误
-    watch(() => obj.count, (count) => {}); // 正确
-  */
-</script>
-```
-
-深层侦听器：
-
-```js
-const state = reactive({
-  age: 1,
-  count: 0,
-  someObject: { a: 1 },
-});
-
-// 直接传入一个响应式对象，会创建一个深层侦听器
-watch(state, (newValue, oldValue) => {
-  // 在嵌套的属性变更时触发，例如 age 和 count 变化就会触发
-  // 注意：`newValue` 此处和 `oldValue` 是相等的, 因为它们是同一个对象！
-});
-
-// 一个返回响应式对象的 getter 函数，只有在返回不同的对象时，才会触发回调：
-watch(
-  () => state.someObject,
-  () => {} // 仅当 state.someObject 被替换时触发
-);
-
-// deep
-watch(
-  () => state.someObject,
-  (newValue, oldValue) => {}, // 强制转成深层侦听器
-  { deep: true }
-);
-
-// immediate
-watch(
-  state,
-  (newValue, oldValue) => {}, // 立即执行
-  { immediate: true }
-);
-
-// once 3.4+
-watch(
-  state,
-  (newValue, oldValue) => {} // 源变化时触发一次
-  { once: true }
-);
-
-/*
-  默认情况下，侦听器回调会在父组件更新之后、所属组件的 DOM 更新之前被调用。
-  在侦听器回调中访问所属组件的 DOM，那么 DOM 将处于更新前的状态。
-  flush: 'post' 可以解决这个问题
-*/
-watch(
-  state,
-  (newValue, oldValue) => {} // 能访问最新的dom
-  { flush: 'post' }
-);
-```
-
-## watchEffect
-
-下面的代码，在每当 todoId 的引用发生变化时使用侦听器来加载一个远程资源：
-
-```js
-const todoId = ref(1);
-const data = ref(null);
-watch(
-  todoId,
-  async () => {
-    const response = await fetch(`https://jsonplaceholder/${todoId.value}`);
-    data.value = await response.json();
-  },
-  { immediate: true }
-);
-```
-
-watchEffect 简化上面的代码：
-
-```js
-const todoId = ref(1);
-const data = ref(null);
-
-// 回调会立即执行，不需要指定 immediate: true
-watchEffect(async () => {
-  const response = await fetch(`https://jsonplaceholder/${todoId.value}`);
-  // 为什么 data.value 发生变化不会触发回调？
-  // 因为 watchEffect 使用异步回调时，只有在第一个 await 正常工作前访问到的属性才会被追踪。
-  data.value = await response.json();
-});
-
-// 访问最新的dom
-watchEffect(callback, { flush: "post" });
-// 访问最新的dom， 有个更方便的别名 watchPostEffect()
-import { watchPostEffect } from "vue";
-watchPostEffect(() => {});
-```
-
-注意：
-
-1. watchEffect 仅会在其同步执行期间，才追踪依赖。
-2. 在使用异步回调时，只有在第一个 await 正常工作前访问到的属性才会被追踪。
-
-## 访问 vue 实例
+## 6. 访问实例
 
 ### 基本使用
 
@@ -821,7 +853,20 @@ ref 使用在自定义组件，获取的就是组件实例
 </script>
 ```
 
-## 组件相关
+## 7. 组件相关
+
+### 生命周期
+
+```html
+<script setup>
+  import { onMounted } from "vue";
+
+  // onMounted 钩子可以用来在组件完成初始渲染并创建 DOM 节点后运行代码：
+  onMounted(() => {
+    console.log(`the component is now mounted.`);
+  });
+</script>
+```
 
 ### 基本使用
 
@@ -1106,7 +1151,7 @@ $attrs 对象包含了除组件所声明的 props 和 emits 之外的所有其�
 -->
 ```
 
-## 插槽 slot
+## 8. 插槽
 
 ```html
 <!-- 子组件 AlertBox.vue -->
@@ -1194,55 +1239,292 @@ $attrs 对象包含了除组件所声明的 props 和 emits 之外的所有其�
 </BaseLayout>
 ```
 
-## provide 和 inject
+## 9. 异步组件
 
-一个父组件相对于其所有的后代组件，会作为依赖提供者。任何后代的组件树，无论层级有多深，都可以注入由父组件提供给整条链路的依赖。
-
-```html
-<!-- 父组件 -->
-<script setup>
-  import { provide } from "vue";
-  const location = ref("123");
-  function updateLocation() {
-    location.value = "345";
-  }
-  provide("location", { location, updateLocation });
-</script>
-
-<!-- 后代组件 -->
-<script setup>
-  import { inject } from "vue";
-  const { location, updateLocation } = inject("location");
-</script>
-
-<!-- 
-  父组件：
-  import { provide } from 'vue'
-  export default {
-    setup() { provide("location", {}) }
-  }
-  后代组件：
-  import { inject } from 'vue'
-  export default {
-    setup() {
-      const location = inject("location", "默认值");
-      return { location }
-    }
-  } 
--->
-```
-
-**使用 Symbol 作注入名**
+### 基本用法
 
 ```js
-// keys.js
-export const myInjectionKey = Symbol();
+import { defineAsyncComponent } from "vue";
+const AsyncComp = defineAsyncComponent(() => {
+  return new Promise((resolve, reject) => {
+    resolve(/* 获取到的组件 */);
+  });
+});
 
-// 在供给方组件中
-import { myInjectionKey } from "./keys.js";
-provide(myInjectionKey, {});
-
-// 注入方组件
-import { myInjectionKey } from "./keys.js";
-const injected = inject(myInjectionKey);
+// ES 模块 import 也会返回 Promise，一般会这样使用
+import { defineAsyncComponent } from "vue";
+const AsyncComp = defineAsyncComponent(() =>
+  import("./components/MyComponent.vue")
+);
 ```
+
+### 全局注册
+
+```js
+app.component(
+  "MyComponent",
+  defineAsyncComponent(() => import("./components/MyComponent.vue"))
+);
+```
+
+### 父组件定义使用
+
+```html
+<script setup>
+  import { defineAsyncComponent } from "vue";
+  const AdminPage = defineAsyncComponent(() =>
+    import("./components/AdminPageComponent.vue")
+  );
+</script>
+
+<template>
+  <AdminPage />
+</template>
+```
+
+### 高级选项配置
+
+```js
+const AsyncComp = defineAsyncComponent({
+  // 加载函数
+  loader: () => import("./Foo.vue"),
+  // 加载异步组件时使用的组件
+  loadingComponent: LoadingComponent,
+  // 展示加载组件前的延迟时间，默认为 200ms
+  delay: 200,
+  // 加载失败后展示的组件
+  errorComponent: ErrorComponent,
+  // 提供了一个 timeout 时间限制，并超时了也会显示报错组件，默认值是：Infinity
+  timeout: 3000,
+});
+```
+
+## 10. 组合式函数
+
+### 基本使用
+
+其实就是 react 的 hooks，举例来说，我们可以将添加和清除 DOM 事件监听器的逻辑也封装进一个组合式函数中：
+
+```js
+// event.js
+import { onMounted, onUnmounted } from "vue";
+export function useEventListener(target, event, callback) {
+  onMounted(() => target.addEventListener(event, callback));
+  onUnmounted(() => target.removeEventListener(event, callback));
+}
+
+// mouse.js
+import { ref } from "vue";
+import { useEventListener } from "./event";
+export function useMouse() {
+  const x = ref(0);
+  const y = ref(0);
+  useEventListener(window, "mousemove", (event) => {
+    x.value = event.pageX;
+    y.value = event.pageY;
+  });
+  return { x, y };
+}
+
+// 使用
+import { useMouse } from "./mouse.js";
+const { x, y } = useMouse();
+```
+
+### 异步的 hooks
+
+```js
+// fetch.js
+import { ref, watchEffect, toValue } from "vue";
+export function useFetch(url) {
+  const data = ref(null);
+  const fetchData = () => {
+    data.value = null;
+    fetch(toValue(url))
+      .then((res) => res.json())
+      .then((json) => (data.value = json));
+  };
+  watchEffect(() => fetchData());
+  return { data };
+}
+
+// 参数是 ref，当 url.value 变化会重新触发 fetch
+const url = ref("/initial-url");
+const { data, error } = useFetch(url);
+url.value = "/new-url";
+
+// 参数是 getter 函数，当 props.id 改变时重新 fetch
+const { data, error } = useFetch(() => `/posts/${props.id}`);
+```
+
+### toValue
+
+1. 在 3.3 版本中新增的 API。如果参数是 ref，它会返回 ref 的值；如果参数是函数，它会调用函数并返回其返回值。否则原样返回。
+
+2. toValue 在 watchEffect 回调函数的内部调用的。这确保了在 toValue() 规范化期间访问的任何响应式依赖项都会被侦听器跟踪。
+
+### 注意事项
+
+1. 命名：组合式函数约定用驼峰命名法命名，并以“use”作为开头。
+2. 输入参数：使用 toValue() 处理下，兼容参数类型
+3. 返回值返回 ref，并非 reactive
+4. 组合式函数只能在 `<script setup> 或 setup()` 钩子中被调用，只能被同步调用
+5. `<script setup>` 是唯一在调用 await 之后仍可调用组合式函数的地方
+
+**选项式 API 中使用组合式函数**
+
+使用选项式 API，组合式函数必须在 setup() 中调用。且其返回的绑定必须在 setup() 中返回
+
+```js
+import { useMouse } from "./mouse.js";
+import { useFetch } from "./fetch.js";
+
+export default {
+  setup() {
+    const { x, y } = useMouse();
+    const { data } = useFetch("...");
+    return { x, y, data };
+  },
+  mounted() {
+    console.log(this.x);
+  },
+};
+```
+
+## 11. 内置组件
+
+参考文档：<https://cn.vuejs.org/guide/built-ins/transition.html>
+
+### Transition
+
+当一个 `Transition` 组件中的元素被插入或移除时，会发生下面这些事情：
+
+1. 检测目标元素是否应用了 CSS 过渡或动画。如果是，则一些 CSS 过渡 class 会在适当的时机被添加和移除。
+2. 有作为监听器的 JavaScript 钩子，这些钩子函数会在适当时机被调用。
+3. 没有探测到 CSS 过渡或动画、也没提供钩子，DOM 的插入、删除操作将在浏览器的下一个动画帧后执行。
+
+一共有 6 个应用于进入与离开过渡效果的 CSS class。
+
+![alt text](./image.png)
+
+1. `v-enter-fro：` 进入动画的起始状态。在元素插入之前添加，在元素插入完成后的下一帧移除。
+2. `v-enter-active：` 进入动画的生效状态。应用于整个进入动画阶段。在元素被插入之前添加，在过渡或动画完成之后移除。这个 class 可以被用来定义进入动画的持续时间、延迟与速度曲线类型。
+3. `v-enter-to：` 进入动画的结束状态。在元素插入完成后的下一帧被添加 (也就是 v-enter-from 被移除的同时)，在过渡或动画完成之后移除。
+4. `v-leave-from：` 离开动画的起始状态。在离开过渡效果被触发时立即添加，在一帧后被移除。
+5. `v-leave-active：` 离开动画的生效状态。应用于整个离开动画阶段。在离开过渡效果被触发时立即添加，在过渡或动画完成之后移除。这个 class 可以被用来定义离开动画的持续时间、延迟与速度曲线类型。
+6. `v-leave-to：` 离开动画的结束状态。在一个离开动画被触发后的下一帧被添加 (也就是 v-leave-from 被移除的同时)，在过渡或动画完成之后移除。
+
+v-enter-active 和 v-leave-active 给我们提供了为进入和离开动画指定不同速度曲线的能力，我们将在下面的小节中看到一个示例。
+
+```css
+/* <Transition name="fade">xxx</Transition> */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+```
+
+::: tip
+Transition 仅支持单个元素或组件作为其插槽内容。如果内容是一个组件，这个组件必须仅有一个根元素。
+:::
+
+### KeepAlive
+
+在线文档： <https://cn.vuejs.org/guide/built-ins/keep-alive.html>
+
+KeepAlive 是一个内置组件，它的功能是在多个组件间动态切换时缓存被移除的组件实例。
+
+```html
+<script setup>
+  import { shallowRef } from "vue";
+  import CompA from "./CompA.vue";
+  import CompB from "./CompB.vue";
+  const current = shallowRef(CompA);
+</script>
+<template>
+  <input type="radio" v-model="current" :value="CompA" />
+  <input type="radio" v-model="current" :value="CompB" />
+  <KeepAlive>
+    <component :is="current"></component>
+  </KeepAlive>
+</template>
+
+<!-- 
+  包含/排除: 
+  根据组件的 name 选项进行匹配，组件想要条件性地被缓存，就必须显式声明一个 name 选项 
+  3.2.34+ <script setup> 会根据文件名生成对应的 name 选项，无需再手动声明
+-->
+<KeepAlive include="a,b">
+  <component :is="view" />
+</KeepAlive>
+<KeepAlive :include="/a|b/">
+  <component :is="view" />
+</KeepAlive>
+<KeepAlive :include="['a', 'b']">
+  <component :is="view" />
+</KeepAlive>
+
+<!-- 最大缓存实例数 -->
+<KeepAlive :max="10">
+  <component :is="activeComponent" />
+</KeepAlive>
+```
+
+**钩子函数**
+
+```html
+<script setup>
+  import { onActivated, onDeactivated } from "vue";
+  // 调用时机为首次挂载，以及每次从缓存中被重新插入时
+  onActivated(() => {});
+  // 在从 DOM 上移除、进入缓存，以及组件卸载时调用
+  onDeactivated(() => {});
+</script>
+```
+
+### Teleport
+
+在线文档： <https://cn.vuejs.org/guide/built-ins/teleport.html>
+
+类似于 react 的传送门，`Teleport` 接收一个 `to prop` 来指定传送的目标。
+
+**其它注意事项**
+
+1. `to`: `CSS 选择器字符串 / DOM 元素对象`
+2. `Teleport` 挂载时，确保 `to` 目标已经存在
+3. 禁用： `<Teleport :disabled="isMobile"></Teleport>`
+
+```html
+<!-- 子组件 -->
+<button @click="open = true">Open Modal</button>
+<Teleport to="body">
+  <div v-if="open" class="modal">
+    <p>Hello from the modal!</p>
+    <button @click="open = false">Close</button>
+  </div>
+</Teleport>
+
+<!-- 子组件：多个 Teleport -->
+<Teleport to="#modals">
+  <div>A</div>
+</Teleport>
+<Teleport to="#modals">
+  <div>B</div>
+</Teleport>
+
+<!-- 渲染结果 -->
+<div id="modals">
+  <div>A</div>
+  <div>B</div>
+</div>
+```
+
+### Suspense
+
+## 插件
+
+参考文档：<https://cn.vuejs.org/guide/reusability/plugins.html>
